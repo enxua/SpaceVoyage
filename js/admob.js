@@ -6,11 +6,12 @@
    · 시작할 때: AdMob 초기화 → 개인정보 동의(UMP, 유럽 등 필요한 지역만 동의 창) → 보상형 광고 미리 불러오기
    · AD_PLAY(onDone, onCancel) 를 실제 광고로 바꾼다. 끝까지 봐서 보상을 받은 경우에만 onDone
    · 광고가 닫히면 다음 광고를 미리 불러 둔다. 불러오기에 실패하면 점점 늦춰 가며 다시 시도한다
-   ★ 출시 전에 바꿀 것: 아래 ADMOB.rewarded (광고 단위 ID) + android/app/src/main/res/values/strings.xml 의 admob_app_id (앱 ID)
-     둘 다 구글 테스트 ID 이면 testing 을 true 로 두고, 실제 ID 로 바꾸면 testing 을 false 로 바꾼다. */
+   광고 ID: 아래 ADMOB.rewarded (광고 단위 ID) + android/app/src/main/res/values/strings.xml 의 admob_app_id (앱 ID)
+   개발 중 테스트: 에뮬레이터는 자동으로 테스트 기기라 테스트 광고가 나온다. 실제 휴대전화로 시험할 때는
+   AdMob 콘솔 > 설정 > 테스트 기기에 그 휴대전화를 등록하거나 testing 을 잠시 true 로 바꾼다 (내 광고를 직접 누르면 정책 위반). */
 const ADMOB = {
-  rewarded: "ca-app-pub-3940256099942544/5224354917",       /* 보상형 광고 단위 ID (지금은 구글 공식 테스트 ID) */
-  testing: true,                                            /* 실제 ID 로 바꾸면 false */
+  rewarded: "ca-app-pub-4021465850940162/5910533613",       /* 보상형 광고 단위 ID (voyage_rewarded) */
+  testing: false,                                           /* true: 구글 테스트 광고로 시험 */
 };
 const ADM = { plugin:null, ready:false, loading:false, canRequest:false, privacy:false, retry:0, cur:null, consent:null };
 const admobOff = () => typeof adFree === "function" && state && adFree();      /* 광고 제거 이용 중 */

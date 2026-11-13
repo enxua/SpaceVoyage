@@ -7,7 +7,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!-- AdMob 앱 ID: res/values/strings.xml 의 admob_app_id (지금은 구글 테스트 ID) -->
+        <!-- AdMob 앱 ID: res/values/strings.xml 의 admob_app_id -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_app_id" />

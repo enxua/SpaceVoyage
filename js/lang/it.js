@@ -2050,4 +2050,8 @@ I18N.it = {"일반":"Comune",
 "승무원 판넬 접기·펼치기":"Comprimi / espandi pannello equipaggio",
 "메뉴 판넬 접기·펼치기":"Comprimi / espandi pannello menu",
 "우주 끝까지: VOYAGE":"Fino ai confini dello spazio: VOYAGE",
-"우주 끝까지":"Fino ai confini dello spazio"};
+"우주 끝까지":"Fino ai confini dello spazio",
+"광고를 준비하고 있습니다. 잠시 후 다시 시도해 주세요":"L'annuncio si sta ancora caricando. Riprova tra poco.",
+"광고를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요":"Impossibile caricare l'annuncio. Riprova più tardi.",
+"🧪 테스트 모드 - 웹 버전에서는 광고 대신 잠시 기다리면 보상을 받습니다.":"🧪 Modalità test - nella versione web basta attendere un momento, senza annuncio, per ricevere la ricompensa.",
+"광고 개인정보 설정":"Privacy annunci"};

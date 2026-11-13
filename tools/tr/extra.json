@@ -5068,5 +5068,45 @@
   "ja": "宇宙の果てまで",
   "zhs": "直抵宇宙尽头",
   "zht": "直抵宇宙盡頭"
+ },
+ "광고를 준비하고 있습니다. 잠시 후 다시 시도해 주세요": {
+  "en": "The ad is still loading. Please try again in a moment.",
+  "es": "El anuncio aún se está cargando. Inténtalo de nuevo en un momento.",
+  "fr": "La publicité est en cours de chargement. Réessayez dans un instant.",
+  "it": "L'annuncio si sta ancora caricando. Riprova tra poco.",
+  "pt": "O anúncio ainda está carregando. Tente novamente em instantes.",
+  "ja": "広告を準備しています。少し待ってからもう一度お試しください",
+  "zhs": "广告正在准备中，请稍后再试",
+  "zht": "廣告正在準備中，請稍後再試"
+ },
+ "광고를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요": {
+  "en": "Couldn't load the ad. Please try again later.",
+  "es": "No se pudo cargar el anuncio. Inténtalo de nuevo más tarde.",
+  "fr": "Impossible de charger la publicité. Réessayez plus tard.",
+  "it": "Impossibile caricare l'annuncio. Riprova più tardi.",
+  "pt": "Não foi possível carregar o anúncio. Tente novamente mais tarde.",
+  "ja": "広告を読み込めませんでした。しばらくしてからもう一度お試しください",
+  "zhs": "广告加载失败，请稍后再试",
+  "zht": "廣告載入失敗，請稍後再試"
+ },
+ "🧪 테스트 모드 - 웹 버전에서는 광고 대신 잠시 기다리면 보상을 받습니다.": {
+  "en": "🧪 Test mode - on the web version, just wait a moment instead of watching an ad to get the reward.",
+  "es": "🧪 Modo de prueba - en la versión web, espera un momento en lugar de ver un anuncio para recibir la recompensa.",
+  "fr": "🧪 Mode test - sur la version web, patientez un instant au lieu de regarder une publicité pour obtenir la récompense.",
+  "it": "🧪 Modalità test - nella versione web basta attendere un momento, senza annuncio, per ricevere la ricompensa.",
+  "pt": "🧪 Modo de teste - na versão web, basta esperar um instante em vez de ver um anúncio para receber a recompensa.",
+  "ja": "🧪 テストモード - Web版では広告の代わりに少し待つと報酬を受け取れます。",
+  "zhs": "🧪 测试模式 - 网页版无需观看广告，稍等片刻即可获得奖励。",
+  "zht": "🧪 測試模式 - 網頁版無需觀看廣告，稍等片刻即可獲得獎勵。"
+ },
+ "광고 개인정보 설정": {
+  "en": "Ad Privacy Settings",
+  "es": "Privacidad de anuncios",
+  "fr": "Confidentialité des pubs",
+  "it": "Privacy annunci",
+  "pt": "Privacidade de anúncios",
+  "ja": "広告のプライバシー設定",
+  "zhs": "广告隐私设置",
+  "zht": "廣告隱私設定"
  }
 }

@@ -1,8 +1,8 @@
 "use strict";
 /* ══════════════════ 우주 끝까지: VOYAGE - 보상형 광고 ══════════════════
    광고를 끝까지 보면 보상을 준다: 상점의 무료 크레딧·보석, 전투·임무·납품 보상 2배, 조난 시 기함 되살리기.
-   지금은 광고 모듈이 없어 5초짜리 테스트 화면으로 대신한다.
-   실제 광고를 붙일 때는 AD_PLAY 하나만 바꾸면 된다: AD_PLAY(onDone, onCancel) - 끝까지 보면 onDone, 중간에 닫으면 onCancel. */
+   안드로이드 앱에서는 js/admob.js 가 AD_PLAY 를 AdMob 보상형 광고로 바꾼다. 웹에서는 5초짜리 테스트 화면이다.
+   광고 방식을 바꿀 때는 AD_PLAY 하나만 바꾸면 된다: AD_PLAY(onDone, onCancel) - 끝까지 보면 onDone, 중간에 닫으면 onCancel. */
 const AD_LIMIT = { credit:5, gem:3, revive:2, double:20 };           /* 하루에 받을 수 있는 횟수 */
 const AD_SECONDS = 5;
 function ads(){
@@ -35,7 +35,7 @@ function adFreeHTML(){
   return html;
 }
 
-/* 테스트용 광고 화면. 실제 SDK(AdMob 등)를 붙이면 이 함수만 바꾼다 */
+/* 웹용 테스트 광고 화면 (앱에서는 js/admob.js 가 실제 광고로 바꾼다) */
 let AD_PLAY = function(onDone, onCancel){
   let el = $("adView");
   if(!el){ el = document.createElement("div"); el.id = "adView"; document.body.appendChild(el);
@@ -43,7 +43,7 @@ let AD_PLAY = function(onDone, onCancel){
   let left = AD_SECONDS;
   const paint = () => { el.innerHTML = `<div style="font-size:54px">📺</div>
     <div style="font-size:18px;font-weight:800">${__("광고 시청 중")}</div>
-    <div style="font-size:12.5px;opacity:.75;max-width:320px;line-height:1.7">${__("🧪 테스트 모드 - 아직 광고 모듈이 없어 잠시 기다리면 보상을 받습니다.")}</div>
+    <div style="font-size:12.5px;opacity:.75;max-width:320px;line-height:1.7">${__("🧪 테스트 모드 - 웹 버전에서는 광고 대신 잠시 기다리면 보상을 받습니다.")}</div>
     <div style="font-size:40px;font-weight:800;color:#ffb347">${left}</div>
     <div style="width:220px;height:6px;border-radius:3px;background:rgba(255,255,255,.18);overflow:hidden"><i style="display:block;height:100%;width:${(1-left/AD_SECONDS)*100}%;background:#ffb347;transition:width 1s linear"></i></div>
     <button class="btn ghost" style="margin-top:10px;color:#fff;border-color:rgba(255,255,255,.4)" onclick="adCancel()">${__("그만 보기 (보상 없음)")}</button>`; };

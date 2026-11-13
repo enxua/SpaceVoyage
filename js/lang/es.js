@@ -2050,4 +2050,8 @@ I18N.es = {"일반":"Común",
 "승무원 판넬 접기·펼치기":"Plegar / desplegar panel de tripulación",
 "메뉴 판넬 접기·펼치기":"Plegar / desplegar panel de menú",
 "우주 끝까지: VOYAGE":"Hasta el confín del espacio: VOYAGE",
-"우주 끝까지":"Hasta el confín del espacio"};
+"우주 끝까지":"Hasta el confín del espacio",
+"광고를 준비하고 있습니다. 잠시 후 다시 시도해 주세요":"El anuncio aún se está cargando. Inténtalo de nuevo en un momento.",
+"광고를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요":"No se pudo cargar el anuncio. Inténtalo de nuevo más tarde.",
+"🧪 테스트 모드 - 웹 버전에서는 광고 대신 잠시 기다리면 보상을 받습니다.":"🧪 Modo de prueba - en la versión web, espera un momento en lugar de ver un anuncio para recibir la recompensa.",
+"광고 개인정보 설정":"Privacidad de anuncios"};

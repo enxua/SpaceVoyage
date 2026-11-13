@@ -955,6 +955,7 @@ function openAudio(){
       ${slider("bgm",__("배경 음악"),"🎵")}${slider("sfx",__("효과음"),"🔔")}
       <div class="stat">${__`배경 음악은 지금 있는 우주에 따라 바뀌고, 전투 중에는 긴박한 곡으로 넘어갑니다. 모든 소리는 실시간으로 합성되어 음악 파일이 없습니다.`}</div></div>
     <div class="sec">🌐 Language</div><div class="card" style="display:flex;flex-wrap:wrap;gap:6px">${langButtons()}</div>
+    ${typeof admobPrivacyHTML === "function" ? admobPrivacyHTML() : ""}
     <div class="sec">${__`화면 효과`}</div><div class="card">
       <div style="margin-bottom:14px"><div class="row"><div class="grow ttl">${__`📳 화면 흔들림 세기`}</div><div class="acc" id="fx_shake">${Math.round(state.fx.shake*100)}%</div></div>
         <input type="range" min="0" max="100" value="${Math.round(state.fx.shake*100)}" style="width:100%;accent-color:#d96f32;margin-top:6px"

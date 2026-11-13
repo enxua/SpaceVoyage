@@ -446,6 +446,22 @@
   .langBtn.on { border-color:#d96f32; background:#d96f32; color:#fff; }
   .langList { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:8px; }
   .langList .langBtn { padding:13px 10px; font-size:15px; border-radius:12px; }
+
+  /* 설정 · 데이터 초기화 */
+  .btn.red { background:#c8432f; color:#fff; }
+  .dangerCard { border-color:#efc2b8; background:#fff7f5; }
+  body.dark .dangerCard { border-color:#5a2a26; background:#2a1716; }
+  /* 처음 화면: 오른쪽 위 설정 버튼 · 연동 버튼. 처음 화면이 떠 있을 때는 창·알림을 그 위로 올린다 */
+  #intro #introGear { position:absolute; top:calc(16px + env(safe-area-inset-top)); right:calc(16px + env(safe-area-inset-right)); z-index:3;
+    width:42px; height:42px; border-radius:50%; border:1px solid rgba(127,182,255,.35); background:rgba(14,22,44,.6); color:#dfe7f5;
+    font-size:19px; cursor:pointer; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); animation:fadeIn 1s ease both 1.5s; }
+  #intro #introGear:active { transform:scale(.92); }
+  #intro .hr { right:72px; }
+  #intro #introLink { margin-top:14px; background:rgba(14,22,44,.7); border:1px solid rgba(127,216,255,.45); color:#cfeaff; font-size:12.5px; padding:9px 18px; border-radius:20px; }
+  @media (max-width:520px){ #intro .hr { right:66px; } }
+  body.on-title #shade { z-index:46; }
+  body.on-title #topWrap { z-index:47; pointer-events:none; }
+  body.on-title #top { visibility:hidden; }
 </style>
 </head>
 <body>
@@ -476,7 +492,7 @@
       <button class="mapBtn" id="zoomOut" onclick="setZoom(0.8)">－</button>
       <button class="mapBtn" id="recenter" onclick="recenter()" data-t-title title="내 함선 위치로 이동 · 기본 배율">🚀<span data-t>내 함선</span></button>
       <button class="mapBtn" id="themeBtn" onclick="toggleTheme()" data-t-title title="밝은 지도 / 어두운 우주">🌓</button>
-      <button class="mapBtn" id="langBtn" onclick="openLang()" title="Language">🌐</button>
+      <button class="mapBtn" id="langBtn" onclick="openSettings()" data-t-title title="설정 · 계정 · 언어">⚙️</button>
     </div>
   </div>
   <div id="under">
@@ -550,7 +566,9 @@
      기지에서 <b>무역</b>으로 돈을 벌고, <b>승무원</b>을 영입하고, <b>해적</b>을 물리치세요.<br>
      최종 목적지는 138억 년 전, <b>우주의 시작</b>입니다.</p>
   <button class="btn orange launchBtn" onclick="introLaunch()" data-t>발진</button>
+  <button class="btn" id="introLink" style="display:none" onclick="cloudLink()"></button>
   <div id="langPick"></div>
+  <button id="introGear" onclick="openSettings()" data-t-title title="설정">⚙️</button>
 </div>
 
 <div id="gameover" class="full">
@@ -580,6 +598,7 @@
 <script src="js/ads.js"></script>
 <script src="js/admob.js"></script>
 <script src="js/billing.js"></script>
+<script src="js/cloud.js"></script>
 <script src="js/chat.js"></script>
 <script src="js/cuts.js"></script>
 <script src="js/story.js"></script>

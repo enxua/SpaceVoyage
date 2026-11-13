@@ -726,10 +726,7 @@ function openCodex(tab){
   openModal(__("📖 도감"), __`천체 ${state.found.length}/${BODIES.length} · 떠돌이 별 ${state.starsFound.length}/${wstars.length}`, html, "codex");
 }
 function equipTitle(id){ state.title = state.title===id ? null : id; updateHUD(); save(); openCodex(); }
-function resetGame(){
-  if(!confirm(__("모든 진행 상황을 지우고 처음부터 다시 시작할까요?"))) return;
-  localStorage.removeItem("voyage_space_save"); location.reload();
-}
+function resetGame(){ openResetConfirm(); }
 
 /* ══════════════════ 상점 (크레딧 충전) ══════════════════
    안드로이드 앱에서는 js/billing.js 가 requestPayment() 를 구글 플레이 결제로 바꾼다.
@@ -973,6 +970,70 @@ function openAudio(){
        ["alarm",__("경보")],["shot",__("포격")],["hit",__("피격")],["explode",__("격파")],["bad",__("경고")],["over",__("조난")]]
       .map(([k,n])=>`<button class="btn sm ghost" onclick="sfx('${k}')">${n}</button>`).join("")}</div>`, "audio");
 }
+/* ══════════════════ 설정 (처음 화면 오른쪽 위 ⚙️ · 게임 중 도구 줄 ⚙️) ══════════════════
+   계정(구글 Play 게임즈 연동) · 소리 · 언어 · 초기 화면으로 · 광고 개인정보 · 데이터 초기화 */
+function openSettings(){
+  const inGame = !state.intro && $("intro").style.display === "none";
+  openModal(__("⚙️ 설정"), "", `<div class="sec">${__`계정`}</div>${typeof cloudHTML === "function" ? cloudHTML() : ""}
+    <div class="sec">${__`소리`}</div><div class="card"><div class="row">
+      <div class="grow"><div class="ttl">${__`전체 소리`}</div><div class="stat">${__`배경 음악 ${Math.round(state.vol.bgm*100)}% · 효과음 ${Math.round(state.vol.sfx*100)}%`}</div></div>
+      <button class="btn ${state.mute?"ghost":"orange"}" onclick="toggleMute();openSettings()">${state.mute?__("🔇 꺼짐"):__("🔊 켜짐")}</button></div>
+      <button class="btn ghost wide" onclick="openAudio()">${__`🎚 소리·화면 효과 자세히`}</button></div>
+    <div class="sec">🌐 Language</div><div class="card" style="display:flex;flex-wrap:wrap;gap:6px">${langButtons()}</div>
+    ${inGame ? `<div class="sec">${__`게임`}</div><div class="card">
+      <div class="stat" style="margin:0 0 4px">${__`진행 상황을 저장하고 처음 화면으로 돌아갑니다. 발진을 누르면 이어서 합니다.`}</div>
+      <button class="btn wide" onclick="goTitle()">${__`🏠 초기 화면으로`}</button></div>` : ""}
+    ${typeof admobPrivacyHTML === "function" ? admobPrivacyHTML() : ""}
+    <div class="sec">${__`데이터`}</div><div class="card dangerCard">
+      <div class="ttl">${__`⚠️ 데이터 초기화`}</div>
+      <div class="stat">${__`모든 진행 상황을 지우고 처음부터 다시 시작합니다. 되돌릴 수 없습니다.`}</div>
+      <button class="btn red wide" onclick="openResetConfirm()">${__`데이터 초기화`}</button></div>`, "settings");
+}
+
+/* 처음 화면으로: 저장하고 게임을 멈춘 뒤 처음 화면 연출을 다시 튼다 */
+function goTitle(){
+  if(combat){ toast(__("전투 중에는 처음 화면으로 갈 수 없습니다")); return; }
+  if(forcedModal) return;
+  save(); if(typeof cloudPush === "function") cloudPush();
+  closeModal(); paused = true;
+  const el = $("intro"); el.classList.remove("launch", "gone"); el.style.display = "";
+  document.body.classList.add("on-title");
+  INTRO.launching = false; INTRO.speed = INTRO.target = 0.35; INTRO.last = 0;
+  introStart();
+  if(typeof cloudIntroBtn === "function") cloudIntroBtn();
+}
+function titleOff(){ document.body.classList.remove("on-title"); paused = false; }
+
+/* 데이터 초기화: 경고 → 확인 문구 입력 → 처음부터. 결제 기록(광고 제거 · 누적 결제 등급)과 소리·화면 설정은 남긴다 */
+const RESET_WORD = () => __("초기화");
+function openResetConfirm(){
+  const w = RESET_WORD();
+  openModal(__("⚠️ 데이터 초기화"), "", `<div class="card dangerCard">
+      <div style="font-size:34px;text-align:center;margin:4px 0">⚠️</div>
+      <div class="ttl" style="text-align:center">${__`정말 처음부터 다시 시작할까요?`}</div>
+      <div class="stat">${__`지워지는 것: 크레딧·보석·연구 데이터, 함선과 승무원, 발견한 천체, 임무·업적, 이야기 진행`}</div>
+      <div class="stat">${__`남는 것: 광고 제거 이용권, 누적 결제 등급, 소리·화면·언어 설정`}</div>
+      ${typeof cloudOn === "function" && cloudOn() ? `<div class="stat"><b>${__`구글 Play 게임즈에 저장된 클라우드 기록도 초기화됩니다.`}</b></div>` : ""}
+      <div class="stat" style="margin-top:10px">${__`계속하려면 아래 칸에 <b>${w}</b> 을(를) 입력하세요.`}</div>
+      <input id="resetInput" type="text" autocomplete="off" placeholder="${w}" oninput="$('resetGo').disabled = this.value.trim().toLowerCase() !== RESET_WORD().toLowerCase()"
+        style="width:100%;box-sizing:border-box;margin-top:8px;padding:10px 12px;border:1.5px solid #d9534f;border-radius:10px;font-size:15px;background:transparent;color:inherit"></div>
+    <button class="btn red wide" id="resetGo" disabled onclick="dataReset()">${__`초기화하고 처음부터 시작`}</button>
+    <button class="btn ghost wide" onclick="openSettings()">${__`취소`}</button>`, "reset");
+  sfx("bad");
+}
+function dataReset(){
+  const inp = $("resetInput"); if(!inp || inp.value.trim().toLowerCase() !== RESET_WORD().toLowerCase()) return;
+  const f = freshState();
+  Object.assign(f, { theme:state.theme, mute:state.mute, vol:state.vol, fx:state.fx, shop:state.shop, resetAt:Date.now(), savedAt:Date.now() });
+  try{
+    const j = JSON.stringify(f);
+    if(typeof saveBlocked !== "undefined") saveBlocked = true;
+    localStorage.setItem("voyage_space_save", j); guardSaveSig(j);
+    for(const k of ["voyage_space_backup", "voyage_space_backup_sig", "voyage_space_broken"]) localStorage.removeItem(k);
+  }catch(e){}
+  location.reload();
+}
+
 function setVol(k, val){ state.vol[k] = val; $("vol_"+k).textContent = Math.round(val*100)+"%"; auApplyVolume(); }
 /* VIP 일일 지급은 정박 중이거나 멈춰 있어도 확인한다 */
 setInterval(()=>{ if(typeof state !== "undefined" && state && state.shop && !state.intro && $("gameover").style.display !== "flex") vipTick(); }, 5000);

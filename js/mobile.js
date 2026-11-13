@@ -19,7 +19,7 @@
     lastBack = now; toast(__("뒤로 버튼을 한 번 더 누르면 종료합니다"));
   });
   App.addListener("appStateChange", st=>{
-    if(!st.isActive){ try{ save(); }catch(e){} if(AU.ctx) AU.ctx.suspend(); }
+    if(!st.isActive){ try{ save(); if(typeof cloudPush === "function") cloudPush(); }catch(e){} if(AU.ctx) AU.ctx.suspend(); }
     else if(AU.ctx) AU.ctx.resume();
   });
 })();

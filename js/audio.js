@@ -171,7 +171,7 @@ let auWant = null, auWantT = 0;
 setInterval(()=>{
   if(!AU.ctx || typeof state === "undefined" || !state) return;
   const over = document.getElementById("gameover").style.display === "flex";
-  const id = over ? "over" : (typeof combat !== "undefined" && combat) ? "combat" : state.intro ? "z0:earth" : auRegion();
+  const id = over ? "over" : (typeof combat !== "undefined" && combat) ? "combat" : state.intro || document.body.classList.contains("on-title") ? "z0:earth" : auRegion();
   if(id !== auWant){ auWant = id; auWantT = 0; }
   auWantT += 0.5;
   if(!AU.track || id === "over" || id === "combat" || AU.track.id === "combat" || AU.track.id === "over" || auWantT >= 3) auPlayTrack(id);

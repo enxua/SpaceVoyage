@@ -29,7 +29,9 @@ function freshState(){
     intro:true, theme:"paper", mute:false, ended:false,
   };
 }
-function save(){ try{ state.docked = dockedAt; const j = JSON.stringify(state); localStorage.setItem("voyage_space_save", j); guardSaveSig(j); }catch(e){} }
+function save(){ if(typeof saveBlocked !== "undefined" && saveBlocked) return;          /* 클라우드 기록을 덮어쓰는 중·초기화 중에는 저장하지 않는다 */
+  try{ state.docked = dockedAt; state.savedAt = Date.now(); const j = JSON.stringify(state); localStorage.setItem("voyage_space_save", j); guardSaveSig(j);
+    if(typeof cloudMark === "function") cloudMark(); }catch(e){} }
 let guardNotice = false;                                          /* 세이브 변조가 감지되어 되돌렸는지 */
 function load(){
   const f = freshState();
@@ -1289,7 +1291,7 @@ function toggleTheme(){
   document.body.style.background = T.bg; document.body.classList.toggle("dark", T.dark); buildWorld(); save();
 }
 function toggleMute(){ state.mute = !state.mute; $("muteBtn").textContent = state.mute?"🔇":"🔊"; auApplyVolume(); save(); }
-function startGame(quiet){ rememberLang(); state.intro = false; $("intro").style.display = "none"; if(!quiet) sfx("warp"); storyOnce("prologue"); save(); }   /* quiet: 처음 화면 연출(js/intro.js)이 이미 소리를 냈다 */
+function startGame(quiet){ rememberLang(); state.intro = false; $("intro").style.display = "none"; titleOff(); if(!quiet) sfx("warp"); storyOnce("prologue"); save(); }   /* quiet: 처음 화면 연출(js/intro.js)이 이미 소리를 냈다 */
 function init(){
   i18nStatic(); $("langPick").innerHTML = langButtons(); setTimeout(fitLabels, 0);        /* 고정 문구 번역 + 처음 화면의 언어 고르기 */
   const had = load();
@@ -1315,7 +1317,7 @@ function init(){
     state.visited = state.visited.filter(i=>i !== "sun"); }
   { const st = eff(); state.fuel = Math.min(state.fuel, st.sup); state.o2 = Math.min(state.o2, st.sup); }   /* 탱크 용량 변경 반영 */
   cam.x = state.x; cam.y = state.y;
-  if(had && !state.intro) $("intro").style.display = "none";
+  if(had && !state.intro) $("intro").style.display = "none"; else document.body.classList.add("on-title");
   $("muteBtn").textContent = state.mute?"🔇":"🔊";
   updateHUD(); requestAnimationFrame(loop);
   if(guardNotice) setTimeout(()=>toast(__("⚠️ 세이브 파일이 변조되어 이전 정상 기록으로 되돌렸습니다")), 1500);

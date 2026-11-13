@@ -5248,5 +5248,565 @@
   "ja": "この端末ではGoogle Playの決済を利用できません",
   "zhs": "此设备无法使用 Google Play 结算",
   "zht": "此裝置無法使用 Google Play 結帳"
+ },
+ "⚙️ 설정": {
+  "en": "⚙️ Settings",
+  "es": "⚙️ Ajustes",
+  "fr": "⚙️ Paramètres",
+  "it": "⚙️ Impostazioni",
+  "pt": "⚙️ Configurações",
+  "ja": "⚙️ 設定",
+  "zhs": "⚙️ 设置",
+  "zht": "⚙️ 設定"
+ },
+ "계정": {
+  "en": "Account",
+  "es": "Cuenta",
+  "fr": "Compte",
+  "it": "Account",
+  "pt": "Conta",
+  "ja": "アカウント",
+  "zhs": "账号",
+  "zht": "帳號"
+ },
+ "소리": {
+  "en": "Sound",
+  "es": "Sonido",
+  "fr": "Son",
+  "it": "Audio",
+  "pt": "Som",
+  "ja": "サウンド",
+  "zhs": "声音",
+  "zht": "聲音"
+ },
+ "배경 음악 {0}% · 효과음 {1}%": {
+  "en": "Music {0}% · Effects {1}%",
+  "es": "Música {0}% · Efectos {1}%",
+  "fr": "Musique {0}% · Effets {1}%",
+  "it": "Musica {0}% · Effetti {1}%",
+  "pt": "Música {0}% · Efeitos {1}%",
+  "ja": "BGM {0}% · 効果音 {1}%",
+  "zhs": "音乐 {0}% · 音效 {1}%",
+  "zht": "音樂 {0}% · 音效 {1}%"
+ },
+ "🎚 소리·화면 효과 자세히": {
+  "en": "🎚 Sound & screen effects",
+  "es": "🎚 Sonido y efectos de pantalla",
+  "fr": "🎚 Son et effets visuels",
+  "it": "🎚 Audio ed effetti visivi",
+  "pt": "🎚 Som e efeitos de tela",
+  "ja": "🎚 サウンド・画面効果の詳細",
+  "zhs": "🎚 声音与画面效果",
+  "zht": "🎚 聲音與畫面效果"
+ },
+ "게임": {
+  "en": "Game",
+  "es": "Juego",
+  "fr": "Jeu",
+  "it": "Gioco",
+  "pt": "Jogo",
+  "ja": "ゲーム",
+  "zhs": "游戏",
+  "zht": "遊戲"
+ },
+ "진행 상황을 저장하고 처음 화면으로 돌아갑니다. 발진을 누르면 이어서 합니다.": {
+  "en": "Saves your progress and returns to the title screen. Press Launch to continue.",
+  "es": "Guarda tu progreso y vuelve a la pantalla de inicio. Pulsa Despegar para continuar.",
+  "fr": "Sauvegarde votre progression et revient à l’écran titre. Appuyez sur Décollage pour continuer.",
+  "it": "Salva i progressi e torna alla schermata iniziale. Premi Decollo per continuare.",
+  "pt": "Salva seu progresso e volta à tela inicial. Toque em Decolar para continuar.",
+  "ja": "進行状況を保存してタイトル画面に戻ります。発進を押すと続きから遊べます。",
+  "zhs": "保存进度并返回标题画面。点击出发即可继续。",
+  "zht": "儲存進度並返回標題畫面。點擊啟航即可繼續。"
+ },
+ "🏠 초기 화면으로": {
+  "en": "🏠 Title screen",
+  "es": "🏠 Pantalla de inicio",
+  "fr": "🏠 Écran titre",
+  "it": "🏠 Schermata iniziale",
+  "pt": "🏠 Tela inicial",
+  "ja": "🏠 タイトル画面へ",
+  "zhs": "🏠 返回标题画面",
+  "zht": "🏠 返回標題畫面"
+ },
+ "데이터": {
+  "en": "Data",
+  "es": "Datos",
+  "fr": "Données",
+  "it": "Dati",
+  "pt": "Dados",
+  "ja": "データ",
+  "zhs": "数据",
+  "zht": "資料"
+ },
+ "⚠️ 데이터 초기화": {
+  "en": "⚠️ Reset data",
+  "es": "⚠️ Restablecer datos",
+  "fr": "⚠️ Réinitialiser les données",
+  "it": "⚠️ Ripristina dati",
+  "pt": "⚠️ Redefinir dados",
+  "ja": "⚠️ データ初期化",
+  "zhs": "⚠️ 重置数据",
+  "zht": "⚠️ 重設資料"
+ },
+ "모든 진행 상황을 지우고 처음부터 다시 시작합니다. 되돌릴 수 없습니다.": {
+  "en": "Erases all progress and starts over from the beginning. This can’t be undone.",
+  "es": "Borra todo el progreso y empieza desde el principio. No se puede deshacer.",
+  "fr": "Efface toute la progression et recommence depuis le début. Action irréversible.",
+  "it": "Cancella tutti i progressi e ricomincia dall’inizio. Non si può annullare.",
+  "pt": "Apaga todo o progresso e recomeça do início. Não pode ser desfeito.",
+  "ja": "すべての進行状況を消して最初からやり直します。元に戻せません。",
+  "zhs": "清除所有进度并从头开始。此操作无法撤销。",
+  "zht": "清除所有進度並從頭開始。此操作無法復原。"
+ },
+ "데이터 초기화": {
+  "en": "Reset data",
+  "es": "Restablecer datos",
+  "fr": "Réinitialiser",
+  "it": "Ripristina dati",
+  "pt": "Redefinir dados",
+  "ja": "データ初期化",
+  "zhs": "重置数据",
+  "zht": "重設資料"
+ },
+ "전투 중에는 처음 화면으로 갈 수 없습니다": {
+  "en": "You can’t return to the title screen during combat",
+  "es": "No puedes volver a la pantalla de inicio durante un combate",
+  "fr": "Impossible de revenir à l’écran titre pendant un combat",
+  "it": "Non puoi tornare alla schermata iniziale durante un combattimento",
+  "pt": "Não é possível voltar à tela inicial durante um combate",
+  "ja": "戦闘中はタイトル画面に戻れません",
+  "zhs": "战斗中无法返回标题画面",
+  "zht": "戰鬥中無法返回標題畫面"
+ },
+ "초기화": {
+  "en": "RESET",
+  "es": "BORRAR",
+  "fr": "EFFACER",
+  "it": "RESET",
+  "pt": "APAGAR",
+  "ja": "初期化",
+  "zhs": "重置",
+  "zht": "重設"
+ },
+ "정말 처음부터 다시 시작할까요?": {
+  "en": "Really start over from the beginning?",
+  "es": "¿Seguro que quieres empezar de nuevo?",
+  "fr": "Vraiment tout recommencer ?",
+  "it": "Vuoi davvero ricominciare da capo?",
+  "pt": "Quer mesmo recomeçar do início?",
+  "ja": "本当に最初からやり直しますか?",
+  "zhs": "确定要从头开始吗?",
+  "zht": "確定要從頭開始嗎?"
+ },
+ "지워지는 것: 크레딧·보석·연구 데이터, 함선과 승무원, 발견한 천체, 임무·업적, 이야기 진행": {
+  "en": "Erased: credits, gems, research data, ships and crew, discovered bodies, missions, achievements and story progress",
+  "es": "Se borra: créditos, gemas, datos de investigación, naves y tripulación, astros descubiertos, misiones, logros y progreso de la historia",
+  "fr": "Effacé : crédits, gemmes, données de recherche, vaisseaux et équipage, astres découverts, missions, succès et progression de l’histoire",
+  "it": "Cancellati: crediti, gemme, dati di ricerca, navi ed equipaggio, corpi celesti scoperti, missioni, obiettivi e progressi della storia",
+  "pt": "Apagado: créditos, gemas, dados de pesquisa, naves e tripulação, astros descobertos, missões, conquistas e progresso da história",
+  "ja": "消えるもの: クレジット・宝石・研究データ、艦船と乗組員、発見した天体、任務・実績、ストーリーの進行",
+  "zhs": "将被清除: 信用点、宝石、研究数据、舰船与船员、已发现的天体、任务与成就、剧情进度",
+  "zht": "將被清除: 信用點、寶石、研究資料、艦船與船員、已發現的天體、任務與成就、劇情進度"
+ },
+ "남는 것: 광고 제거 이용권, 누적 결제 등급, 소리·화면·언어 설정": {
+  "en": "Kept: ad removal pass, total purchase tier, and sound, display and language settings",
+  "es": "Se conserva: pase sin anuncios, nivel de compras acumuladas y ajustes de sonido, pantalla e idioma",
+  "fr": "Conservé : pass sans publicité, niveau d’achats cumulés et réglages du son, de l’affichage et de la langue",
+  "it": "Mantenuti: pass senza pubblicità, livello acquisti totali e impostazioni di audio, schermo e lingua",
+  "pt": "Mantido: passe sem anúncios, nível de compras acumuladas e configurações de som, tela e idioma",
+  "ja": "残るもの: 広告除去パス、累計購入ランク、サウンド・画面・言語の設定",
+  "zhs": "将保留: 去广告权益、累计充值等级、声音·画面·语言设置",
+  "zht": "將保留: 去廣告權益、累計儲值等級、聲音·畫面·語言設定"
+ },
+ "구글 Play 게임즈에 저장된 클라우드 기록도 초기화됩니다.": {
+  "en": "Your cloud save on Google Play Games will be reset too.",
+  "es": "También se restablecerá tu partida en la nube de Google Play Juegos.",
+  "fr": "Votre sauvegarde cloud sur Google Play Jeux sera aussi réinitialisée.",
+  "it": "Verrà ripristinato anche il salvataggio cloud su Google Play Giochi.",
+  "pt": "Seu salvamento na nuvem do Google Play Games também será redefinido.",
+  "ja": "Google Play ゲームズのクラウドセーブも初期化されます。",
+  "zhs": "Google Play 游戏中的云端存档也会被重置。",
+  "zht": "Google Play 遊戲中的雲端存檔也會被重設。"
+ },
+ "계속하려면 아래 칸에 <b>{0}</b> 을(를) 입력하세요.": {
+  "en": "To continue, type <b>{0}</b> in the box below.",
+  "es": "Para continuar, escribe <b>{0}</b> en el campo de abajo.",
+  "fr": "Pour continuer, tapez <b>{0}</b> dans le champ ci-dessous.",
+  "it": "Per continuare, scrivi <b>{0}</b> nel campo qui sotto.",
+  "pt": "Para continuar, digite <b>{0}</b> no campo abaixo.",
+  "ja": "続けるには下の欄に <b>{0}</b> と入力してください。",
+  "zhs": "如要继续,请在下方输入 <b>{0}</b>。",
+  "zht": "如要繼續,請在下方輸入 <b>{0}</b>。"
+ },
+ "초기화하고 처음부터 시작": {
+  "en": "Reset and start over",
+  "es": "Restablecer y empezar de nuevo",
+  "fr": "Réinitialiser et recommencer",
+  "it": "Ripristina e ricomincia",
+  "pt": "Redefinir e recomeçar",
+  "ja": "初期化して最初から始める",
+  "zhs": "重置并从头开始",
+  "zht": "重設並從頭開始"
+ },
+ "취소": {
+  "en": "Cancel",
+  "es": "Cancelar",
+  "fr": "Annuler",
+  "it": "Annulla",
+  "pt": "Cancelar",
+  "ja": "キャンセル",
+  "zhs": "取消",
+  "zht": "取消"
+ },
+ "클라우드 기록을 읽지 못했습니다. 잠시 뒤 다시 시도하세요": {
+  "en": "Couldn’t read your cloud save. Please try again later.",
+  "es": "No se pudo leer la partida en la nube. Inténtalo más tarde.",
+  "fr": "Impossible de lire la sauvegarde cloud. Réessayez plus tard.",
+  "it": "Impossibile leggere il salvataggio cloud. Riprova più tardi.",
+  "pt": "Não foi possível ler o salvamento na nuvem. Tente mais tarde.",
+  "ja": "クラウドセーブを読み込めませんでした。しばらくしてからお試しください",
+  "zhs": "无法读取云端存档,请稍后再试",
+  "zht": "無法讀取雲端存檔,請稍後再試"
+ },
+ "클라우드에 저장된 기록이 없습니다": {
+  "en": "No cloud save found",
+  "es": "No hay ninguna partida en la nube",
+  "fr": "Aucune sauvegarde cloud",
+  "it": "Nessun salvataggio cloud",
+  "pt": "Nenhum salvamento na nuvem",
+  "ja": "クラウドセーブがありません",
+  "zhs": "云端没有存档",
+  "zht": "雲端沒有存檔"
+ },
+ "저장: {0}": {
+  "en": "Saved: {0}",
+  "es": "Guardado: {0}",
+  "fr": "Sauvegardé : {0}",
+  "it": "Salvato: {0}",
+  "pt": "Salvo: {0}",
+  "ja": "保存: {0}",
+  "zhs": "保存于: {0}",
+  "zht": "儲存於: {0}"
+ },
+ "☁️ 저장 기록 고르기": {
+  "en": "☁️ Choose a save",
+  "es": "☁️ Elige una partida",
+  "fr": "☁️ Choisir une sauvegarde",
+  "it": "☁️ Scegli un salvataggio",
+  "pt": "☁️ Escolha um salvamento",
+  "ja": "☁️ セーブデータを選択",
+  "zhs": "☁️ 选择存档",
+  "zht": "☁️ 選擇存檔"
+ },
+ "클라우드와 이 기기의 기록이 다릅니다. 이어서 할 기록을 고르세요. 고르지 않은 기록은 사라집니다.": {
+  "en": "Your cloud save and this device’s save are different. Choose which one to continue. The other will be lost.",
+  "es": "La partida en la nube y la de este dispositivo son distintas. Elige con cuál continuar. La otra se perderá.",
+  "fr": "La sauvegarde cloud et celle de cet appareil diffèrent. Choisissez celle à poursuivre. L’autre sera perdue.",
+  "it": "Il salvataggio cloud e quello di questo dispositivo sono diversi. Scegli quale continuare. L’altro andrà perso.",
+  "pt": "O salvamento na nuvem e o deste aparelho são diferentes. Escolha qual continuar. O outro será perdido.",
+  "ja": "クラウドとこの端末のセーブが異なります。続けるセーブを選んでください。選ばなかった方は消えます。",
+  "zhs": "云端存档与本设备存档不同。请选择要继续的存档,未选择的存档将被删除。",
+  "zht": "雲端存檔與本裝置存檔不同。請選擇要繼續的存檔,未選擇的存檔將被刪除。"
+ },
+ "클라우드 기록": {
+  "en": "Cloud save",
+  "es": "Partida en la nube",
+  "fr": "Sauvegarde cloud",
+  "it": "Salvataggio cloud",
+  "pt": "Salvamento na nuvem",
+  "ja": "クラウドのセーブ",
+  "zhs": "云端存档",
+  "zht": "雲端存檔"
+ },
+ "클라우드 기록으로 하기": {
+  "en": "Use cloud save",
+  "es": "Usar la partida en la nube",
+  "fr": "Utiliser la sauvegarde cloud",
+  "it": "Usa il salvataggio cloud",
+  "pt": "Usar salvamento na nuvem",
+  "ja": "クラウドのセーブを使う",
+  "zhs": "使用云端存档",
+  "zht": "使用雲端存檔"
+ },
+ "이 기기 기록": {
+  "en": "This device’s save",
+  "es": "Partida de este dispositivo",
+  "fr": "Sauvegarde de cet appareil",
+  "it": "Salvataggio di questo dispositivo",
+  "pt": "Salvamento deste aparelho",
+  "ja": "この端末のセーブ",
+  "zhs": "本设备存档",
+  "zht": "本裝置存檔"
+ },
+ "이 기기 기록으로 하기": {
+  "en": "Use this device’s save",
+  "es": "Usar la partida de este dispositivo",
+  "fr": "Utiliser celle de cet appareil",
+  "it": "Usa quello di questo dispositivo",
+  "pt": "Usar o deste aparelho",
+  "ja": "この端末のセーブを使う",
+  "zhs": "使用本设备存档",
+  "zht": "使用本裝置存檔"
+ },
+ "☁️ 이 기기 기록을 클라우드에 저장했습니다": {
+  "en": "☁️ Saved this device’s progress to the cloud",
+  "es": "☁️ Se guardó la partida de este dispositivo en la nube",
+  "fr": "☁️ Progression de cet appareil enregistrée dans le cloud",
+  "it": "☁️ Progressi di questo dispositivo salvati nel cloud",
+  "pt": "☁️ Progresso deste aparelho salvo na nuvem",
+  "ja": "☁️ この端末のセーブをクラウドに保存しました",
+  "zhs": "☁️ 已将本设备存档保存到云端",
+  "zht": "☁️ 已將本裝置存檔儲存到雲端"
+ },
+ "🎁 계정 연동 보상": {
+  "en": "🎁 Account link reward",
+  "es": "🎁 Recompensa por vincular la cuenta",
+  "fr": "🎁 Récompense de liaison du compte",
+  "it": "🎁 Ricompensa per il collegamento",
+  "pt": "🎁 Recompensa por vincular a conta",
+  "ja": "🎁 アカウント連携報酬",
+  "zhs": "🎁 账号关联奖励",
+  "zht": "🎁 帳號連結獎勵"
+ },
+ "구글 Play 게임즈 연동을 마쳤습니다": {
+  "en": "Linked to Google Play Games",
+  "es": "Vinculado con Google Play Juegos",
+  "fr": "Lié à Google Play Jeux",
+  "it": "Collegato a Google Play Giochi",
+  "pt": "Vinculado ao Google Play Games",
+  "ja": "Google Play ゲームズとの連携が完了しました",
+  "zhs": "已关联 Google Play 游戏",
+  "zht": "已連結 Google Play 遊戲"
+ },
+ "이제 진행 정보가 구글 계정에 저장됩니다. 기기를 바꿔도 이어서 할 수 있습니다.": {
+  "en": "Your progress is now saved to your Google account. You can continue even on a new device.",
+  "es": "Tu progreso ahora se guarda en tu cuenta de Google. Puedes continuar incluso en otro dispositivo.",
+  "fr": "Votre progression est désormais enregistrée sur votre compte Google. Vous pourrez continuer même sur un autre appareil.",
+  "it": "Ora i tuoi progressi sono salvati nel tuo account Google. Puoi continuare anche su un nuovo dispositivo.",
+  "pt": "Agora seu progresso fica salvo na sua conta Google. Você pode continuar mesmo em outro aparelho.",
+  "ja": "進行状況がGoogleアカウントに保存されるようになりました。端末を替えても続きから遊べます。",
+  "zhs": "进度将保存到你的 Google 账号,更换设备也能继续游戏。",
+  "zht": "進度將儲存到你的 Google 帳號,更換裝置也能繼續遊戲。"
+ },
+ "받기": {
+  "en": "Claim",
+  "es": "Recibir",
+  "fr": "Récupérer",
+  "it": "Riscuoti",
+  "pt": "Receber",
+  "ja": "受け取る",
+  "zhs": "领取",
+  "zht": "領取"
+ },
+ "구글 Play 게임즈에 로그인하지 못했습니다": {
+  "en": "Couldn’t sign in to Google Play Games",
+  "es": "No se pudo iniciar sesión en Google Play Juegos",
+  "fr": "Connexion à Google Play Jeux impossible",
+  "it": "Impossibile accedere a Google Play Giochi",
+  "pt": "Não foi possível entrar no Google Play Games",
+  "ja": "Google Play ゲームズにログインできませんでした",
+  "zhs": "无法登录 Google Play 游戏",
+  "zht": "無法登入 Google Play 遊戲"
+ },
+ "✅ {0} 계정과 연동했습니다": {
+  "en": "✅ Linked with {0}",
+  "es": "✅ Vinculado con {0}",
+  "fr": "✅ Lié à {0}",
+  "it": "✅ Collegato a {0}",
+  "pt": "✅ Vinculado a {0}",
+  "ja": "✅ {0} と連携しました",
+  "zhs": "✅ 已与 {0} 关联",
+  "zht": "✅ 已與 {0} 連結"
+ },
+ "연동을 해제했습니다. 이 기기의 기록은 그대로 남습니다": {
+  "en": "Unlinked. Your progress on this device stays as it is.",
+  "es": "Cuenta desvinculada. El progreso de este dispositivo se mantiene.",
+  "fr": "Compte délié. La progression de cet appareil est conservée.",
+  "it": "Collegamento rimosso. I progressi su questo dispositivo restano invariati.",
+  "pt": "Conta desvinculada. O progresso deste aparelho continua salvo.",
+  "ja": "連携を解除しました。この端末の進行状況はそのまま残ります",
+  "zhs": "已解除关联,本设备的进度将保留",
+  "zht": "已解除連結,本裝置的進度將保留"
+ },
+ "☁️ 클라우드에 저장했습니다": {
+  "en": "☁️ Saved to the cloud",
+  "es": "☁️ Guardado en la nube",
+  "fr": "☁️ Enregistré dans le cloud",
+  "it": "☁️ Salvato nel cloud",
+  "pt": "☁️ Salvo na nuvem",
+  "ja": "☁️ クラウドに保存しました",
+  "zhs": "☁️ 已保存到云端",
+  "zht": "☁️ 已儲存到雲端"
+ },
+ "클라우드에 저장하지 못했습니다. 잠시 뒤 다시 시도하세요": {
+  "en": "Couldn’t save to the cloud. Please try again later.",
+  "es": "No se pudo guardar en la nube. Inténtalo más tarde.",
+  "fr": "Impossible d’enregistrer dans le cloud. Réessayez plus tard.",
+  "it": "Impossibile salvare nel cloud. Riprova più tardi.",
+  "pt": "Não foi possível salvar na nuvem. Tente mais tarde.",
+  "ja": "クラウドに保存できませんでした。しばらくしてからお試しください",
+  "zhs": "无法保存到云端,请稍后再试",
+  "zht": "無法儲存到雲端,請稍後再試"
+ },
+ "구글 Play 게임즈 연동은 안드로이드 앱에서 사용할 수 있습니다.": {
+  "en": "Google Play Games linking is available in the Android app.",
+  "es": "La vinculación con Google Play Juegos está disponible en la app de Android.",
+  "fr": "La liaison à Google Play Jeux est disponible dans l’app Android.",
+  "it": "Il collegamento a Google Play Giochi è disponibile nell’app Android.",
+  "pt": "A vinculação ao Google Play Games está disponível no app Android.",
+  "ja": "Google Play ゲームズ連携はAndroidアプリで利用できます。",
+  "zhs": "Google Play 游戏关联功能仅限 Android 应用使用。",
+  "zht": "Google Play 遊戲連結功能僅限 Android 應用程式使用。"
+ },
+ "🎮 구글 Play 게임즈 연동": {
+  "en": "🎮 Link Google Play Games",
+  "es": "🎮 Vincular Google Play Juegos",
+  "fr": "🎮 Lier Google Play Jeux",
+  "it": "🎮 Collega Google Play Giochi",
+  "pt": "🎮 Vincular Google Play Games",
+  "ja": "🎮 Google Play ゲームズ連携",
+  "zhs": "🎮 关联 Google Play 游戏",
+  "zht": "🎮 連結 Google Play 遊戲"
+ },
+ "연동하면 진행 정보가 구글 계정에 저장되어, 기기를 바꾸거나 앱을 다시 설치해도 이어서 할 수 있습니다.": {
+  "en": "Link to save your progress to your Google account, so you can continue after switching devices or reinstalling the app.",
+  "es": "Vincula tu cuenta para guardar el progreso en Google y continuar aunque cambies de dispositivo o reinstales la app.",
+  "fr": "Liez votre compte pour enregistrer votre progression sur Google et continuer même après un changement d’appareil ou une réinstallation.",
+  "it": "Collega l’account per salvare i progressi su Google e continuare anche cambiando dispositivo o reinstallando l’app.",
+  "pt": "Vincule para salvar seu progresso na conta Google e continuar mesmo trocando de aparelho ou reinstalando o app.",
+  "ja": "連携すると進行状況がGoogleアカウントに保存され、機種変更やアプリの再インストール後も続きから遊べます。",
+  "zhs": "关联后进度会保存到 Google 账号,更换设备或重新安装应用后也能继续游戏。",
+  "zht": "連結後進度會儲存到 Google 帳號,更換裝置或重新安裝應用程式後也能繼續遊戲。"
+ },
+ "첫 연동 보상: 💎 {0} · 💠 {1}": {
+  "en": "First link reward: 💎 {0} · 💠 {1}",
+  "es": "Recompensa por la primera vinculación: 💎 {0} · 💠 {1}",
+  "fr": "Récompense de première liaison : 💎 {0} · 💠 {1}",
+  "it": "Ricompensa primo collegamento: 💎 {0} · 💠 {1}",
+  "pt": "Recompensa da primeira vinculação: 💎 {0} · 💠 {1}",
+  "ja": "初回連携報酬: 💎 {0} · 💠 {1}",
+  "zhs": "首次关联奖励: 💎 {0} · 💠 {1}",
+  "zht": "首次連結獎勵: 💎 {0} · 💠 {1}"
+ },
+ "🔗 계정 연동": {
+  "en": "🔗 Link account",
+  "es": "🔗 Vincular cuenta",
+  "fr": "🔗 Lier le compte",
+  "it": "🔗 Collega account",
+  "pt": "🔗 Vincular conta",
+  "ja": "🔗 アカウント連携",
+  "zhs": "🔗 关联账号",
+  "zht": "🔗 連結帳號"
+ },
+ "✅ 연동됨": {
+  "en": "✅ Linked",
+  "es": "✅ Vinculado",
+  "fr": "✅ Lié",
+  "it": "✅ Collegato",
+  "pt": "✅ Vinculado",
+  "ja": "✅ 連携済み",
+  "zhs": "✅ 已关联",
+  "zht": "✅ 已連結"
+ },
+ "이번 실행에서는 아직 없음": {
+  "en": "not yet this session",
+  "es": "aún no en esta sesión",
+  "fr": "pas encore cette session",
+  "it": "non ancora in questa sessione",
+  "pt": "ainda não nesta sessão",
+  "ja": "今回の起動ではまだなし",
+  "zhs": "本次运行尚未保存",
+  "zht": "本次執行尚未儲存"
+ },
+ "마지막 클라우드 저장: {0}": {
+  "en": "Last cloud save: {0}",
+  "es": "Último guardado en la nube: {0}",
+  "fr": "Dernière sauvegarde cloud : {0}",
+  "it": "Ultimo salvataggio cloud: {0}",
+  "pt": "Último salvamento na nuvem: {0}",
+  "ja": "最後のクラウド保存: {0}",
+  "zhs": "上次云端保存: {0}",
+  "zht": "上次雲端儲存: {0}"
+ },
+ "☁️ 지금 저장": {
+  "en": "☁️ Save now",
+  "es": "☁️ Guardar ahora",
+  "fr": "☁️ Enregistrer",
+  "it": "☁️ Salva ora",
+  "pt": "☁️ Salvar agora",
+  "ja": "☁️ 今すぐ保存",
+  "zhs": "☁️ 立即保存",
+  "zht": "☁️ 立即儲存"
+ },
+ "⬇️ 클라우드에서 불러오기": {
+  "en": "⬇️ Load from cloud",
+  "es": "⬇️ Cargar desde la nube",
+  "fr": "⬇️ Charger depuis le cloud",
+  "it": "⬇️ Carica dal cloud",
+  "pt": "⬇️ Carregar da nuvem",
+  "ja": "⬇️ クラウドから読み込む",
+  "zhs": "⬇️ 从云端读取",
+  "zht": "⬇️ 從雲端讀取"
+ },
+ "연동 해제": {
+  "en": "Unlink",
+  "es": "Desvincular",
+  "fr": "Délier",
+  "it": "Scollega",
+  "pt": "Desvincular",
+  "ja": "連携解除",
+  "zhs": "解除关联",
+  "zht": "解除連結"
+ },
+ "구글 계정 로그아웃이나 계정 변경은 Play 게임즈 앱에서 할 수 있습니다. 연동 해제는 이 기기에서 클라우드 저장만 멈춥니다.": {
+  "en": "To sign out or switch Google accounts, use the Play Games app. Unlinking only stops cloud saving on this device.",
+  "es": "Para cerrar sesión o cambiar de cuenta de Google, usa la app Play Juegos. Desvincular solo detiene el guardado en la nube en este dispositivo.",
+  "fr": "Pour vous déconnecter ou changer de compte Google, utilisez l’app Play Jeux. Délier arrête seulement la sauvegarde cloud sur cet appareil.",
+  "it": "Per uscire o cambiare account Google usa l’app Play Giochi. Scollegando si interrompe solo il salvataggio cloud su questo dispositivo.",
+  "pt": "Para sair ou trocar de conta Google, use o app Play Games. Desvincular só interrompe o salvamento na nuvem neste aparelho.",
+  "ja": "Googleアカウントのログアウトや切り替えはPlay ゲームズアプリで行えます。連携解除はこの端末のクラウド保存を止めるだけです。",
+  "zhs": "如需退出或切换 Google 账号,请使用 Play 游戏应用。解除关联只会停止本设备的云端保存。",
+  "zht": "如需登出或切換 Google 帳號,請使用 Play 遊戲應用程式。解除連結只會停止本裝置的雲端儲存。"
+ },
+ "🎮 구글 Play 게임즈 연동 - 💎 {0} 보상": {
+  "en": "🎮 Link Google Play Games - 💎 {0} reward",
+  "es": "🎮 Vincula Google Play Juegos - 💎 {0} de recompensa",
+  "fr": "🎮 Lier Google Play Jeux - 💎 {0} offerts",
+  "it": "🎮 Collega Google Play Giochi - 💎 {0} in regalo",
+  "pt": "🎮 Vincular Google Play Games - 💎 {0} de recompensa",
+  "ja": "🎮 Google Play ゲームズ連携 - 💎 {0} 報酬",
+  "zhs": "🎮 关联 Google Play 游戏 - 奖励 💎 {0}",
+  "zht": "🎮 連結 Google Play 遊戲 - 獎勵 💎 {0}"
+ },
+ "☁️ 클라우드에 저장된 기록을 불러왔습니다": {
+  "en": "☁️ Loaded your cloud save",
+  "es": "☁️ Se cargó tu partida de la nube",
+  "fr": "☁️ Sauvegarde cloud chargée",
+  "it": "☁️ Salvataggio cloud caricato",
+  "pt": "☁️ Salvamento na nuvem carregado",
+  "ja": "☁️ クラウドセーブを読み込みました",
+  "zhs": "☁️ 已读取云端存档",
+  "zht": "☁️ 已讀取雲端存檔"
+ },
+ "설정 · 계정 · 언어": {
+  "en": "Settings · Account · Language",
+  "es": "Ajustes · Cuenta · Idioma",
+  "fr": "Paramètres · Compte · Langue",
+  "it": "Impostazioni · Account · Lingua",
+  "pt": "Configurações · Conta · Idioma",
+  "ja": "設定 · アカウント · 言語",
+  "zhs": "设置 · 账号 · 语言",
+  "zht": "設定 · 帳號 · 語言"
+ },
+ "설정": {
+  "en": "Settings",
+  "es": "Ajustes",
+  "fr": "Paramètres",
+  "it": "Impostazioni",
+  "pt": "Configurações",
+  "ja": "設定",
+  "zhs": "设置",
+  "zht": "設定"
  }
 }

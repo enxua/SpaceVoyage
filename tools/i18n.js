@@ -11,7 +11,7 @@
    새 문구를 추가한 뒤: tag → extract → todo/번역 추가 → check 순서로 돌린다. */
 const fs = require("fs"), path = require("path");
 const ROOT = path.resolve(__dirname, "..");
-const JS_FILES = ["js/data.js", "js/guard.js", "js/game.js", "js/ui.js", "js/fx.js", "js/world.js", "js/fate.js", "js/ads.js", "js/admob.js", "js/billing.js", "js/chat.js", "js/cuts.js", "js/story.js", "js/audio.js", "js/mobile.js"];
+const JS_FILES = ["js/data.js", "js/guard.js", "js/game.js", "js/ui.js", "js/fx.js", "js/world.js", "js/fate.js", "js/ads.js", "js/admob.js", "js/billing.js", "js/cloud.js", "js/chat.js", "js/cuts.js", "js/story.js", "js/audio.js", "js/mobile.js"];
 const LANGS = ["en", "es", "fr", "it", "pt", "ja", "zhs", "zht"];
 const HANGUL = /[가-힣]/;
 const INLINE = new Set(["b", "i", "br", "span", "em", "strong", "small"]);     /* 문장 안에 섞여 있어도 문장을 끊지 않는 태그 */

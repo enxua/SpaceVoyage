@@ -7,5 +7,5 @@
     <!-- AdMob 앱 ID (AdMob 콘솔: To the Edge of Space: VOYAGE) -->
     <string name="admob_app_id" translatable="false">ca-app-pub-4021465850940162~3839563180</string>
     <!-- Play 게임즈 서비스 프로젝트 ID (플레이 콘솔 > Play 게임즈 서비스 > 설정 및 관리 > 구성) -->
-    <string name="game_services_project_id" translatable="false">000000000000</string>
+    <string name="game_services_project_id" translatable="false">1002432850795</string>
 </resources>

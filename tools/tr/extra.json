@@ -5238,5 +5238,15 @@
   "ja": "♾️ 広告削除（無期限）の購入を復元しました",
   "zhs": "♾️ 已恢复永久免广告购买记录",
   "zht": "♾️ 已恢復永久免廣告購買紀錄"
+ },
+ "이 기기에서는 구글 플레이 결제를 사용할 수 없습니다": {
+  "en": "Google Play billing isn't available on this device",
+  "es": "La facturación de Google Play no está disponible en este dispositivo",
+  "fr": "La facturation Google Play n'est pas disponible sur cet appareil",
+  "it": "La fatturazione di Google Play non è disponibile su questo dispositivo",
+  "pt": "O faturamento do Google Play não está disponível neste dispositivo",
+  "ja": "この端末ではGoogle Playの決済を利用できません",
+  "zhs": "此设备无法使用 Google Play 结算",
+  "zht": "此裝置無法使用 Google Play 結帳"
  }
 }

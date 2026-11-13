@@ -2067,4 +2067,5 @@ I18N.it = {"일반":"Comune",
 "결제를 취소했습니다":"Pagamento annullato",
 "이미 구매한 상품입니다":"Possiedi già questo articolo",
 "결제를 완료하지 못했습니다. 잠시 후 다시 시도해 주세요":"Impossibile completare il pagamento. Riprova più tardi.",
-"♾️ 광고 제거 무제한 구매 내역을 되살렸습니다":"♾️ Acquisto Rimozione annunci illimitata ripristinato"};
+"♾️ 광고 제거 무제한 구매 내역을 되살렸습니다":"♾️ Acquisto Rimozione annunci illimitata ripristinato",
+"이 기기에서는 구글 플레이 결제를 사용할 수 없습니다":"La fatturazione di Google Play non è disponibile su questo dispositivo"};

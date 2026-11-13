@@ -2067,4 +2067,5 @@ I18N.en = {"일반":"Common",
 "결제를 취소했습니다":"Payment canceled",
 "이미 구매한 상품입니다":"You already own this item",
 "결제를 완료하지 못했습니다. 잠시 후 다시 시도해 주세요":"Couldn't complete the payment. Please try again later.",
-"♾️ 광고 제거 무제한 구매 내역을 되살렸습니다":"♾️ Restored your Unlimited Ad Removal purchase"};
+"♾️ 광고 제거 무제한 구매 내역을 되살렸습니다":"♾️ Restored your Unlimited Ad Removal purchase",
+"이 기기에서는 구글 플레이 결제를 사용할 수 없습니다":"Google Play billing isn't available on this device"};

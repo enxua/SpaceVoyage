@@ -7,14 +7,14 @@
    · 상점 가격은 플레이 스토어가 알려 주는 그 나라 가격으로 보여 준다 (불러오기 전에는 원화 가격)
    · 앱을 다시 설치해도 광고 제거 무제한은 시작할 때 구매 내역에서 되살린다
    ※ 기기 안에서만 확인하는 결제라 완벽한 부정 방지는 아니다. 매출이 커지면 서버에서 구매 토큰을 검증하는 것이 좋다. */
-const BILL = { plugin:null, on:false, prices:{}, busy:false };
+const BILL = { plugin:null, on:false, native:false, prices:{}, busy:false };
 const billId = p => "voyage_" + p.id.toLowerCase();
 const billConsumable = p => p.noAds !== Infinity;                 /* 광고 제거 무제한만 비소모성 */
 const billPacks = () => [...SHOP_PACKS, ...GEM_PACKS, ...STARTER_PACKS, ...AD_PACKS];
 
 /* 상점 버튼에 쓸 가격: 스토어 가격 → 없으면 원화 */
 function priceOf(p){ return (BILL.on && BILL.prices[billId(p)]) || won(p.won); }
-const payIsTest = () => !BILL.on;                                  /* 웹·결제 미지원 기기: 테스트 결제 */
+const payIsTest = () => !BILL.native;                              /* 웹만 테스트 결제. 앱에서는 결제가 안 되면 지급하지 않는다 */
 
 async function billPay(pack, onPaid){
   const NP = BILL.plugin;
@@ -35,7 +35,10 @@ async function billPay(pack, onPaid){
 /* 시작할 때: 가격 불러오기 + 비소모성 상품 되살리기 + 끝나지 않은 결제 정리 */
 async function billInit(){
   const cap = window.Capacitor, NP = cap && cap.Plugins && cap.Plugins.NativePurchases;
-  if(!NP || !(cap.isNativePlatform && cap.isNativePlatform())) return;
+  if(!(cap && cap.isNativePlatform && cap.isNativePlatform())) return;           /* 웹: 테스트 결제 유지 */
+  BILL.native = true;
+  requestPayment = () => toast(__("이 기기에서는 구글 플레이 결제를 사용할 수 없습니다"));   /* 결제 연결 전·미지원 기기: 공짜 지급 막기 */
+  if(!NP) return;
   try{ const s = await NP.isBillingSupported(); if(!s || !s.isBillingSupported) return; }catch(e){ return; }
   BILL.plugin = NP; BILL.on = true; requestPayment = billPay;
   try{

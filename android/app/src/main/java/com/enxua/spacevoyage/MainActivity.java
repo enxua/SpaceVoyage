@@ -1,4 +1,4 @@
-package com.edgeofspace.voyage;
+package com.enxua.spacevoyage;
 
 import com.getcapacitor.BridgeActivity;
 

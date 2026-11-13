@@ -8,10 +8,10 @@ if (keystorePropsFile.exists()) {
 }
 
 android {
-    namespace = "com.edgeofspace.voyage"
+    namespace = "com.enxua.spacevoyage"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.edgeofspace.voyage"
+        applicationId "com.enxua.spacevoyage"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

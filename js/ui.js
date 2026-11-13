@@ -732,8 +732,8 @@ function resetGame(){
 }
 
 /* ══════════════════ 상점 (크레딧 충전) ══════════════════
-   현재는 테스트 모드: 결제 모듈이 없어 구매 즉시 지급된다.
-   실제 결제를 붙일 때는 requestPayment() 한 곳만 바꾸면 된다. */
+   안드로이드 앱에서는 js/billing.js 가 requestPayment() 를 구글 플레이 결제로 바꾼다.
+   웹에서는 테스트 모드: 결제 없이 바로 지급된다. */
 const SHOP_PACKS = [
   { id:"p1", name:__("크레딧 주머니"),   won:1200,   gold:1000,   bonus:0,   ic:"💠" },
   { id:"p2", name:__("크레딧 상자"),     won:5900,   gold:5000,   bonus:.10, ic:"📦" },
@@ -801,27 +801,33 @@ function rewardText(r){
   const t = []; if(r.gold) t.push(`${fmt(r.gold)}💠`); if(r.sci) t.push(`🔬${r.sci}`); if(r.ship) t.push(__`${r.ship} 등급 함선 1척`); if(r.crew) t.push(__`${r.crew} 등급 승무원 1명`);
   return t.join(" + ");
 }
-/* ▼ 결제 연동 지점: 실제 결제 모듈을 붙이면 결제 성공 콜백에서 onPaid()를 호출하도록 바꾼다.
-     (실서비스에서는 서버에서 영수증을 검증한 뒤 지급해야 한다) */
-function requestPayment(pack, onPaid){ onPaid(); }
+/* ▼ 결제 연동 지점: 결제가 끝나면 onPaid() 를 부른다. 웹은 바로 지급(테스트), 앱은 js/billing.js 가 바꾼다 */
+let requestPayment = function(pack, onPaid){ onPaid(); };
+const findPack = id => SHOP_PACKS.find(x=>x.id===id) || GEM_PACKS.find(x=>x.id===id) || AD_PACKS.find(x=>x.id===id) || STARTER_PACKS.find(x=>x.id===id);
+/* 가격 표시: 앱에서는 플레이 스토어 가격 (js/billing.js 의 priceOf 가 있으면 그것을 쓴다) */
+const packPrice = p => typeof priceOf === "function" ? priceOf(p) : won(p.won);
+const payTestNote = () => (typeof payIsTest !== "function" || payIsTest()) ? __(" (테스트 모드: 실제 결제 없음)") : "";
 function buyPack(id){
-  const p = SHOP_PACKS.find(x=>x.id===id) || GEM_PACKS.find(x=>x.id===id) || AD_PACKS.find(x=>x.id===id) || STARTER_PACKS.find(x=>x.id===id); if(!p) return;
+  const p = findPack(id); if(!p) return;
   if(p.grant && state.shop.count[p.id]) return;                       /* 초보 지원은 한 번만 */
   if(p.noAds === Infinity && state.shop.noAds === "forever") return;
-  requestPayment(p, ()=>{
+  requestPayment(p, ()=>buyPackGrant(p));
+}
+/* 결제가 끝난 묶음을 지급한다 (구매 직후, 또는 지급 전에 앱이 꺼졌던 결제를 다음 실행 때) */
+function buyPackGrant(p){
     const before = vipLevel(), g = p.noAds || p.grant ? 0 : packGold(p);
     const got = p.grant ? (p.grant.ship ? grantShip(p.grant.ship) : grantCrew(p.grant.crew)) : "";
     if(p.grant){} else if(p.noAds) adFreeGrant(p.noAds); else if(p.gems) state.gems += g; else state.gold += g;
     state.shop.paid += p.won; state.shop.count[p.id] = (state.shop.count[p.id]||0)+1;
-    sfx(p.gems ? "gem" : "coin"); toast(p.grant ? __`🛒 ${p.name} 구매 완료! (테스트 모드: 실제 결제 없음)` + ` ${got}` : p.noAds ? __`🛒 ${p.name} 구매 완료! (테스트 모드: 실제 결제 없음)` : p.gems ? __`🛒 ${p.name} 구매 완료! 💎+${fmt(g)} (테스트 모드: 실제 결제 없음)` : __`🛒 ${p.name} 구매 완료! +${fmt(g)}💠 (테스트 모드: 실제 결제 없음)`, true);
+    const note = payTestNote();
+    sfx(p.gems ? "gem" : "coin"); toast((p.grant || p.noAds ? __`🛒 ${p.name} 구매 완료!` : p.gems ? __`🛒 ${p.name} 구매 완료! 💎+${fmt(g)}` : __`🛒 ${p.name} 구매 완료! +${fmt(g)}💠`) + note + (got ? ` ${got}` : ""), true);
     for(let lv=before+1; lv<=vipLevel(); lv++){
       const r = VIP[lv].reward; let msg = __`👑 VIP ${lv} 달성!`;
       if(r){ if(r.gold) state.gold += r.gold; if(r.sci) state.sci += r.sci;
         msg += __` 보상: ${rewardText(r)}`; if(r.ship) msg += ` - ${grantShip(r.ship)}`; if(r.crew) msg += ` - ${grantCrew(r.crew)}`; }
       sfx("warp"); toast(msg, true);
     }
-    checkMissions(); checkAchievements(); updateHUD(); save(); openShop();
-  });
+    checkMissions(); checkAchievements(); updateHUD(); save(); if(typeof modalKind === "undefined" || modalKind === "shop") openShop();
 }
 function openShop(){
   const lv = vipLevel(), next = VIP[lv+1], paid = state.shop.paid;
@@ -831,12 +837,12 @@ function openShop(){
       <div class="stat">${__`충전 보너스 <b class="acc">+${Math.round(VIP[lv].extra*100)}%</b> 적용 중${next?` ${__`· 다음 등급까지 <b>${vipPt(next.need-paid)}</b>`}`:__(" · 최고 등급")}`}</div>
       ${lv ? `<div class="stat">${__`매일 <b class="acc">${fmt(VIP[lv].pay)}💠</b> 지급 - 날짜가 바뀌면 받습니다`}</div>` : ""}
       <div class="bar"><i style="width:${next?clamp((paid-VIP[lv].need)/(next.need-VIP[lv].need)*100,0,100):100}%;background:#e0a63f"></i></div></div></div></div>
-    <div class="stat" style="margin:0 4px 10px">${__`🧪 <b>테스트 모드</b> - 아직 결제 모듈이 없어 버튼을 누르면 결제 없이 바로 지급됩니다.`}</div>`;
+    ${payTestNote() ? `<div class="stat" style="margin:0 4px 10px">${__`🧪 <b>테스트 모드</b> - 웹 버전에서는 버튼을 누르면 결제 없이 바로 지급됩니다.`}</div>` : ""}`;
   html += `<div class="sec">${__`🎁 초보 지원 패키지 - 한 번씩만 살 수 있습니다`}</div>`;
   for(const p of STARTER_PACKS){ const done = !!state.shop.count[p.id];
     html += `<div class="card" style="border-color:#8e6fd8"><div class="row"><div style="font-size:28px;width:38px;text-align:center">${p.ic}</div>
       <div class="grow"><div class="ttl">${p.name}</div><div style="font-size:14px;font-weight:800;color:#8e6fd8;margin-top:2px">${rewardText(p.grant)}</div></div>
-      <button class="btn orange" ${done?"disabled":""} onclick="buyPack('${p.id}')">${done ? __("구매 완료") : won(p.won)}</button></div></div>`; }
+      <button class="btn orange" ${done?"disabled":""} onclick="buyPack('${p.id}')">${done ? __("구매 완료") : packPrice(p)}</button></div></div>`; }
   html += adShopHTML() + adFreeHTML();
   for(const p of [...SHOP_PACKS, ...GEM_PACKS]){
     if(p === GEM_PACKS[0]) html += `<div class="sec">${__`💎 보석 충전 - 보유 ${fmt(state.gems)}개`}</div>`;
@@ -845,7 +851,7 @@ function openShop(){
       <div class="grow"><div class="ttl">${p.name}${p.tag?` <span class="gtag" style="background:#d96f32">${p.tag}</span>`:""}</div>
         <div style="font-size:15px;font-weight:800;color:${p.gems?"#8e6fd8":"#d96f32"};margin-top:2px">${p.gems?"💎":"💠"} ${fmt(g)}</div>
         <div class="stat">${__`기본 ${fmt(base)}${pct?` ${__`· 보너스 <b>+${pct}%</b>`}`:""}${first?` ${__`· <b class="acc">첫 구매 2배 (+${fmt(base)})</b>`}`:""}`}</div></div>
-      <button class="btn orange" onclick="buyPack('${p.id}')">${won(p.won)}</button></div></div>`;
+      <button class="btn orange" onclick="buyPack('${p.id}')">${packPrice(p)}</button></div></div>`;
   }
   html += `<div class="sec">${__`💎 보석 교환소 - 보유 ${fmt(state.gems)}개 (떠돌이 별 조사·외계 생명체 격퇴로 획득)`}</div><div class="card">`;
   for(const g of GEM_SHOP) html += `<div class="goodRow"><div style="font-size:20px;width:30px;text-align:center">${g.ic}</div>

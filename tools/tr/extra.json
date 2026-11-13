@@ -5138,5 +5138,105 @@
   "ja": "🎁 旗艦を復活させる（本日あと{0}回）",
   "zhs": "🎁 复活旗舰（今天剩余{0}次）",
   "zht": "🎁 復活旗艦（今天剩餘{0}次）"
+ },
+ " (테스트 모드: 실제 결제 없음)": {
+  "en": " (Test mode: no real payment)",
+  "es": " (Modo de prueba: sin pago real)",
+  "fr": " (Mode test : aucun paiement réel)",
+  "it": " (Modalità test: nessun pagamento reale)",
+  "pt": " (Modo de teste: sem pagamento real)",
+  "ja": "（テストモード：実際の決済なし）",
+  "zhs": "（测试模式：无实际付款）",
+  "zht": "（測試模式：無實際付款）"
+ },
+ "🛒 {0} 구매 완료!": {
+  "en": "🛒 {0} purchased!",
+  "es": "🛒 ¡{0} comprado!",
+  "fr": "🛒 {0} acheté !",
+  "it": "🛒 {0} acquistato!",
+  "pt": "🛒 {0} comprado!",
+  "ja": "🛒 {0}を購入しました！",
+  "zhs": "🛒 已购买{0}！",
+  "zht": "🛒 已購買{0}！"
+ },
+ "🛒 {0} 구매 완료! 💎+{1}": {
+  "en": "🛒 {0} purchased! 💎+{1}",
+  "es": "🛒 ¡{0} comprado! 💎+{1}",
+  "fr": "🛒 {0} acheté ! 💎+{1}",
+  "it": "🛒 {0} acquistato! 💎+{1}",
+  "pt": "🛒 {0} comprado! 💎+{1}",
+  "ja": "🛒 {0}を購入しました！💎+{1}",
+  "zhs": "🛒 已购买{0}！💎+{1}",
+  "zht": "🛒 已購買{0}！💎+{1}"
+ },
+ "🛒 {0} 구매 완료! +{1}💠": {
+  "en": "🛒 {0} purchased! +{1}💠",
+  "es": "🛒 ¡{0} comprado! +{1}💠",
+  "fr": "🛒 {0} acheté ! +{1}💠",
+  "it": "🛒 {0} acquistato! +{1}💠",
+  "pt": "🛒 {0} comprado! +{1}💠",
+  "ja": "🛒 {0}を購入しました！+{1}💠",
+  "zhs": "🛒 已购买{0}！+{1}💠",
+  "zht": "🛒 已購買{0}！+{1}💠"
+ },
+ "🧪 <b>테스트 모드</b> - 웹 버전에서는 버튼을 누르면 결제 없이 바로 지급됩니다.": {
+  "en": "🧪 <b>Test mode</b> - on the web version, items are granted right away without payment.",
+  "es": "🧪 <b>Modo de prueba</b> - en la versión web, los artículos se entregan al instante sin pago.",
+  "fr": "🧪 <b>Mode test</b> - sur la version web, les articles sont donnés tout de suite, sans paiement.",
+  "it": "🧪 <b>Modalità test</b> - nella versione web gli articoli vengono consegnati subito senza pagamento.",
+  "pt": "🧪 <b>Modo de teste</b> - na versão web, os itens são entregues na hora, sem pagamento.",
+  "ja": "🧪 <b>テストモード</b> - Web版ではボタンを押すと決済なしですぐに受け取れます。",
+  "zhs": "🧪 <b>测试模式</b> - 网页版点击按钮即可直接领取，无需付款。",
+  "zht": "🧪 <b>測試模式</b> - 網頁版點擊按鈕即可直接領取，無需付款。"
+ },
+ "결제가 대기 중입니다. 결제가 끝나면 다음 실행 때 지급됩니다": {
+  "en": "Payment is pending. Your item will be delivered the next time you launch the game once it completes.",
+  "es": "El pago está pendiente. Recibirás el artículo la próxima vez que abras el juego cuando se complete.",
+  "fr": "Paiement en attente. L'article sera livré au prochain lancement une fois le paiement terminé.",
+  "it": "Pagamento in sospeso. Riceverai l'articolo al prossimo avvio quando sarà completato.",
+  "pt": "Pagamento pendente. O item será entregue na próxima vez que você abrir o jogo após a conclusão.",
+  "ja": "決済が保留中です。決済が完了すると次回起動時に付与されます",
+  "zhs": "付款处理中。付款完成后，将在下次启动时发放",
+  "zht": "付款處理中。付款完成後，將在下次啟動時發放"
+ },
+ "결제를 취소했습니다": {
+  "en": "Payment canceled",
+  "es": "Pago cancelado",
+  "fr": "Paiement annulé",
+  "it": "Pagamento annullato",
+  "pt": "Pagamento cancelado",
+  "ja": "決済をキャンセルしました",
+  "zhs": "已取消付款",
+  "zht": "已取消付款"
+ },
+ "이미 구매한 상품입니다": {
+  "en": "You already own this item",
+  "es": "Ya tienes este artículo",
+  "fr": "Vous possédez déjà cet article",
+  "it": "Possiedi già questo articolo",
+  "pt": "Você já possui este item",
+  "ja": "すでに購入済みの商品です",
+  "zhs": "你已购买过此商品",
+  "zht": "你已購買過此商品"
+ },
+ "결제를 완료하지 못했습니다. 잠시 후 다시 시도해 주세요": {
+  "en": "Couldn't complete the payment. Please try again later.",
+  "es": "No se pudo completar el pago. Inténtalo de nuevo más tarde.",
+  "fr": "Impossible de finaliser le paiement. Réessayez plus tard.",
+  "it": "Impossibile completare il pagamento. Riprova più tardi.",
+  "pt": "Não foi possível concluir o pagamento. Tente novamente mais tarde.",
+  "ja": "決済を完了できませんでした。しばらくしてからもう一度お試しください",
+  "zhs": "付款未能完成，请稍后再试",
+  "zht": "付款未能完成，請稍後再試"
+ },
+ "♾️ 광고 제거 무제한 구매 내역을 되살렸습니다": {
+  "en": "♾️ Restored your Unlimited Ad Removal purchase",
+  "es": "♾️ Se restauró tu compra de eliminación de anuncios ilimitada",
+  "fr": "♾️ Votre achat Sans pub illimité a été restauré",
+  "it": "♾️ Acquisto Rimozione annunci illimitata ripristinato",
+  "pt": "♾️ Sua compra de remoção de anúncios ilimitada foi restaurada",
+  "ja": "♾️ 広告削除（無期限）の購入を復元しました",
+  "zhs": "♾️ 已恢复永久免广告购买记录",
+  "zht": "♾️ 已恢復永久免廣告購買紀錄"
  }
 }

@@ -33,7 +33,7 @@ function adFreeHTML(){
   for(const p of AD_PACKS){ const done = forever;
     html += `<div class="card"><div class="row"><div style="font-size:28px;width:38px;text-align:center">${p.ic}</div>
       <div class="grow"><div class="ttl">${p.name}</div><div class="stat">${__`광고를 보지 않고 광고 보상을 바로 받습니다.`}</div></div>
-      <button class="btn orange" ${done?"disabled":""} onclick="buyPack('${p.id}')">${done ? __("이용 중") : won(p.won)}</button></div></div>`; }
+      <button class="btn orange" ${done?"disabled":""} onclick="buyPack('${p.id}')">${done ? __("이용 중") : packPrice(p)}</button></div></div>`; }
   return html;
 }
 

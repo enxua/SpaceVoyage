@@ -318,7 +318,6 @@
   #intro .launchBtn::after { content:""; position:absolute; inset:-2px; border-radius:14px; border:2px solid rgba(255,150,90,.7); animation:pulse 2.2s ease-out infinite 2.4s; opacity:0; }
   @keyframes shine { 0%, 60% { background-position:-150% 0; } 100% { background-position:250% 0; } }
   @keyframes pulse { 0% { opacity:.9; transform:scale(1); } 100% { opacity:0; transform:scale(1.35, 1.8); } }
-  #intro #langPick { animation:fadeIn 1s ease both 2s; }
   #intro .langBtn { background:rgba(14,22,44,.6); border-color:rgba(127,182,255,.25); color:#b9c4da; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
   #intro .langBtn.on { background:#d96f32; border-color:#ff9a5c; color:#fff; box-shadow:0 0 14px rgba(217,111,50,.6); }
   @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } }
@@ -341,7 +340,6 @@
     #intro .tag { letter-spacing:.14em; font-size:11.5px; max-width:90vw; }
     #intro p { font-size:12.5px; line-height:1.75; padding:13px 15px; margin-bottom:20px; }
     #intro .launchBtn { padding:13px 46px; }
-    #intro #langPick { margin-top:18px; }
     #intro .hud { font-size:9px; } #intro .hl { left:44px; } #intro .hr { right:44px; }
   }
   @media (max-height:700px) { #intro h1 { padding:40px 0; } #intro p { line-height:1.75; padding:12px 16px; margin-bottom:18px; } #intro .tag { margin-bottom:14px; } }
@@ -441,7 +439,6 @@
   body.dark .foldBtn { background:rgba(20,28,51,.96); border-color:#2c3757; color:#8b96b0; }
 
   /* 언어 고르기 */
-  #langPick { margin-top:26px; display:flex; flex-wrap:wrap; justify-content:center; gap:6px; max-width:520px; }
   .langBtn { border:1px solid #e2dfda; background:#fff; color:#666; border-radius:16px; padding:6px 13px; font-size:12.5px; font-weight:600; cursor:pointer; }
   .langBtn.on { border-color:#d96f32; background:#d96f32; color:#fff; }
   .langList { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:8px; }
@@ -567,7 +564,6 @@
      최종 목적지는 138억 년 전, <b>우주의 시작</b>입니다.</p>
   <button class="btn orange launchBtn" onclick="introLaunch()" data-t>발진</button>
   <button class="btn" id="introLink" style="display:none" onclick="cloudLink()"></button>
-  <div id="langPick"></div>
   <button id="introGear" onclick="openSettings()" data-t-title title="설정">⚙️</button>
 </div>
 

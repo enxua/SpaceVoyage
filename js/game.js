@@ -1293,7 +1293,7 @@ function toggleTheme(){
 function toggleMute(){ state.mute = !state.mute; $("muteBtn").textContent = state.mute?"🔇":"🔊"; auApplyVolume(); save(); }
 function startGame(quiet){ rememberLang(); state.intro = false; $("intro").style.display = "none"; titleOff(); if(!quiet) sfx("warp"); storyOnce("prologue"); save(); }   /* quiet: 처음 화면 연출(js/intro.js)이 이미 소리를 냈다 */
 function init(){
-  i18nStatic(); $("langPick").innerHTML = langButtons(); setTimeout(fitLabels, 0);        /* 고정 문구 번역 + 처음 화면의 언어 고르기 */
+  i18nStatic(); setTimeout(fitLabels, 0);        /* 고정 문구 번역 (언어 고르기는 설정 창) */
   const had = load();
   T = THEMES[state.theme] || THEMES.paper; document.body.style.background = T.bg; document.body.classList.toggle("dark", T.dark);
   resize(); buildWorld(); if(state.priceVer !== 2){ state.priceVer = 2;                 /* 시세 조정: 산 값 기록을 새 시세에 맞추고 오늘의 의뢰를 새로 뽑는다 */

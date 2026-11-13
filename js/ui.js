@@ -957,7 +957,6 @@ function openAudio(){
         <button class="btn ${state.mute?"ghost":"orange"}" onclick="toggleMute();openAudio()">${state.mute?__("🔇 꺼짐"):__("🔊 켜짐")}</button></div>
       ${slider("bgm",__("배경 음악"),"🎵")}${slider("sfx",__("효과음"),"🔔")}
       <div class="stat">${__`배경 음악은 지금 있는 우주에 따라 바뀌고, 전투 중에는 긴박한 곡으로 넘어갑니다. 모든 소리는 실시간으로 합성되어 음악 파일이 없습니다.`}</div></div>
-    <div class="sec">🌐 Language</div><div class="card" style="display:flex;flex-wrap:wrap;gap:6px">${langButtons()}</div>
     ${typeof admobPrivacyHTML === "function" ? admobPrivacyHTML() : ""}
     <div class="sec">${__`화면 효과`}</div><div class="card">
       <div style="margin-bottom:14px"><div class="row"><div class="grow ttl">${__`📳 화면 흔들림 세기`}</div><div class="acc" id="fx_shake">${Math.round(state.fx.shake*100)}%</div></div>
@@ -979,7 +978,7 @@ function openSettings(){
       <div class="grow"><div class="ttl">${__`전체 소리`}</div><div class="stat">${__`배경 음악 ${Math.round(state.vol.bgm*100)}% · 효과음 ${Math.round(state.vol.sfx*100)}%`}</div></div>
       <button class="btn ${state.mute?"ghost":"orange"}" onclick="toggleMute();openSettings()">${state.mute?__("🔇 꺼짐"):__("🔊 켜짐")}</button></div>
       <button class="btn ghost wide" onclick="openAudio()">${__`🎚 소리·화면 효과 자세히`}</button></div>
-    <div class="sec">🌐 Language</div><div class="card" style="display:flex;flex-wrap:wrap;gap:6px">${langButtons()}</div>
+    <div class="sec">🌐 Language · ${(LANGS.find(l=>l[0] === LANG)||[])[1] || ""}</div><div class="card" style="display:flex;flex-wrap:wrap;gap:6px">${langButtons()}</div>
     ${inGame ? `<div class="sec">${__`게임`}</div><div class="card">
       <div class="stat" style="margin:0 0 4px">${__`진행 상황을 저장하고 처음 화면으로 돌아갑니다. 발진을 누르면 이어서 합니다.`}</div>
       <button class="btn wide" onclick="goTitle()">${__`🏠 초기 화면으로`}</button></div>` : ""}

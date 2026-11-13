@@ -22,3 +22,6 @@ tools/todo-*.json
 .DS_Store
 Thumbs.db
 *.log
+
+# 스토어 스크린샷 원본 (node tools/shots.js 로 다시 찍을 수 있다)
+store/raw/

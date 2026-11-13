@@ -110,6 +110,7 @@ const save = (name, buf) => sharp(buf).png().toFile(path.join(OUT, name)).then((
   /* 시작 화면: 가운데 작은 함선 + 우주 */
   const S = 2732, splash = svg(S, S, background(S, S, { planet: true, stars: 420, seed: 11 }) +
     `<g transform="translate(${S / 2} ${S / 2 - 120}) scale(.9) translate(-512 -512)">${fg}</g>`);
+  await save("emblem.png", svg(1024, 1024, fg));                                  /* 스토어 그래픽용 함선 문장(배경 없음) */
   await save("splash.png", splash);
   await save("splash-dark.png", splash);
 })();

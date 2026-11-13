@@ -8,6 +8,17 @@ Play Console > 스토어 등록정보 > 기본 스토어 등록정보 (및 번�
 - 카테고리: 게임 > 시뮬레이션 (또는 전략) · 태그: 우주, 탐험, 무역, 함선, 공상과학
 - 광고 포함: 예 (보상형 광고) · 인앱 구매: 예 (보석, 광고 제거)
 
+## 그래픽 자료 (언어별로 같은 폴더 이름)
+
+| 항목 | 파일 | 규격 |
+|---|---|---|
+| 앱 아이콘 | `assets/play-store-512.png` | 512×512 PNG |
+| 그래픽 이미지 | `store/feature/<언어>.png` | 1024×500 PNG |
+| 휴대전화 스크린샷 | `store/screenshots/<언어>/01-map.png` … `08-intro.png` | 1080×1920 PNG 8장 (파일 이름 순서대로 올린다) |
+
+언어 폴더: ko · en · es · fr · it · pt · ja · zhs(zh-CN) · zht(zh-TW)
+다시 만들기: `npm run store` (게임 장면 촬영 → 문구 얹기). 문구는 `tools/store-art.js` 의 CAP 에서 고친다.
+
 ---
 
 ## ko-KR 한국어

@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "skills": {
+    "dialogue-systems": {
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/disciplines/dialogue-systems/SKILL.md",
+      "computedHash": "5d0c741b21a838582310882600e4a2de7f0ae4c1d8ef13e0c7ce0329b6a2073c"
+    },
+    "game-audio": {
+      "source": "playableintelligence/game-creator",
+      "sourceType": "github",
+      "skillPath": "skills/game-audio/SKILL.md",
+      "computedHash": "ca4bdca76187bf9f04f37c2ed5b3ec66b7b347c8e50c0d94a643201e139eb9d1"
+    },
+    "game-engine": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/game-engine/SKILL.md",
+      "computedHash": "22e5e2b6e9fcce8f3e19b439bca37351c4ea054183a9421427e5bb38e6726748"
+    },
+    "game-feel": {
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/disciplines/game-feel/SKILL.md",
+      "computedHash": "f0a2becd199feabc7e8720f8f5626c84571ef763a0a5edefcdae8a039ce64338"
+    },
+    "roguelike": {
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/genres/roguelike/SKILL.md",
+      "computedHash": "4d6e1b811e639a4a7b768ad2fd3fc52dbfabee90d1d6c306e126678699e01aa6"
+    }
+  }
+}

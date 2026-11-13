@@ -1,0 +1,2753 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>VOYAGE — 항해</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { width:100%; height:100%; overflow:hidden; background:#faf9f7;
+    font-family:"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif; color:#3a3a3a;
+    user-select:none; -webkit-user-select:none; }
+  #sea { position:absolute; inset:0; display:block; touch-action:none; }
+
+  /* ── HUD ───────────────────────────── */
+  #hud { position:absolute; top:0; left:0; right:0; padding:10px 14px;
+    display:flex; gap:8px; align-items:center; pointer-events:none; z-index:10; }
+  .pill { background:rgba(255,255,255,.92); border:1px solid #e2dfda; border-radius:20px;
+    padding:6px 14px; font-size:13px; font-weight:600; letter-spacing:.02em;
+    box-shadow:0 1px 4px rgba(0,0,0,.04); white-space:nowrap; }
+  .pill b { color:#d96f32; }
+  #shipPill { margin-left:auto; font-weight:500; color:#777; max-width:40%;
+    overflow:hidden; text-overflow:ellipsis; }
+
+  #recenter { position:absolute; right:14px; bottom:86px; width:42px; height:42px;
+    border-radius:50%; background:#fff; border:1px solid #e2dfda; font-size:19px; color:#666;
+    box-shadow:0 2px 6px rgba(0,0,0,.06); cursor:pointer; z-index:10; display:none; }
+  .mapBtn { position:absolute; right:14px; width:42px; height:42px; border-radius:50%;
+    background:#fff; border:1px solid #e2dfda; font-size:20px; color:#666;
+    box-shadow:0 2px 6px rgba(0,0,0,.06); cursor:pointer; z-index:10; }
+  #zoomIn { bottom:188px; } #zoomOut { bottom:138px; }
+
+  /* ── 하단 메뉴 ─────────────────────── */
+  #dock { position:absolute; left:0; right:0; bottom:0; z-index:10;
+    display:flex; justify-content:center; gap:6px; padding:10px 8px 14px;
+    background:linear-gradient(transparent, rgba(250,249,247,.95) 40%); }
+  .dockBtn { border:1px solid #e2dfda; background:#fff; border-radius:14px;
+    padding:8px 2px 7px; flex:1 1 0; max-width:62px; min-width:44px; font-size:11.5px; font-weight:600; color:#555;
+    cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.05); transition:transform .1s; text-align:center; }
+  .dockBtn:active { transform:scale(.94); }
+  .dockBtn .ic { display:block; font-size:19px; margin-bottom:2px; }
+  .dockBtn.off { opacity:.35; pointer-events:none; }
+  .dockBtn.hot { border-color:#d96f32; color:#d96f32; }
+
+  /* ── 모달 ──────────────────────────── */
+  #shade { position:absolute; inset:0; background:rgba(60,55,50,.28); z-index:20;
+    display:none; align-items:flex-end; justify-content:center; }
+  #shade.on { display:flex; }
+  #modal { background:#faf9f7; width:100%; max-width:520px; max-height:82%;
+    border-radius:22px 22px 0 0; display:flex; flex-direction:column;
+    box-shadow:0 -6px 30px rgba(0,0,0,.15); animation:up .22s ease; }
+  @keyframes up { from { transform:translateY(60px); opacity:0; } to { transform:none; opacity:1; } }
+  #mHead { display:flex; align-items:center; padding:16px 20px 10px; }
+  #mHead h2 { font-size:17px; letter-spacing:.03em; }
+  #mHead .sub { font-size:12px; color:#999; margin-left:10px; }
+  #mClose { margin-left:auto; border:none; background:#efede9; width:30px; height:30px;
+    border-radius:50%; font-size:14px; color:#777; cursor:pointer; }
+  #mBody { overflow-y:auto; padding:4px 16px 26px; }
+
+  .card { background:#fff; border:1px solid #e6e3de; border-radius:14px;
+    padding:12px 14px; margin-bottom:10px; }
+  .row { display:flex; align-items:center; gap:10px; }
+  .grow { flex:1; min-width:0; }
+  .btn { border:none; border-radius:10px; padding:9px 16px; font-size:13px; font-weight:700;
+    cursor:pointer; background:#3a3a3a; color:#fff; transition:transform .1s; }
+  .btn:active { transform:scale(.95); }
+  .btn.orange { background:#d96f32; }
+  .btn.ghost { background:#efede9; color:#555; }
+  .btn.sm { padding:6px 10px; font-size:12px; border-radius:8px; }
+  .btn:disabled { opacity:.35; pointer-events:none; }
+
+  .gtag { display:inline-block; font-size:10.5px; font-weight:800; padding:2px 8px;
+    border-radius:8px; color:#fff; letter-spacing:.05em; vertical-align:1px; }
+  .stat { font-size:11.5px; color:#888; margin-top:3px; line-height:1.5; }
+  .stat b { color:#555; font-weight:600; }
+  .stars { color:#e0a63f; font-size:11px; letter-spacing:1px; }
+  .shipName { font-size:14px; font-weight:700; }
+
+  /* 뽑기 결과 */
+  #pullWrap { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; padding:8px 0 4px; }
+  .pullCard { width:88px; background:#fff; border-radius:12px; border:2px solid #ccc;
+    padding:10px 6px; text-align:center; animation:pop .35s ease backwards; }
+  .pullCard .nm { font-size:11.5px; font-weight:700; margin-top:4px; line-height:1.3; }
+  .pullCard .gd { font-size:10px; font-weight:800; letter-spacing:.08em; }
+  .pullCard .dup { font-size:10px; color:#999; margin-top:2px; }
+  @keyframes pop { from { transform:scale(.3) rotate(-6deg); opacity:0; } to { transform:none; opacity:1; } }
+
+  /* 항해사 */
+  .navCard { display:flex; gap:12px; align-items:center; }
+  .navCard svg { flex:none; border-radius:50%; background:#f4f1ec; border:1px solid #e6e3de; }
+  .navName { font-size:14.5px; font-weight:700; }
+  .navTitle { font-size:11px; color:#b0743f; font-weight:600; margin-left:6px; }
+  .navDesc { font-size:11.5px; color:#888; margin-top:2px; line-height:1.45; }
+  .navBonus { font-size:11.5px; color:#d96f32; font-weight:700; margin-top:2px; }
+  .lockNote { font-size:11px; color:#aaa; }
+
+  /* 무역 */
+  .goodRow { display:flex; align-items:center; padding:9px 2px; border-bottom:1px solid #f0eee9; gap:8px; }
+  .goodRow:last-child { border:none; }
+  .gname { font-size:13px; font-weight:600; width:76px; }
+  .gprice { font-size:12.5px; width:74px; font-weight:700; }
+  .cheap { color:#3f7fbf; } .expensive { color:#d96f32; }
+  .ghave { font-size:11px; color:#999; width:52px; }
+  .tbtns { margin-left:auto; display:flex; gap:4px; }
+
+  .tabs { display:flex; gap:6px; margin:2px 4px 12px; }
+  .tab { flex:1; text-align:center; padding:8px 0; border-radius:10px; background:#efede9;
+    font-size:12.5px; font-weight:700; color:#888; cursor:pointer; }
+  .tab.on { background:#3a3a3a; color:#fff; }
+
+  /* 토스트 */
+  #toasts { position:absolute; top:54px; left:0; right:0; display:flex; flex-direction:column;
+    align-items:center; gap:6px; z-index:30; pointer-events:none; }
+  .toast { background:rgba(58,58,58,.92); color:#fff; font-size:12.5px; padding:8px 18px;
+    border-radius:18px; animation:tin .25s ease, tout .4s ease 2.6s forwards; max-width:86%; text-align:center; }
+  .toast.gold { background:rgba(217,111,50,.95); }
+  @keyframes tin { from { transform:translateY(-12px); opacity:0; } }
+  @keyframes tout { to { transform:translateY(-8px); opacity:0; } }
+
+  /* 인트로 */
+  #intro { position:absolute; inset:0; z-index:40; background:rgba(250,249,247,.96);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:30px; }
+  #intro h1 { font-size:34px; letter-spacing:.35em; font-weight:300; margin-bottom:6px; }
+  #intro .tag { color:#d96f32; font-size:12px; letter-spacing:.25em; margin-bottom:34px; }
+  #intro p { font-size:13px; color:#777; line-height:2; margin-bottom:36px; }
+  #intro p b { color:#3a3a3a; }
+
+  /* 보조 HUD (날짜·바람) */
+  #hud2 { position:absolute; top:48px; left:14px; display:flex; gap:6px; z-index:9; pointer-events:none; }
+  #hud2 .pill { font-size:11px; padding:4px 10px; color:#888; }
+  #hud2 .pill b { color:#d96f32; }
+
+  /* 조난 화면 */
+  #gameover { position:absolute; inset:0; z-index:45; background:rgba(250,249,247,.97);
+    display:none; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:30px; }
+  #gameover h1 { font-size:30px; letter-spacing:.4em; font-weight:300; margin-bottom:6px; color:#b3502a; }
+  #gameover .tag { color:#999; font-size:12px; letter-spacing:.15em; margin-bottom:30px; }
+  #gameover p { font-size:13px; color:#777; line-height:2; margin-bottom:34px; }
+  #gameover p b { color:#b3502a; }
+</style>
+</head>
+<body>
+<canvas id="sea"></canvas>
+
+<div id="hud">
+  <div class="pill">🪙 <b id="hGold">0</b></div>
+  <div class="pill">🍞 <b id="hFood">0</b></div>
+  <div class="pill">💧 <b id="hWater">0</b></div>
+  <div class="pill" id="shipPill">—</div>
+</div>
+<div id="hud2">
+  <div class="pill" id="hDate">📅 —</div>
+  <div class="pill" id="hWind">💨 —</div>
+  <div class="pill" id="hZoom">🔍 100%</div>
+  <div class="pill" id="hMate" style="display:none"></div>
+</div>
+<button id="recenter" onclick="recenter()">⌖</button>
+<button class="mapBtn" id="zoomIn" onclick="setZoom(1.2)">＋</button>
+<button class="mapBtn" id="zoomOut" onclick="setZoom(1/1.2)">－</button>
+
+<div id="dock">
+  <button class="dockBtn" onclick="openFleet()"><span class="ic">⚓</span>함대</button>
+  <button class="dockBtn" onclick="openGacha()"><span class="ic">🎲</span>조선소</button>
+  <button class="dockBtn" id="btnNav" onclick="openNavs()"><span class="ic">💞</span>항해사</button>
+  <button class="dockBtn" id="btnTrade" onclick="openTrade()"><span class="ic">⚖️</span>무역</button>
+  <button class="dockBtn" id="btnRoute" onclick="openRoutes()"><span class="ic">🧭</span>항로</button>
+  <button class="dockBtn" onclick="openDens()"><span class="ic">💀</span>토벌</button>
+  <button class="dockBtn" id="btnQuest" onclick="openQuests()"><span class="ic">📜</span>의뢰</button>
+</div>
+
+<div id="shade" onclick="if(event.target===this)closeModal()">
+  <div id="modal">
+    <div id="mHead"><h2 id="mTitle"></h2><span class="sub" id="mSub"></span>
+      <button id="mClose" onclick="closeModal()">✕</button></div>
+    <div id="mBody"></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<div id="intro">
+  <h1>VOYAGE</h1>
+  <div class="tag">— 대항해의 시대 —</div>
+  <p><b>바다를 탭</b>하면 뱃길을 따라 항해합니다. 육지는 지날 수 없어요.<br>
+     출항할 때마다 <b>식량과 물</b>이 골드로 자동 보급되고, 항해 중 소모됩니다.<br>
+     둘 다 바닥나면 <b>조난</b>... 마지막 항구에서 다시 시작하게 됩니다.<br>
+     바람과 조류를 타면 빨라지고, 거스르면 느려집니다.<br>
+     항구에서 <b>무역</b>으로 돈을 벌고 <b>항해사</b>를 영입하세요.<br>
+     <b>조선소</b>의 좋은 배일수록 보급을 많이 싣고 멀리 갑니다.</p>
+  <button class="btn orange" style="padding:12px 44px;font-size:15px" onclick="startGame()">출항</button>
+</div>
+
+<div id="gameover">
+  <h1>조 난</h1>
+  <div class="tag">— 식량과 물이 모두 바닥났습니다 —</div>
+  <p>굶주림과 갈증 속에 배는 정처 없이 표류했습니다.<br>
+     다행히 지나가던 상선이 선원들을 구조해<br>
+     마지막으로 들렀던 항구로 데려다 주었습니다.<br>
+     <b>싣고 있던 화물은 모두 바다에 버려졌습니다.</b></p>
+  <button class="btn orange" style="padding:12px 44px;font-size:15px" onclick="respawn()">항구에서 다시 시작</button>
+</div>
+
+<script>
+"use strict";
+/* ══════════════════ 데이터 ══════════════════ */
+const GRADES = {
+  N:  { name:"일반", color:"#9aa2a8", rate:60 },
+  R:  { name:"고급", color:"#4a90d9", rate:31.5 },
+  SR: { name:"희귀", color:"#8e6fd8", rate:6.5 },
+  SSR:{ name:"영웅", color:"#e0a63f", rate:1.5 },
+  UR: { name:"전설", color:"#d96f32", rate:0.5 },
+};
+/* speed:px/s  cargo:적재량  food:100해리당 소모  luck:행운  sup:식량·물 각각의 적재 한계 */
+const SHIPS = [
+  { id:"fish",  g:"N",  name:"낡은 어선",     speed:45, cargo:20,  food:4.8, luck:0,  sup:120 },
+  { id:"sloop", g:"N",  name:"소형 슬루프",   speed:48, cargo:25,  food:4.4, luck:1,  sup:130 },
+  { id:"barge", g:"N",  name:"연안 바지선",   speed:42, cargo:40,  food:5.4, luck:0,  sup:150 },
+  { id:"tug",   g:"N",  name:"통통배",        speed:50, cargo:18,  food:4.2, luck:2,  sup:110 },
+  { id:"carav", g:"R",  name:"카라벨",        speed:58, cargo:45,  food:3.8, luck:3,  sup:200 },
+  { id:"brig",  g:"R",  name:"브리간틴",      speed:62, cargo:40,  food:3.6, luck:4,  sup:190 },
+  { id:"schoo", g:"R",  name:"스쿠너",        speed:65, cargo:35,  food:3.4, luck:5,  sup:180 },
+  { id:"junk",  g:"R",  name:"정크선",        speed:56, cargo:55,  food:3.8, luck:3,  sup:220 },
+  { id:"carrack",g:"SR",name:"카락",          speed:70, cargo:70,  food:3.0, luck:6,  sup:300 },
+  { id:"galleon",g:"SR",name:"갤리온",        speed:74, cargo:85,  food:3.0, luck:5,  sup:340 },
+  { id:"clipper",g:"SR",name:"클리퍼",        speed:85, cargo:55,  food:2.6, luck:8,  sup:260 },
+  { id:"frigate",g:"SR",name:"프리깃",        speed:80, cargo:65,  food:2.8, luck:7,  sup:290 },
+  { id:"goldga", g:"SSR",name:"황금 갤리온",  speed:90, cargo:110, food:2.2, luck:15, sup:450 },
+  { id:"ironst", g:"SSR",name:"철갑 증기선",  speed:100,cargo:95,  food:2.0, luck:10, sup:400 },
+  { id:"ghost",  g:"SSR",name:"유령 범선",    speed:95, cargo:80,  food:1.5, luck:20, sup:380 },
+  { id:"suncar", g:"SSR",name:"태양의 카라크",speed:92, cargo:120, food:2.0, luck:12, sup:480 },
+  { id:"ark",    g:"UR", name:"전설의 방주",  speed:115,cargo:160, food:1.2, luck:25, sup:650 },
+  { id:"kraken", g:"UR", name:"크라켄 헌터",  speed:120,cargo:130, food:1.3, luck:30, sup:560 },
+];
+const SHIP_MAP = Object.fromEntries(SHIPS.map(s=>[s.id,s]));
+const DUP_GOLD = { N:80, R:200, SR:600, SSR:2000, UR:6000 };
+
+/* 배 종류별 실루엣 — len/wid:크기, stern:선미(round/square/point), masts:돛대 수 */
+const SHIP_LOOK = {
+  fish:   { len:26, wid:11, stern:"round",  masts:1 },
+  sloop:  { len:28, wid:10, stern:"round",  masts:1 },
+  barge:  { len:28, wid:15, stern:"square", masts:1 },
+  tug:    { len:22, wid:11, stern:"round",  masts:0, funnel:true },
+  carav:  { len:32, wid:12, stern:"round",  masts:2 },
+  brig:   { len:33, wid:11, stern:"square", masts:2 },
+  schoo:  { len:34, wid:10, stern:"point",  masts:2 },
+  junk:   { len:32, wid:13, stern:"square", masts:3, junk:true },
+  carrack:{ len:38, wid:14, stern:"square", masts:3 },
+  galleon:{ len:40, wid:15, stern:"square", masts:3 },
+  clipper:{ len:40, wid:10, stern:"point",  masts:3 },
+  frigate:{ len:39, wid:12, stern:"square", masts:3, guns:true },
+  goldga: { len:44, wid:16, stern:"square", masts:3, hull:"#f6e7c5", trim:"#b8863f" },
+  ironst: { len:44, wid:13, stern:"square", masts:1, funnel:true, hull:"#e9e9ec", trim:"#4a4f55" },
+  ghost:  { len:42, wid:12, stern:"point",  masts:3, hull:"rgba(213,223,232,.55)", trim:"#7a8894" },
+  suncar: { len:45, wid:16, stern:"round",  masts:3, hull:"#fdf0dc", trim:"#d96f32" },
+  ark:    { len:52, wid:18, stern:"round",  masts:4, hull:"#f3ead8", trim:"#8a6f4d" },
+  kraken: { len:48, wid:13, stern:"point",  masts:3, harpoon:true, trim:"#3a5b6e" },
+};
+
+const GOODS = [
+  { id:"wine",  name:"와인",     base:40  },
+  { id:"wool",  name:"모직물",   base:60  },
+  { id:"glass", name:"유리세공", base:90  },
+  { id:"tea",   name:"차",       base:120 },
+  { id:"spice", name:"향신료",   base:150 },
+  { id:"pottery",name:"도자기",  base:170 },
+  { id:"silk",  name:"비단",     base:200 },
+  { id:"goldw", name:"금세공품", base:300 },
+];
+const GOOD_MAP = Object.fromEntries(GOODS.map(g=>[g.id,g]));
+
+/* 실제 지리 좌표(경도/위도) — 초기화 시 픽셀로 변환 후 근해로 보정 */
+const PORTS = [
+  { id:"lisbon", name:"리스본",       lon:-10.0, lat:38.5,  p:["wine","wool"],    d:["spice","silk"]   },
+  { id:"london", name:"런던",         lon:1.2,   lat:50.6,  p:["wool","glass"],   d:["wine","spice"]   },
+  { id:"seville",name:"세비야",       lon:-7.0,  lat:36.2,  p:["wine","wool"],    d:["silk","pottery"] },
+  { id:"marseil",name:"마르세유",     lon:5.3,   lat:42.7,  p:["wine","glass"],   d:["spice","tea"]    },
+  { id:"naples", name:"나폴리",       lon:13.8,  lat:39.9,  p:["wine","glass"],   d:["silk","spice"]   },
+  { id:"venice", name:"베네치아",     lon:13.2,  lat:44.8,  p:["glass","wine"],   d:["spice","pottery"]},
+  { id:"athens", name:"아테네",       lon:23.9,  lat:37.2,  p:["pottery","wine"], d:["goldw","spice"]  },
+  { id:"istan",  name:"이스탄불",     lon:27.0,  lat:39.6,  p:["wool","goldw"],   d:["silk","tea"]     },
+  { id:"tunis",  name:"튀니스",       lon:11.5,  lat:37.8,  p:["wool","goldw"],   d:["glass","tea"]    },
+  { id:"alex",   name:"알렉산드리아", lon:29.8,  lat:32.0,  p:["glass","goldw"],  d:["spice","pottery"]},
+  { id:"dakar",  name:"다카르",       lon:-18.3, lat:14.5,  p:["goldw","wool"],   d:["glass","wine"]   },
+  { id:"elmina", name:"엘미나",       lon:-1.0,  lat:4.2,   p:["goldw","spice"],  d:["wool","glass"]   },
+  { id:"luanda", name:"루안다",       lon:11.9,  lat:-8.7,  p:["spice","wool"],   d:["wine","tea"]     },
+  { id:"cape",   name:"케이프타운",   lon:17.4,  lat:-34.8, p:["wine","wool"],    d:["tea","silk"]     },
+  { id:"sofala", name:"소팔라",       lon:37.4,  lat:-19.7, p:["goldw","spice"],  d:["glass","pottery"]},
+  { id:"zanzi",  name:"잔지바르",     lon:40.3,  lat:-6.3,  p:["spice","goldw"],  d:["wool","pottery"] },
+  { id:"aden",   name:"아덴",         lon:45.0,  lat:11.9,  p:["spice","goldw"],  d:["wool","wine"]    },
+  { id:"muscat", name:"무스카트",     lon:60.6,  lat:22.4,  p:["spice","goldw"],  d:["tea","wool"]     },
+  { id:"goa",    name:"고아",         lon:72.9,  lat:15.0,  p:["spice","silk"],   d:["wine","goldw"]   },
+  { id:"calicut",name:"캘리컷",       lon:74.7,  lat:11.2,  p:["spice","tea"],    d:["glass","goldw"]  },
+  { id:"colombo",name:"콜롬보",       lon:79.2,  lat:6.6,   p:["tea","spice"],    d:["wool","pottery"] },
+  { id:"calcutta",name:"캘커타",      lon:87.8,  lat:20.4,  p:["tea","silk"],     d:["glass","goldw"]  },
+  { id:"ayutt",  name:"아유타야",     lon:101.0, lat:12.4,  p:["spice","tea"],    d:["silk","glass"]   },
+  { id:"malacca",name:"말라카",       lon:101.6, lat:1.5,   p:["spice","tea"],    d:["wool","glass"]   },
+  { id:"batavia",name:"바타비아",     lon:107.2, lat:-5.6,  p:["spice","tea"],    d:["wool","wine"]    },
+  { id:"manila", name:"마닐라",       lon:119.4, lat:14.5,  p:["tea","spice"],    d:["glass","wine"]   },
+  { id:"canton", name:"광저우",       lon:113.6, lat:21.4,  p:["silk","pottery"], d:["glass","wine"]   },
+  { id:"shanghai",name:"상하이",      lon:123.0, lat:31.0,  p:["silk","tea"],     d:["spice","glass"]  },
+  { id:"busan",  name:"부산",         lon:129.9, lat:34.4,  p:["pottery","silk"], d:["spice","glass"]  },
+  { id:"nagasa", name:"나가사키",     lon:128.6, lat:32.4,  p:["pottery","tea"],  d:["wine","goldw"]   },
+  { id:"edo",    name:"에도",         lon:140.0, lat:34.2,  p:["goldw","pottery"],d:["silk","spice"]   },
+  { id:"havana", name:"아바나",       lon:-82.6, lat:23.8,  p:["spice","tea"],    d:["wool","glass"]   },
+  { id:"veracruz",name:"베라크루스",  lon:-95.8, lat:19.5,  p:["goldw","pottery"],d:["silk","wine"]    },
+  { id:"neworl", name:"뉴올리언스",   lon:-89.6, lat:28.6,  p:["wool","tea"],     d:["glass","goldw"]  },
+  { id:"newyork",name:"뉴욕",         lon:-73.4, lat:40.1,  p:["wool","glass"],   d:["tea","silk"]     },
+  { id:"carta",  name:"카르타헤나",   lon:-76.2, lat:10.9,  p:["goldw","spice"],  d:["glass","silk"]   },
+  { id:"panama", name:"파나마",       lon:-79.6, lat:7.4,   p:["goldw","spice"],  d:["wool","wine"]    },
+  { id:"lima",   name:"리마",         lon:-77.9, lat:-12.6, p:["goldw","pottery"],d:["wine","glass"]   },
+  { id:"valpo",  name:"발파라이소",   lon:-72.5, lat:-33.0, p:["wine","wool"],    d:["tea","spice"]    },
+  { id:"buenos", name:"부에노스아이레스", lon:-56.8, lat:-35.6, p:["wool","wine"], d:["silk","pottery"] },
+  { id:"rio",    name:"리우데자네이루", lon:-43.1, lat:-23.9, p:["goldw","tea"],  d:["wool","glass"]   },
+  { id:"acapulco",name:"아카풀코",    lon:-100.4,lat:16.3,  p:["goldw","pottery"],d:["silk","spice"]   },
+  { id:"sanfran",name:"샌프란시스코", lon:-123.5,lat:37.2,  p:["goldw","wool"],   d:["tea","pottery"]  },
+  { id:"sydney", name:"시드니",       lon:152.2, lat:-34.3, p:["wool","wine"],    d:["tea","glass"]    },
+  { id:"perth",  name:"퍼스",         lon:114.7, lat:-32.3, p:["wool","goldw"],   d:["spice","tea"]    },
+  { id:"honolulu",name:"호놀룰루",    lon:-158.0,lat:20.9,  p:["tea","spice"],    d:["goldw","glass"]  },
+];
+const PORT_MAP = Object.fromEntries(PORTS.map(p=>[p.id,p]));
+
+/* 항해사 — bonus: sell/buy/route/luck/salv/food/speed */
+const NAVIGATORS = [
+  { id:"seraphine", name:"세라핀",   title:"리스본의 상인",     port:"lisbon", cost:2000,
+    bonus:{sell:.06},  desc:"미소가 아름다운 무역상. 흥정이라면 리스본 제일.",
+    look:{hair:0,hc:"#b8865f",skin:"#f7e3d4",blush:1,acc:"ear"} },
+  { id:"isabella",  name:"이자벨라", title:"베네치아의 중개인", port:"venice", cost:2500,
+    bonus:{buy:.06},   desc:"유리처럼 투명한 눈동자. 좋은 물건을 싸게 구해다 준다.",
+    look:{hair:3,hc:"#5a3b28",skin:"#f7e3d4",blush:1,acc:"ear"} },
+  { id:"leyla",     name:"레일라",   title:"이스탄불의 책사",   port:"istan",  cost:4000,
+    bonus:{route:.15}, desc:"보스포루스의 물길을 손금 보듯 읽는 전략가.",
+    look:{hair:2,hc:"#2e2a28",skin:"#eecfae",blush:1,acc:"ear"} },
+  { id:"rashid",    name:"라시드",   title:"알렉산드리아의 점성술사", port:"alex", cost:3000,
+    bonus:{luck:8},    desc:"별을 읽는 잘생긴 청년. 그와 함께라면 바다가 웃는다.",
+    look:{hair:1,hc:"#1e1b19",skin:"#caa07a",blush:0,acc:"none"} },
+  { id:"amin",      name:"아민",     title:"아덴의 잠수부",     port:"aden",   cost:3500,
+    bonus:{salv:.25},  desc:"바다에 가라앉은 것은 무엇이든 건져 올린다.",
+    look:{hair:1,hc:"#2e2a28",skin:"#caa07a",blush:0,acc:"none"} },
+  { id:"zaina",     name:"자이나",   title:"잔지바르의 요리사", port:"zanzi",  cost:4500,
+    bonus:{food:.10},  desc:"향신료의 마법사. 같은 식량으로 두 배 멀리 간다.",
+    look:{hair:5,hc:"#171412",skin:"#8d6748",blush:1,acc:"ear"} },
+  { id:"noah",      name:"노아",     title:"케이프타운의 키잡이", port:"cape", cost:6000,
+    bonus:{speed:.06}, desc:"폭풍의 곶을 스무 번 넘은 과묵한 미남 항해사.",
+    look:{hair:4,hc:"#7a5a3a",skin:"#f7e3d4",blush:0,acc:"none"} },
+  { id:"priya",     name:"프리야",   title:"캘리컷의 보석상",   port:"calicut",cost:7000,
+    bonus:{sell:.08},  desc:"그녀가 값을 부르면 상인들은 고개를 끄덕일 뿐.",
+    look:{hair:0,hc:"#171412",skin:"#caa07a",blush:1,acc:"ear"} },
+  { id:"maya",      name:"마야",     title:"말라카의 예언가",   port:"malacca",cost:7500,
+    bonus:{luck:12},   desc:"해협의 바람이 그녀의 귓가에 내일을 속삭인다.",
+    look:{hair:3,hc:"#3d2b1f",skin:"#caa07a",blush:1,acc:"ear"} },
+  { id:"minghua",   name:"밍화",     title:"광저우의 거상",     port:"canton", cost:8000,
+    bonus:{buy:.08},   desc:"비단길의 큰손. 그의 도장 하나면 값이 절반이 된다.",
+    look:{hair:4,hc:"#171412",skin:"#eecfae",blush:0,acc:"glass"} },
+  { id:"haruka",    name:"하루카",   title:"나가사키의 파도술사", port:"nagasa", cost:10000,
+    bonus:{speed:.08}, desc:"파도의 결을 읽어 배를 미끄러지듯 나아가게 한다.",
+    look:{hair:5,hc:"#26221f",skin:"#f7e3d4",blush:1,acc:"ear"} },
+  { id:"marco",     name:"마르코",   title:"마닐라의 항로개척자", port:"manila", cost:9000,
+    bonus:{route:.25}, desc:"지도에 없는 길을 그리는 모험가. 항로 수익의 달인.",
+    look:{hair:1,hc:"#5a3b28",skin:"#eecfae",blush:0,acc:"none"} },
+];
+/* 🌟 떠도는 항해사 — 정해진 항구 없이 기항 시 인연(0.5%)으로만 만남. 강력하고 비쌈 */
+const RARE_NAVS = [
+  { id:"adelaide", name:"아델라이데", title:"폭풍의 여제",     cost:32000, bonus:{speed:.14,luck:10},
+    desc:"허리케인 한가운데를 세 번 뚫고 나온 전설의 선장." },
+  { id:"cassandra",name:"카산드라",   title:"운명을 읽는 자",   cost:30000, bonus:{luck:25},
+    desc:"그녀가 침몰을 예언한 배는 단 한 척도 무사하지 못했다." },
+  { id:"odilia",   name:"오딜리아",   title:"북해의 늑대",     cost:28000, bonus:{speed:.12,food:.10},
+    desc:"얼어붙은 바다에서 태어나 파도를 뜯어먹고 자랐다." },
+  { id:"liuying",  name:"류잉",       title:"남해의 검무희",   cost:26000, bonus:{luck:15,salv:.30},
+    desc:"칼끝으로 바다의 보물을 낚아 올리는 무희." },
+  { id:"ismene",   name:"이스멘",     title:"세이렌의 후예",   cost:24000, bonus:{sell:.12},
+    desc:"그녀의 노래를 들은 상인은 지갑을 여는 것을 잊지 못한다." },
+  { id:"beatrice", name:"베아트리체", title:"황금 장부",       cost:27000, bonus:{buy:.13},
+    desc:"세상 모든 시세가 그녀의 장부 안에 적혀 있다." },
+  { id:"naila",    name:"나일라",     title:"사막의 별",       cost:29000, bonus:{luck:20,food:.10},
+    desc:"별 없는 밤에도 길을 잃지 않는 대상(隊商)의 후예." },
+  { id:"yukine",   name:"유키네",     title:"설월화",          cost:25000, bonus:{food:.22},
+    desc:"한 줌의 쌀로 함대를 먹이는 신묘한 살림꾼." },
+  { id:"rosalind", name:"로자린드",   title:"함대의 어머니",   cost:31000, bonus:{route:.45},
+    desc:"그녀가 축복한 항로는 폭풍도 비켜 간다." },
+  { id:"charlotte",name:"샤를로트",   title:"백은의 항해도",   cost:34000, bonus:{speed:.15},
+    desc:"은으로 그린 해도에는 바람의 길이 새겨져 있다." },
+  { id:"drake",    name:"드레이크",   title:"바다의 매",       cost:33000, bonus:{speed:.13,luck:12},
+    desc:"수평선 너머의 먹잇감도 놓치지 않는 눈을 가졌다." },
+  { id:"alvaro",   name:"알바로",     title:"침몰선 사냥꾼",   cost:26000, bonus:{salv:.55},
+    desc:"바다 밑 보물의 절반은 이미 그의 손을 거쳐 갔다." },
+  { id:"hassan",   name:"하산",       title:"향신료 대공",     cost:35000, bonus:{sell:.10,buy:.08},
+    desc:"후추 한 줌으로 궁전을 산 사내." },
+  { id:"klaus",    name:"클라우스",   title:"북극성 항법사",   cost:30000, bonus:{food:.15,speed:.08},
+    desc:"북극성이 구름에 가려도 그의 항로는 흔들리지 않는다." },
+  { id:"jinhai",   name:"진하이",     title:"용왕의 아들",     cost:38000, bonus:{luck:30},
+    desc:"바다가 그를 삼키지 못해 아들로 삼았다는 소문이 있다." },
+  { id:"mateo",    name:"마테오",     title:"쌍둥이 항로",     cost:33000, bonus:{route:.50},
+    desc:"한 번에 두 개의 항로를 계산하는 천재 도선사." },
+  { id:"ragnar",   name:"라그나",     title:"서리수염",        cost:27000, bonus:{luck:10,food:.15},
+    desc:"수염에 맺힌 서리로 날씨를 읽는 북방의 노장." },
+  { id:"santiago", name:"산티아고",   title:"무적함대의 유령", cost:29000, bonus:{speed:.10,salv:.30},
+    desc:"침몰한 무적함대에서 홀로 돌아온 남자." },
+  { id:"osman",    name:"오스만",     title:"일곱 바다의 상인", cost:36000, bonus:{sell:.09,route:.25},
+    desc:"일곱 바다 모든 항구에 그의 외상 장부가 있다." },
+  { id:"kenshin",  name:"켄신",       title:"파도 베는 자",     cost:40000, bonus:{speed:.16},
+    desc:"뱃머리로 파도를 베어 길을 연다는 검객 항해사." },
+].map(n=>({ ...n, port:null, rare:true }));
+NAVIGATORS.push(...RARE_NAVS);
+const NAV_MAP = Object.fromEntries(NAVIGATORS.map(n=>[n.id,n]));
+
+/* 항해사 전용 이벤트 대사·선물 (호감도 80 달성 시) */
+const NAV_EXTRA = {
+  seraphine:{ talk:"리스본의 노을보다… 당신과 보는 바다가 더 근사해요.", gift:{gold:600},        gname:"거상의 거래 정보 (+600골드)" },
+  isabella: { talk:"이 유리구슬, 당신 눈동자 색이라 골랐어요.",           gift:{good:["glass",15]},gname:"베네치아 유리세공 15개" },
+  leyla:    { talk:"별자리보다 아름다운 항로는 처음이에요. 당신이 그린 항로요.", gift:{gold:800},  gname:"비밀 항로의 수익 (+800골드)" },
+  rashid:   { talk:"오늘 밤은 별이 당신 편이에요. 제가 그렇게 읽었거든요.", gift:{gold:500},       gname:"별점 투자 수익 (+500골드)" },
+  amin:     { talk:"바다 밑에서 이걸 주웠을 때, 당신 생각이 났습니다.",     gift:{gold:700},       gname:"심해의 진주 (+700골드)" },
+  zaina:    { talk:"새 요리를 만들었어요. 첫 입은 언제나 당신 거예요.",     gift:{sup:1},          gname:"향신료 만찬 (보급 가득)" },
+  noah:     { talk:"…당신 곁이라면, 폭풍의 곶도 나쁘지 않군.",             gift:{buff:"순풍",d:3}, gname:"바람의 가호 (3일 순풍)" },
+  priya:    { talk:"이 보석은 값을 매기지 않을래요. 당신에게 어울리니까.",  gift:{good:["goldw",5]},gname:"금세공품 5개" },
+  maya:     { talk:"당신의 미래를 봤어요. …비밀이지만, 좋은 미래였어요.",   gift:{gold:800},       gname:"예언의 배당 (+800골드)" },
+  minghua:  { talk:"당신과의 거래가 요즘 제일 즐겁소. 이건 덤이오.",        gift:{good:["silk",10]},gname:"비단 10필" },
+  haruka:   { talk:"파도가 당신을 좋아해요. 저도… 파도와 같은 마음이에요.", gift:{buff:"순풍",d:3}, gname:"파도의 가호 (3일 순풍)" },
+  marco:    { talk:"지도에 없는 섬, 언젠가 꼭 같이 찾으러 갑시다.",         gift:{gold:1000},      gname:"숨겨진 보물 (+1,000골드)" },
+  /* 떠도는 항해사 전용 이벤트 */
+  adelaide: { talk:"폭풍의 눈 속은 고요해요. 당신 곁처럼.",                gift:{buff:"순풍",d:5}, gname:"여제의 바람 (5일 순풍)" },
+  cassandra:{ talk:"당신을 만나는 미래만은… 일부러 읽지 않았어요.",        gift:{gold:2500},      gname:"예언의 대가 (+2,500골드)" },
+  odilia:   { talk:"늑대는 무리를 고르는 데 신중하지. 당신을 골랐다.",     gift:{sup:1},          gname:"북해의 사냥 (보급 가득)" },
+  liuying:  { talk:"제 검무, 당신에게만 보여드릴게요.",                    gift:{gold:2200},      gname:"검무의 사례 (+2,200골드)" },
+  ismene:   { talk:"노래로 홀리지 않아도… 당신은 이미 곁에 있네요.",       gift:{gold:2000},      gname:"세이렌의 진주 (+2,000골드)" },
+  beatrice: { talk:"당신 이름 옆에는 이문이 아니라 마음을 적어뒀어요.",    gift:{gold:2700},      gname:"비밀 장부 (+2,700골드)" },
+  naila:    { talk:"사막의 별은 하나뿐이죠. 바다에선… 당신이에요.",        gift:{gold:2400},      gname:"별의 축복 (+2,400골드)" },
+  yukine:   { talk:"오늘 밤엔 특별한 걸 끓였어요. 둘이서만 먹어요.",       gift:{sup:1},          gname:"설월화의 만찬 (보급 가득)" },
+  rosalind: { talk:"함대는 가족이에요. 당신은… 그 중심이고요.",            gift:{gold:2600},      gname:"어머니의 축복 (+2,600골드)" },
+  charlotte:{ talk:"백은 해도의 마지막 항로, 당신에게만 보여줄게요.",      gift:{buff:"순풍",d:5}, gname:"은빛 바람길 (5일 순풍)" },
+  drake:    { talk:"매는 평생 한 하늘만 난다. 내 하늘은 정해졌군.",        gift:{gold:2800},      gname:"매의 전리품 (+2,800골드)" },
+  alvaro:   { talk:"바다 밑 보물보다 값진 걸 갑판 위에서 찾았소.",         gift:{gold:2300},      gname:"심해의 금괴 (+2,300골드)" },
+  hassan:   { talk:"향신료 창고 열쇠요. 내 전 재산이자… 내 마음이오.",     gift:{good:["spice",25]}, gname:"향신료 25상자" },
+  klaus:    { talk:"북극성은 변하지 않소. 내 충성도 그렇소.",              gift:{sup:1},          gname:"항법사의 준비 (보급 가득)" },
+  jinhai:   { talk:"용왕께 그대를 소개해야겠어. 내 사람이라고.",           gift:{gold:3000},      gname:"용궁의 예물 (+3,000골드)" },
+  mateo:    { talk:"두 개의 항로가 하나로 모이는 지점… 그게 당신이오.",    gift:{gold:2600},      gname:"도선사의 지혜 (+2,600골드)" },
+  ragnar:   { talk:"서리가 녹는군. 그대 곁은 따뜻해서 큰일이야.",          gift:{good:["wool",25]}, gname:"북방의 모직물 25필" },
+  santiago: { talk:"유령은 미련이 있어 남는다지. 내 미련은 그대요.",       gift:{gold:2400},      gname:"무적함대의 유산 (+2,400골드)" },
+  osman:    { talk:"일곱 바다를 다 뒤져도 그대 같은 선장은 없었소.",       gift:{good:["goldw",12]}, gname:"금세공품 12점" },
+  kenshin:  { talk:"검을 놓는 날이 오면… 그대의 배에서이고 싶소.",         gift:{gold:3200},      gname:"검객의 하사금 (+3,200골드)" },
+};
+/* 항해사 초상화 — image/ 시트에서 캐릭터 선택 [시트, 열, 행] (0부터)
+   cx,cy: 첫 원 중심 / px,py: 원 간격 / d: 원 지름 (픽셀 실측값) */
+const SHEETS = {
+  M_1:{ w:1536, h:1024, d:236 },   /* d = 실측 원 지름 (광선 스캔 중앙값) */
+  M_2:{ w:1536, h:1024, d:254 },
+  W_1:{ w:1774, h:887,  d:210 },
+  W_2:{ w:1774, h:887,  d:216 },
+};
+/* [시트, 원 중심 x, 원 중심 y] — 픽셀 단위 개별 실측값 */
+const NAV_PIC = {
+  seraphine:["W_1",485,116],   /* 따뜻한 미소의 갈색머리 상인 */
+  isabella: ["W_1",1258,115],  /* 유리처럼 맑은 하늘빛 머리 */
+  leyla:    ["W_1",998,554],   /* 군모를 쓴 붉은 머리 책사 */
+  rashid:   ["M_1",1262,608],  /* 마법진을 든 점성술사 */
+  amin:     ["M_1",996,370],   /* 단련된 몸의 잠수부 */
+  zaina:    ["W_2",498,557],   /* 햇볕에 그을린 잔지바르 요리사 */
+  noah:     ["M_1",159,370],   /* 백발 수염의 노련한 키잡이 */
+  priya:    ["W_2",1013,340],  /* 금장식을 두른 보석상 */
+  maya:     ["W_2",759,339],   /* 모자를 쓴 예언가 */
+  minghua:  ["M_1",996,606],   /* 상투를 튼 광저우 거상 */
+  haruka:   ["W_1",998,116],   /* 파도빛 남색 머리 */
+  marco:    ["M_2",1335,135],  /* 씩 웃는 붉은 머리 모험가 */
+  /* 떠도는 항해사 (개별 실측) */
+  adelaide: ["W_1",1490,116], cassandra:["W_1",240,115],  odilia:  ["W_2",753,556],
+  liuying:  ["W_2",1503,774], ismene:   ["W_1",742,115],  beatrice:["W_1",998,773],
+  naila:    ["W_1",484,554],  yukine:   ["W_1",742,554],  rosalind:["W_1",239,334],
+  charlotte:["W_2",1519,124], drake:    ["M_2",1047,135], alvaro:  ["M_2",469,135],
+  hassan:   ["M_1",435,844],  klaus:    ["M_1",435,132],  jinhai:  ["M_2",179,383],
+  mateo:    ["M_1",996,846],  ragnar:   ["M_2",180,632],  santiago:["M_2",469,632],
+  osman:    ["M_1",1259,132], kenshin:  ["M_1",159,609],
+};
+/* 동료 이벤트 잡담 */
+const NAV_LINES = [
+  "갑판에 나와 함께 바람을 쐬자고 청합니다.",
+  "당신 몫의 야식을 몰래 챙겨 왔습니다.",
+  "별자리 이야기를 들려주고 싶어 합니다.",
+  "항해일지를 함께 쓰자고 합니다.",
+  "수평선 너머 노을을 말없이 가리킵니다.",
+  "뱃노래를 흥얼거리다 눈이 마주치자 웃습니다.",
+];
+function affName(a){ return a>=80?"운명의 동반자":a>=50?"깊은 신뢰":a>=20?"친근한 사이":"서먹한 사이"; }
+
+/* 해적 소굴 — 토벌 목표 콘텐츠 (난이도 순) */
+const DENS = [
+  { id:"barbary", name:"바르바리 해적단",   region:"모로코 앞바다", lon:-13,   lat:33.5, pow:28,  gold:800,  ship:"R"  },
+  { id:"redsea",  name:"홍해의 약탈자",     region:"아덴만",        lon:48.8,  lat:12.1, pow:50,  gold:1500, ship:"SR" },
+  { id:"carib",   name:"카리브의 무법자들", region:"카리브해",      lon:-75,   lat:15.5, pow:60,  gold:2000, ship:"SR" },
+  { id:"indian",  name:"인도양의 무법자",   region:"인도양 외해",   lon:68,    lat:1.5,  pow:72,  gold:2500, ship:"SR" },
+  { id:"scs",     name:"남중국해의 해적왕", region:"남중국해",      lon:112.5, lat:14,   pow:95,  gold:4000, ship:"SSR"},
+  { id:"wokou",   name:"왜구 대함대",       region:"동중국해",      lon:125.8, lat:29.3, pow:120, gold:6000, ship:"SSR"},
+];
+const DEN_CLEAR_GOLD = 8000;   /* 전체 토벌 보너스 (+UR 함선) */
+const DEN_RESPAWN = 7;         /* 잔당 재집결 주기(일) */
+const DEN_DANGER_R = 180;      /* 소굴 세력권 반경 — 해적 조우율 증가 */
+
+/* 업적 & 칭호 — 달성 시 골드 + 칭호(장착하면 효과 적용) */
+const ACHV = [
+  { id:"firstpull", name:"선주",          desc:"조선소에서 첫 배를 건조한다",      gold:200,  bonus:{},
+    cond:s=>s.stats.pulls>=1 },
+  { id:"explorer10",name:"탐험가",        desc:"항구 10곳을 방문한다",             gold:300,  bonus:{luck:2},
+    cond:s=>s.visited.length>=10, prog:s=>[s.visited.length,10] },
+  { id:"worldtour", name:"대항해자",      desc:"세계의 모든 항구를 방문한다",      gold:2000, bonus:{speed:.03},
+    cond:s=>s.visited.length>=PORTS.length, prog:s=>[s.visited.length,PORTS.length] },
+  { id:"collector", name:"제독",          desc:"도감에 함선 10종을 등록한다",      gold:800,  bonus:{route:.10},
+    cond:s=>Object.keys(s.ships).length>=10, prog:s=>[Object.keys(s.ships).length,10] },
+  { id:"dexmaster", name:"전설의 선장",   desc:"함선 도감을 완성한다",             gold:3000, bonus:{luck:10},
+    cond:s=>Object.keys(s.ships).length>=SHIPS.length, prog:s=>[Object.keys(s.ships).length,SHIPS.length] },
+  { id:"rich",      name:"거상",          desc:"골드 10,000을 보유한다",           gold:500,  bonus:{sell:.03},
+    cond:s=>s.gold>=10000, prog:s=>[Math.min(s.gold,10000),10000] },
+  { id:"tradeking", name:"무역왕",        desc:"누적 판매 수익 20,000골드 달성",   gold:1500, bonus:{buy:.03},
+    cond:s=>s.stats.sell>=20000, prog:s=>[Math.min(s.stats.sell,20000),20000] },
+  { id:"popular",   name:"인기인",        desc:"항해사 6명을 영입한다",            gold:800,  bonus:{luck:5},
+    cond:s=>s.navs.length>=6, prog:s=>[s.navs.length,6] },
+  { id:"romantic",  name:"낭만가",        desc:"호감도 100을 달성한다",            gold:600,  bonus:{food:.05},
+    cond:s=>Object.values(s.aff).some(a=>a>=100) },
+  { id:"hunter",    name:"해적 사냥꾼",   desc:"해적 소굴을 처음 토벌한다",        gold:500,  bonus:{luck:3},
+    cond:s=>Object.keys(s.dens).length>=1 },
+  { id:"guardian",  name:"바다의 수호자", desc:"모든 해적 소굴을 토벌한다",        gold:2000, bonus:{speed:.05},
+    cond:s=>DENS.every(d=>s.dens[d.id]), prog:s=>[Object.keys(s.dens).length,DENS.length] },
+  { id:"phoenix",   name:"불사조",        desc:"조난에서 살아 돌아온다",           gold:300,  bonus:{food:.03},
+    cond:s=>s.stats.deaths>=1 },
+  { id:"veteran",   name:"노련한 선장",   desc:"항해 100일을 넘긴다",              gold:1000, bonus:{food:.05},
+    cond:s=>s.day>=100, prog:s=>[Math.floor(Math.min(s.day,100)),100] },
+  { id:"merchant",  name:"단골 상인",     desc:"납품 의뢰 10회 완료",              gold:800,  bonus:{sell:.02},
+    cond:s=>(s.stats.quests||0)>=10, prog:s=>[Math.min(s.stats.quests||0,10),10] },
+  { id:"polar",     name:"극지 개척자",   desc:"유빙 해역을 누적 3일 항해한다(72시간)", gold:1200, bonus:{food:.04},
+    cond:s=>(s.stats.arctic||0)>=3, prog:s=>[Math.min(Math.floor((s.stats.arctic||0)*24),72),72] },
+  { id:"tycoon",    name:"항만 재벌",     desc:"한 항구를 투자 ★5 단골 항구로 만든다", gold:1500, bonus:{route:.05},
+    cond:s=>Object.values(s.invest||{}).some(v=>v>=5),
+    prog:s=>[Math.max(0,...Object.values(s.invest||{}),0),5] },
+];
+const ACHV_MAP = Object.fromEntries(ACHV.map(a=>[a.id,a]));
+
+/* 도감 수집 보상 — 종 수 마일스톤 + 등급별 전종 수집 (자동 지급) */
+const DEX_MILE = [
+  { id:"m3",  need:3,  gold:300  },
+  { id:"m6",  need:6,  gold:600  },
+  { id:"m9",  need:9,  gold:1200 },
+  { id:"m12", need:12, gold:2000 },
+  { id:"m15", need:15, gold:3000 },
+  { id:"m18", need:18, gold:5000, ur:true },   /* 도감 완성: +UR 함선 강화 */
+];
+const DEX_GRADE = [
+  { id:"gN",   grade:"N",   gold:500  },
+  { id:"gR",   grade:"R",   gold:1000 },
+  { id:"gSR",  grade:"SR",  gold:2000 },
+  { id:"gSSR", grade:"SSR", gold:4000 },
+  { id:"gUR",  grade:"UR",  gold:8000 },
+];
+
+const WORLD_W = 5460, WORLD_H = 2450;
+const GACHA_COST = 1000, GACHA_TEN = 9000;
+const FOOD_COST = 2, WATER_COST = 1;   /* 출항 보급 단가 (골드/1) */
+const INVEST_COST = [500, 1000, 2000, 3500, 5500];   /* 항구 투자 비용 (Lv1~5) */
+const DAY_SEC = 8;                     /* 항해 8초 = 하루 */
+
+/* ══════════════════ 투영 & 세계 지리 (전 세계, 동서 순환) ══════════════════ */
+const KX = 15, KY = 17.7, LAT0 = 78, LON0 = 182;   /* 경도→px, 위도→px (북위 78°까지) */
+const PX = lon => (lon+LON0)*KX;
+const PY = lat => (LAT0-lat)*KY;
+
+/* 간략화한 실제 해안선 (경도,위도 순의 평면 배열) */
+const LAND = [
+/* 아프로·유라시아 본토 */
+[5,66, 5.5,61, 5,59, 7.5,57.5, 8,55.5, 5.5,53.5, 4.5,52.5, 1.8,49.6, 0,49.1,
+ -2.2,48.9, -4.8,48.1, -2.5,47, -1.2,45.5, -1.6,43.7, -6,43.6, -9.3,43.3,
+ -9.5,41, -9.7,38.7, -9,37.2, -7.3,37.1, -6,36.6, -5.4,36.4,
+ -3,36.8, -0.5,37.8, 0.3,39.4, 1.5,41.2, 3.3,42.3, 4.8,43.3, 6.8,43.6,
+ 8.9,44.4, 10.5,42.8, 12.2,41.7, 14.8,40.4, 16,38.5, 16.3,37.9, 17.2,39,
+ 18.3,39.7, 15.8,41.8, 13.8,42.3, 13.2,43.5, 12.3,44.8, 12.7,45.6, 13.9,45.7,
+ 16,44.4, 17.5,43.2, 19,42.4, 20.1,41.2, 20.5,39.4, 21.3,37.5, 22,36.5,
+ 23.2,36.4, 23.5,37.9, 24.2,38.4, 24,39.7, 24.5,40.9, 26.2,40.8, 28.9,40.8,
+ 26.9,38.9, 27.3,37, 28.5,36.7, 30.5,36.3, 32.5,36.1, 34.5,36.3, 36,36.6,
+ 35.7,35, 35.4,33.3, 34.6,31.7, 33,31.1, 31.2,31.3, 29.5,31, 27,31.2,
+ 25.2,31.9, 23,32.4, 20.1,32.2, 19.3,30.5, 17.5,31, 15.3,32.4, 13,32.9,
+ 11.1,33.6, 10.1,34.3, 10.3,36.2, 11,37.1, 9.8,37.3, 8,36.9, 5.3,36.8,
+ 2,36.6, -0.5,35.5, -2.9,34.9, -5.9,34.3,
+ -8.5,33.2, -9.8,31, -11.5,28.5, -13,27, -15.9,23.7, -17.1,20.8, -16.5,16.5,
+ -17.4,14.7, -16.5,12.4, -15,10.8, -13,9.5, -11.5,7, -7.5,4.4, -3,5.1,
+ 1.2,6, 4.3,6.3, 7,4.5, 8.8,4, 9.7,2.8, 9.3,0, 9,-2, 11.8,-4.7, 13.2,-8.5,
+ 13,-12, 12,-15.5, 11.8,-18, 13,-22, 14.5,-25.5, 15.8,-28.5, 17.3,-31.5,
+ 18.4,-34.3, 20,-34.9, 23,-34.1, 26,-33.9, 28.5,-32.5, 31.1,-29.7, 32.7,-27,
+ 35.3,-23.8, 35.2,-21, 34.8,-19.9, 36.5,-17.9, 39,-16.5, 40.7,-14.5, 40.4,-11,
+ 40,-8, 39.3,-6.2, 38.9,-4.5, 39.3,-3, 40.2,-2, 41.5,-1.5, 43,0.5, 46,3,
+ 49,7, 51.4,10.5, 50,11.4, 47,11, 44.5,10.6, 43.3,11.2, 42.6,12.6, 41.5,14.5,
+ 39.8,16.5, 38,20.5, 36.5,23, 35.2,25.5, 34,27.5, 32.4,29.5, 33.7,27.6,
+ 34.9,29.3, 36,25.5, 37.5,23, 38.8,20.5, 40.5,17.5, 42.2,15.3, 43.3,13.2,
+ 44.8,12.7, 47.5,13.4, 49.2,14.4, 52,15.7, 54.8,17, 57,18.7, 58.8,20.5,
+ 59.8,22.3, 58.5,23.8, 56.6,24.6, 56.3,26.2, 55,25, 53,24.2, 51.5,24.4,
+ 50.5,25.5, 48.8,27.5, 47.8,30, 49,30.3, 50.5,29, 52,27.5, 54.5,26.6,
+ 56.8,27.1, 59,25.5, 61.8,25.1, 64.5,25.2, 66.8,24.6, 68.2,23.5, 69,22,
+ 70,20.7, 72.7,19.2, 73.5,16, 74.5,13.5, 75.5,11.4, 76.5,9, 77.4,8.1,
+ 78.2,8.9, 79.3,10.3, 79.9,10.8, 80.3,13.4, 80.2,15.8, 82.3,17, 84.8,19.2,
+ 86.9,20.5, 88,21.9, 89.5,21.9, 91,22.4, 91.9,22.2, 92.5,20.5, 93.8,18,
+ 94.3,16, 95.5,15.8, 97.2,16.9, 97.7,15.5, 98.3,13, 98.5,10.5, 98.7,8.5,
+ 100.2,6.5, 100.9,4.8, 101.5,3.4, 102.3,2.2, 103.5,1.4, 104.2,1.7, 103.5,3.5,
+ 103,5.5, 102.2,6.9, 101.5,9, 100.5,11.5, 100,13.4, 100.8,13.4, 102,12.3,
+ 103.5,10.7, 105,9.2, 106.5,9.8, 106.8,10.4, 108.2,11.5, 109.2,13.5,
+ 109.1,15.5, 108.2,16.5, 106.5,18.5, 105.8,19.8, 106.7,20.8, 108,21.6,
+ 109.5,21.4, 110.4,21.2, 111.8,21.6, 113.6,22.4, 114.8,22.6, 116.5,23.2,
+ 117.5,24, 118.3,25.5, 119.5,27.5, 120.8,29.5, 121.5,30.5, 121.9,31.3,
+ 120.8,32.8, 119.8,34.5, 119.2,35.5, 120.5,36.5, 122.5,37.2, 121,37.8,
+ 119.5,38.2, 118.5,38.8, 119.5,39.6, 121.5,39.4, 122.5,39.8, 124,39.7,
+ 125,39.2, 126.2,37.7, 126.4,36.5, 126.2,35, 127.5,34.5, 129.4,35.3,
+ 129.6,36.5, 129.3,38, 128.5,38.8, 129.8,40.2, 129.7,41.5, 130.7,42.3,
+ 132,43.3, 135.5,45.5, 137.5,49, 140,51.5, 141.5,53.5, 147,59, 153,60,
+ 156,57, 158.5,52.5, 161,56, 163,60, 170,62.5, 178,65, 179,66],
+/* 브리튼 */
+[-5.7,50.5, 0.9,51.3, 2,52.7, 0.2,53.5, -1.5,55, -2.5,56.5, -4,57.8,
+ -5.5,58.4, -6.2,56.8, -4.9,54.8, -4.6,53.3, -5.3,51.7],
+/* 아일랜드 */
+[-9.9,53.5, -8,55.2, -6.2,54.4, -6,52.2, -8.5,51.5, -10.2,52.2],
+/* 시칠리아 */
+[12.9,38, 15.2,38.4, 15.1,37, 13.1,37.3],
+/* 사르데냐·코르시카 */
+[8.2,41, 9.3,43, 9.9,42.5, 9.6,38.9, 8.4,39],
+/* 크레타 */
+[23,35.3, 25.8,35, 25.2,34.7, 23.2,34.9],
+/* 키프로스 */
+[31.8,35.3, 33.8,35.5, 33.2,34.8, 32,34.8],
+/* 마다가스카르 */
+[44.2,-16.2, 43.9,-21, 44.4,-25.2, 47.1,-25.1, 49.5,-19, 50.4,-15.7,
+ 49.3,-12.1, 47.9,-13.3, 46.2,-15.9],
+/* 스리랑카 */
+[80.5,9.8, 82,8.6, 81.8,6.3, 80.4,6, 79.9,7.5],
+/* 수마트라 */
+[95.4,5.5, 97.2,4.2, 99.5,1.8, 101.8,-0.8, 103.6,-2.2, 105.9,-5.7,
+ 104.5,-5.8, 102,-4.3, 100.2,-2.5, 98.2,-0.5, 96.5,2.2, 95.2,4.8],
+/* 자바 */
+[106.4,-6.7, 110,-6.7, 114.4,-7.5, 114.5,-8.7, 110,-8.3, 106.6,-7.6],
+/* 보르네오 */
+[109.2,1.9, 108.9,-0.8, 110.2,-2.9, 113.8,-3.8, 116.3,-3.2, 116.8,-1,
+ 117.7,0.8, 118.7,4.2, 117.1,6.8, 115.1,5.9, 112.9,3.1, 110.9,1.5],
+/* 술라웨시 */
+[118.9,0.6, 120.8,0.3, 120.5,-2.5, 120.8,-5.4, 119.4,-5.6, 119.6,-3, 118.8,-2],
+/* 루손 */
+[119.8,16.3, 120.3,18.5, 122.2,18.4, 122.4,16.2, 123.8,13.9, 122.5,13.5,
+ 120.6,13.8, 120.9,15.3],
+/* 비사야·민다나오 */
+[121.9,11.5, 125.5,11, 126.6,8.5, 126.3,6.2, 124,5.7, 122,6.5, 121.9,8, 123,9.5],
+/* 타이완 */
+[120.5,22.5, 120.9,25.2, 122,25.2, 121.6,22.7],
+/* 하이난 */
+[108.8,19.5, 109.8,20.1, 111,19.6, 110.4,18.3, 109.1,18.4],
+/* 규슈 */
+[129.6,31.1, 129.3,32.9, 130.8,33.4, 131.9,33.0, 131.5,31.1, 130.6,30.8],
+/* 혼슈·시코쿠 */
+[131.9,34.3, 133.2,35.6, 136,36, 137.2,37.4, 139.8,40, 141.3,41.3, 141.8,39.5,
+ 140.9,35.6, 138.9,34.6, 137,34.6, 135.5,33.5, 133,33.4, 132.4,33.6],
+/* 홋카이도 */
+[140.3,42.2, 140.8,43.3, 141.9,45.3, 143.8,44, 145.3,44.2, 145.5,43.2,
+ 143.2,42, 140.9,41.7],
+/* 아메리카 대륙 (북미+중미+남미, 파나마 지협 연결) */
+[-168,66, -166,62, -163,59.5, -158,57.5, -153,58.8, -146,60.5, -140,59.3,
+ -135,57, -130,53.5, -125.5,49, -124.2,45.5, -124.3,40.5, -122.2,37,
+ -120.5,34.4, -117.2,32.6, -114.8,30, -112.2,26, -109.6,23, -111,24.5,
+ -113,27.5, -114.3,30.5, -112.8,31.6, -109.5,26.8, -106.5,23.3, -104,19.7,
+ -100.5,17.2, -96.5,15.8, -93,14.9, -90.8,13.7, -87.7,13, -85.5,11.2,
+ -83.5,9.4, -80.9,8.1, -78.9,8.7, -77.5,7.2, -78.8,4.5, -80.5,0.5,
+ -81.3,-4.5, -79.5,-8, -77.2,-12.3, -74.5,-15.5, -70.5,-18.4, -70.3,-23,
+ -71.5,-30, -71.7,-33.2, -73.2,-37.5, -73.8,-42, -74.5,-47, -73.8,-51,
+ -71,-54, -67.3,-55.9, -64.8,-54.8, -65.5,-52, -63.8,-47.5, -62.3,-42.5,
+ -57.3,-38.3, -58.3,-34.5, -54.5,-34.8, -51.8,-31.8, -48.3,-27.2,
+ -46.4,-24.1, -43.2,-23.1, -40.9,-22, -39.2,-17.5, -38.6,-12.8, -35.2,-9.2,
+ -34.8,-7, -37.2,-4.7, -41,-2.9, -44.2,-2.2, -48,-0.9, -50.2,0.3, -52,4.2,
+ -54.8,5.8, -58,6.9, -61.2,8.6, -64,10.4, -68,11.4, -71.3,12.2, -74.3,11,
+ -75.9,9.6, -77.3,8.8, -79.3,9.5, -81.7,9.1, -83,10.6, -83.6,12.3,
+ -83.2,14.8, -85.8,15.9, -88.4,15.8, -88.4,18.4, -87.1,21.4, -90.2,21.2,
+ -91,18.9, -93.8,18.3, -96,19.1, -97.7,21.9, -97.4,25.5, -96.8,28.2,
+ -94.5,29.4, -91.5,29.2, -89.4,29.1, -87.8,30.3, -85.3,29.8, -83,28.8,
+ -81.9,26.3, -80.6,25.2, -80.1,26.8, -81,30.2, -80.8,32.1, -78.3,34,
+ -75.9,35.3, -76,37.4, -74.1,39.5, -71.7,41.2, -70,42.2, -70.4,43.7,
+ -66.5,44.6, -63.3,44.6, -60.2,46.2, -64.5,48.8, -59.5,50.2, -55.5,49.5,
+ -55.2,52.2, -57.8,54.3, -60.8,57.5, -63.5,60, -66,62.5, -70,63.5,
+ -77,64.5, -80,66],
+/* 쿠바 */
+[-84.8,22.6, -81,23.2, -79.5,22.7, -75,20.7, -74.2,20.2, -77.8,19.8,
+ -82,21.9, -84.5,21.8],
+/* 히스파니올라 */
+[-73.8,19.9, -70.8,19.9, -68.7,18.6, -70.8,18.2, -73.5,18.2],
+/* 그린란드(남단) */
+[-55,66, -53,63.5, -50,61, -46,60.3, -43.5,62, -41,64.5, -40,66],
+/* 아이슬란드 */
+[-22.5,64.5, -18,63.3, -13.8,64.7, -18.2,65.9],
+/* 오스트레일리아 */
+[113.5,-22, 114.2,-26.5, 115.6,-32, 117.8,-35.1, 121.5,-33.9, 124.5,-33,
+ 129,-31.7, 132.5,-32, 135.5,-34.5, 137.8,-35.2, 139.8,-37.2, 144,-38.4,
+ 146.4,-38.8, 149.9,-37.5, 151.4,-33.9, 153.2,-30.5, 153.5,-27.2,
+ 152.4,-24.5, 149.3,-21.2, 146.8,-19, 145.6,-16.6, 142.6,-10.9,
+ 141.6,-12.5, 140.1,-17.6, 136.8,-15.6, 135.6,-12.2, 132.3,-11.2,
+ 129.8,-12.8, 126.2,-14, 122.2,-16.8, 119,-20, 116,-20.7],
+/* 뉴기니 */
+[131,-1.5, 136,-2, 141,-3.5, 147,-6.3, 149.2,-9.6, 144.5,-8.3, 140.5,-8.2,
+ 135.5,-4.4, 131.5,-2.8],
+/* 뉴질랜드 북섬 */
+[172.8,-36.4, 175.9,-37.6, 178.2,-38.6, 176.3,-40.3, 174.5,-39.4, 172.9,-37.8],
+/* 뉴질랜드 남섬 */
+[172.7,-40.8, 174.2,-42.2, 171.2,-44.3, 168.2,-46.6, 166.6,-45.8, 170.3,-42.8],
+/* 하와이 */
+[-157.3,21.4, -155.2,20.3, -156,18.9, -157.8,20.7],
+];
+
+/* 좌표 배열 → 부드러운 폐곡선 Path2D */
+let landPaths = [];
+function makeLandPath(arr){
+  const p = new Path2D(), n = arr.length/2, xs=[], ys=[];
+  for(let i=0;i<n;i++){ xs.push(PX(arr[2*i])); ys.push(PY(arr[2*i+1])); }
+  p.moveTo((xs[0]+xs[n-1])/2, (ys[0]+ys[n-1])/2);
+  for(let i=0;i<n;i++){
+    const j = (i+1)%n;
+    p.quadraticCurveTo(xs[i], ys[i], (xs[i]+xs[j])/2, (ys[i]+ys[j])/2);
+  }
+  p.closePath();
+  return p;
+}
+
+/* ── 육지 마스크(1/2 해상도) ── */
+const MW = WORLD_W/2, MH = WORLD_H/2;
+let landMask;
+function buildMask(){
+  const mc = document.createElement("canvas");
+  mc.width = MW; mc.height = MH;
+  const g = mc.getContext("2d", { willReadFrequently:true });
+  g.scale(0.5, 0.5);
+  g.fillStyle = "#000";
+  for(const p of landPaths) g.fill(p);
+  const d = g.getImageData(0,0,MW,MH).data;
+  landMask = new Uint8Array(MW*MH);
+  for(let i=0;i<MW*MH;i++) landMask[i] = d[i*4+3] > 60 ? 1 : 0;
+}
+function isLand(x,y){
+  if(y<4||y>=WORLD_H-4) return true;
+  x = ((x % WORLD_W) + WORLD_W) % WORLD_W;          /* 동서 순환 */
+  return landMask[((y/2)|0)*MW + ((x/2)|0)] === 1;
+}
+
+/* ── 항로 격자 & A* ── */
+const CELL = 12, GC = Math.ceil(WORLD_W/CELL), GR = Math.ceil(WORLD_H/CELL);
+let blocked;
+function buildGrid(){
+  blocked = new Uint8Array(GC*GR);
+  for(let r=0;r<GR;r++)for(let c=0;c<GC;c++){
+    let b = 0;
+    for(let sy=0;sy<=2&&!b;sy++)for(let sx=0;sx<=2&&!b;sx++)
+      if(isLand(c*CELL+sx*CELL/2, r*CELL+sy*CELL/2)) b = 1;
+    blocked[r*GC+c] = b;
+  }
+}
+function openCellNear(x,y,maxR){
+  const cx = Math.floor(((x%WORLD_W)+WORLD_W)%WORLD_W/CELL), cy = Math.floor(y/CELL);
+  for(let r=0;r<=maxR;r++)
+    for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){
+      if(Math.max(Math.abs(dx),Math.abs(dy))!==r) continue;
+      const nx=(cx+dx+GC)%GC, ny=cy+dy;
+      if(ny<0||ny>=GR) continue;
+      if(!blocked[ny*GC+nx]) return ny*GC+nx;
+    }
+  return -1;
+}
+function losW(ax,ay,bx,by){
+  let dx = bx-ax;
+  if(dx > WORLD_W/2) dx -= WORLD_W; else if(dx < -WORLD_W/2) dx += WORLD_W;
+  const dy = by-ay;
+  const d = Math.hypot(dx,dy), n = Math.max(1, Math.ceil(d/5));
+  for(let i=1;i<=n;i++){
+    const t = i/n;
+    if(isLand(ax+dx*t, ay+dy*t)) return false;
+  }
+  return true;
+}
+/* 시작점 제외한 경유점 배열 반환, 실패 시 null */
+function findPath(x0,y0,x1,y1){
+  if(!isLand(x1,y1) && losW(x0,y0,x1,y1)) return [{x:x1,y:y1}];
+  const sc = openCellNear(x0,y0,16), gc = openCellNear(x1,y1,16);
+  if(sc<0||gc<0) return null;
+  const N = GC*GR;
+  const gs = new Float32Array(N).fill(1e9);
+  const came = new Int32Array(N);
+  const st = new Uint8Array(N);
+  const heap = [];
+  const push = (f,i)=>{ heap.push([f,i]); let k=heap.length-1;
+    while(k>0){ const p=(k-1)>>1; if(heap[p][0]<=heap[k][0]) break;
+      const t=heap[p]; heap[p]=heap[k]; heap[k]=t; k=p; } };
+  const pop = ()=>{ const top=heap[0], last=heap.pop();
+    if(heap.length){ heap[0]=last; let k=0;
+      for(;;){ const l=2*k+1, r=l+1; let m=k;
+        if(l<heap.length&&heap[l][0]<heap[m][0]) m=l;
+        if(r<heap.length&&heap[r][0]<heap[m][0]) m=r;
+        if(m===k) break; const t=heap[m]; heap[m]=heap[k]; heap[k]=t; k=m; } }
+    return top; };
+  const gx = gc%GC, gy = (gc/GC)|0;
+  const H = i=>{ let dx=Math.abs(i%GC-gx); dx=Math.min(dx, GC-dx);
+    const dy=Math.abs(((i/GC)|0)-gy);
+    return dx+dy-0.5858*Math.min(dx,dy); };
+  gs[sc]=0; came[sc]=-1; push(H(sc),sc);
+  const DIR = [[1,0,1],[-1,0,1],[0,1,1],[0,-1,1],
+               [1,1,1.4142],[1,-1,1.4142],[-1,1,1.4142],[-1,-1,1.4142]];
+  let found = false, guard = 0;
+  while(heap.length && guard++<90000){
+    const [,cur] = pop();
+    if(st[cur]===2) continue;
+    st[cur]=2;
+    if(cur===gc){ found=true; break; }
+    const cx=cur%GC, cy=(cur/GC)|0;
+    for(const [dx,dy,w] of DIR){
+      const nx=(cx+dx+GC)%GC, ny=cy+dy;
+      if(ny<0||ny>=GR) continue;
+      const ni=ny*GC+nx;
+      if(blocked[ni]||st[ni]===2) continue;
+      if(dx&&dy&&(blocked[cy*GC+nx]||blocked[ny*GC+cx])) continue;
+      const ng=gs[cur]+w;
+      if(ng<gs[ni]){ gs[ni]=ng; came[ni]=cur; push(ng+H(ni),ni); }
+    }
+  }
+  if(!found) return null;
+  const cells=[]; let c=gc;
+  while(c!==-1){ cells.push(c); c=came[c]; }
+  cells.reverse();
+  const pts = cells.map(i=>({ x:(i%GC)*CELL+CELL/2, y:((i/GC)|0)*CELL+CELL/2 }));
+  pts[0] = { x:x0, y:y0 };
+  if(!isLand(x1,y1)) pts.push({ x:x1, y:y1 });
+  /* 시야 기반 단순화 */
+  const out=[]; let anchor=pts[0];
+  for(let j=2;j<pts.length;j++){
+    if(!losW(anchor.x,anchor.y,pts[j].x,pts[j].y)){ out.push(pts[j-1]); anchor=pts[j-1]; }
+  }
+  out.push(pts[pts.length-1]);
+  return out;
+}
+/* 항구 좌표를 픽셀로 변환 후 가장 가까운 항해 가능 지점으로 보정 */
+function fixPorts(){
+  for(const p of PORTS){
+    p.x = PX(p.lon); p.y = PY(p.lat);
+    const c = openCellNear(p.x, p.y, 24);
+    if(c>=0){ p.x = (c%GC)*CELL+CELL/2; p.y = ((c/GC)|0)*CELL+CELL/2; }
+  }
+  for(const d of DENS){
+    d.x = PX(d.lon); d.y = PY(d.lat);
+    const c = openCellNear(d.x, d.y, 24);
+    if(c>=0){ d.x = (c%GC)*CELL+CELL/2; d.y = ((c/GC)|0)*CELL+CELL/2; }
+  }
+}
+
+/* ══════════════════ 상태 ══════════════════ */
+let state = null;
+function freshState(){
+  return {
+    gold: 1000, food: 120, water: 120,
+    day: 0, lastPort: "lisbon", buff: null,
+    aff: {}, affDone: {},          /* 항해사 호감도 / 전용 이벤트 완료 */
+    mates: [],                     /* 기함에 승선 중인 항해사들 (정원 = 배 등급) */
+    rareCd: 0,                     /* 떠도는 항해사 재등장 가능 시점(일) */
+    dens: {},                      /* 토벌한 해적 소굴 */
+    denRe: {},                     /* 소굴별 마지막 잔당 소탕일 */
+    stats: { sell:0, pulls:0, deaths:0, quests:0, arctic:0 },  /* 업적용 누적 통계 */
+    quests: null,                  /* 오늘의 납품 의뢰 {date, list} */
+    invest: {},                    /* 항구 투자 레벨 (portId → 0~5) */
+    titles: [],                    /* 달성한 업적(칭호) */
+    title: null,                   /* 장착 중인 칭호 */
+    dexRw: [],                     /* 수령한 도감 보상 */
+    ships: { fish: 0 },            /* id → 성급(중복수) */
+    flagship: "fish",
+    cargo: {},                     /* goodId → qty */
+    navs: [],                      /* 영입한 항해사 id */
+    visited: ["lisbon"],           /* 입항한 항구 */
+    found: ["lisbon"],             /* 발견하여 지도에 표시되는 항구 */
+    routes: [],                    /* {from,to,ship,last} */
+    x: PORT_MAP.lisbon.x, y: PORT_MAP.lisbon.y,
+    heading: -0.5,
+    intro: true,
+  };
+}
+function save(){ try{ localStorage.setItem("voyage_save", JSON.stringify(state)); }catch(e){} }
+function load(){
+  try{
+    const raw = localStorage.getItem("voyage_save");
+    if(raw){ state = Object.assign(freshState(), JSON.parse(raw)); return true; }
+  }catch(e){}
+  state = freshState(); return false;
+}
+
+/* ══════════════════ 유틸 ══════════════════ */
+const $ = id => document.getElementById(id);
+const fmt = n => Math.floor(n).toLocaleString();
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0;
+  let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function hash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+const dist = (a,b,c,d)=>{
+  let dx = Math.abs(c-a);
+  if(dx > WORLD_W/2) dx = WORLD_W - dx;             /* 동서 순환 거리 */
+  return Math.hypot(dx, d-b);
+};
+
+function toast(msg, gold){
+  const t = document.createElement("div");
+  t.className = "toast"+(gold?" gold":"");
+  t.textContent = msg;
+  $("toasts").appendChild(t);
+  setTimeout(()=>t.remove(), 3100);
+}
+
+/* 항해사 보너스 합산 */
+function navBonus(){
+  const b = { sell:0, buy:0, route:0, luck:0, salv:0, food:0, speed:0 };
+  for(const id of state.navs){
+    const n = NAV_MAP[id];
+    let m = 1 + (state.aff[id]||0)/200;        /* 호감도 100 → 효과 +50% */
+    if(state.mates.includes(id)) m *= 2;       /* 기함 승선 시 효과 2배 */
+    for(const k in n.bonus) b[k] += n.bonus[k]*m;
+  }
+  /* 장착한 칭호 효과 */
+  if(state.title && ACHV_MAP[state.title]){
+    const t = ACHV_MAP[state.title].bonus;
+    for(const k in t) b[k] += t[k];
+  }
+  return b;
+}
+/* 기함 실효 스탯 */
+function effStats(id){
+  const s = SHIP_MAP[id], st = state.ships[id]||0, b = navBonus();
+  return {
+    speed: s.speed * (1+0.04*Math.min(st,5)) * (1+b.speed),
+    cargo: s.cargo,
+    food:  s.food * (1-0.04*Math.min(st,5)) * (1-b.food),
+    luck:  s.luck + b.luck,
+    sup:   Math.round(s.sup * (1+0.04*Math.min(st,5))),
+  };
+}
+/* 기함 승선 정원: 등급별 1~3명, ★5 달성 시 +1 */
+function mateCap(){
+  const s = SHIP_MAP[state.flagship];
+  const base = { N:1, R:1, SR:2, SSR:2, UR:3 }[s.g];
+  return base + (Math.min(state.ships[s.id]||0,5) >= 5 ? 1 : 0);
+}
+/* 물은 식량보다 25% 빨리 소모 */
+const WATER_RATE = 1.25;
+function dateStr(d){
+  const dt = new Date(1498, 2, 1);
+  dt.setDate(dt.getDate() + Math.floor(d));
+  return `${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일`;
+}
+/* 계절별 유빙 경계 위도: 한여름(7월) 68.5°N까지 북상, 한겨울(1월) 61.5°N까지 남하 */
+function iceLat(){
+  const doy = 59 + (state ? state.day : 0);          /* 1498-03-01 = 59일째 */
+  return 65 + 3.5*Math.cos((doy-196)/365*Math.PI*2); /* 196일째(7월 중순) 최북단 */
+}
+/* 유빙 조각 (최대 남하 범위까지 생성, 계절 경계 이북만 표시) */
+let floes = [];
+function makeFloes(){
+  const r = mulberry32(20261);
+  floes = [];
+  const maxY = PY(61);
+  for(let i=0;i<420;i++){
+    const x = r()*WORLD_W, y = 8 + r()*(maxY-16);
+    if(isLand(x,y)) continue;
+    const rad = 3 + r()*8, vs = [];
+    for(let k=0;k<5;k++){
+      const a = k/5*6.283 + r()*0.5;
+      vs.push([Math.cos(a)*rad*(0.7+r()*0.5), Math.sin(a)*rad*(0.55+r()*0.4)]);
+    }
+    floes.push({ x, y, vs });
+  }
+}
+/* 하루의 위상: 0=새벽 → 0.25=한낮 → 0.5=해질녘 → 0.75=한밤 */
+function dayPhase(){
+  const f = ((state.day % 1) + 1) % 1;
+  return {
+    icon: f<0.2 ? "🌅" : f<0.45 ? "☀️" : f<0.58 ? "🌇" : "🌙",
+    dark: f>0.55 ? Math.sin((f-0.55)/0.45*Math.PI) : 0,
+    warm: Math.max(0, 1-Math.abs(f-0.5)/0.08) + Math.max(0, 1-Math.min(f,1-f)/0.08),
+  };
+}
+/* 바람·조류: 위치와 날짜에 따라 천천히 변하는 장 */
+function windDirAt(x,y,day){
+  return (Math.sin(x*0.0038+day*0.55) + Math.cos(y*0.0043-day*0.4)
+        + Math.sin((x+y)*0.0016+1.7)) * 1.05;
+}
+let monsoonNow = null;   /* 현재 위치의 몬순 이름 (HUD 표시용) */
+function seaFactor(){
+  if(!sail) return 1;
+  const wd = windDirAt(state.x, state.y, state.day);
+  let f = 1 + Math.cos(wd - state.heading)*0.30;                       /* 바람 */
+  const cd = Math.sin(state.x*0.002) + Math.cos(state.y*0.0024);
+  f += Math.cos(cd*2 - state.heading)*0.12;                            /* 조류 */
+  /* 계절풍(몬순): 인도양~동중국해, 여름엔 북동행·겨울엔 남서행이 유리 */
+  monsoonNow = null;
+  const lon = state.x/KX - LON0, lat = LAT0 - state.y/KY;
+  if(lon > 38 && lon < 126 && lat > -12 && lat < 30){
+    const m = monthOf(state.day);
+    if(m >= 4 && m <= 8){        /* 5~9월 남서 몬순 */
+      monsoonNow = "남서 몬순";
+      f += Math.cos(-Math.PI/4 - state.heading)*0.28;
+    } else if(m >= 10 || m <= 2){ /* 11~3월 북동 몬순 */
+      monsoonNow = "북동 몬순";
+      f += Math.cos(Math.PI*3/4 - state.heading)*0.28;
+    }
+  }
+  if(state.buff){
+    if(state.day < state.buff.until){
+      if(state.buff.t==="순풍") f *= 1.4;
+      else if(state.buff.t==="무풍") f *= 0.5;
+      else if(state.buff.t==="병") f *= 0.7;
+    } else state.buff = null;
+  }
+  return Math.max(0.5, Math.min(1.5, f));
+}
+function cargoUsed(){ return Object.values(state.cargo).reduce((a,b)=>a+b,0); }
+
+/* 시세: 산지 ×0.55 / 수요지 ×1.6 / 그외 0.85~1.25 */
+function priceMult(portId, goodId){
+  const p = PORT_MAP[portId];
+  if(p.p.includes(goodId)) return 0.55;
+  if(p.d.includes(goodId)) return 1.6;
+  return 0.85 + (hash(portId+goodId)%41)/100;
+}
+/* 계절: 게임 내 월(0~11) */
+function monthOf(day){
+  const dt = new Date(1498,2,1); dt.setDate(dt.getDate()+Math.floor(day)); return dt.getMonth();
+}
+/* 계절 시세 변동 ±13% — 품목·항구마다 성수기가 다름 */
+function seasonMult(portId,goodId){
+  const m = state ? monthOf(state.day) : 0;
+  return 1 + 0.13*Math.sin(m/12*Math.PI*2 + (hash(goodId+portId)%63)/10);
+}
+const goodPrice = (portId,goodId)=>
+  Math.round(GOOD_MAP[goodId].base*priceMult(portId,goodId)*seasonMult(portId,goodId));
+/* 항구 투자 레벨 (0~5) */
+const investLv = portId => (state && portId && state.invest[portId]) || 0;
+
+/* ══════════════════ 지도(정적 배경) ══════════════════ */
+let worldCv;
+function buildWorld(){
+  worldCv = document.createElement("canvas");
+  worldCv.width = WORLD_W; worldCv.height = WORLD_H;
+  const g = worldCv.getContext("2d");
+  g.fillStyle = "#faf9f7"; g.fillRect(0,0,WORLD_W,WORLD_H);
+  const rnd = mulberry32(20260722);
+  g.lineJoin = "round"; g.lineCap = "round";
+
+  /* 등심선: 해안에서 13px 간격의 오프셋 링 3개 */
+  const S = 13, ringCols = ["#d6d3cc","#e0ddd7","#e9e6e1"];
+  for(let i=3;i>=1;i--){
+    g.lineWidth = i*S*2; g.strokeStyle = ringCols[i-1];
+    for(const p of landPaths) g.stroke(p);
+    g.lineWidth = i*S*2-2.4; g.strokeStyle = "#faf9f7";
+    for(const p of landPaths) g.stroke(p);
+  }
+  /* 육지 */
+  g.fillStyle = "#f6f4ef";
+  for(const p of landPaths) g.fill(p);
+  g.strokeStyle = "#b9b5ac"; g.lineWidth = 1.5;
+  for(const p of landPaths) g.stroke(p);
+  /* 육지 질감 점 */
+  g.fillStyle = "#e7e4de";
+  for(let i=0;i<2600;i++){
+    const x = rnd()*WORLD_W, y = rnd()*WORLD_H;
+    if(isLand(x,y)){ g.beginPath(); g.arc(x,y,0.8+rnd()*0.8,0,7); g.fill(); }
+  }
+  /* 바다 잔물결 */
+  g.strokeStyle = "#e6e4df"; g.lineWidth = 1;
+  for(let i=0;i<680;i++){
+    const x = rnd()*WORLD_W, y = rnd()*WORLD_H, w = 10+rnd()*16;
+    if(isLand(x,y)||isLand(x+w,y)) continue;
+    g.beginPath();
+    g.moveTo(x,y); g.quadraticCurveTo(x+w*.5, y-3, x+w, y);
+    if(rnd()<0.5){ g.moveTo(x+w*.3, y+4); g.quadraticCurveTo(x+w*.7, y+1, x+w*1.1, y+4); }
+    g.stroke();
+  }
+  /* + 표시 */
+  g.strokeStyle = "#ccc9c3";
+  for(let i=0;i<150;i++){
+    const x = rnd()*WORLD_W, y = rnd()*WORLD_H;
+    if(isLand(x,y)) continue;
+    g.beginPath(); g.moveTo(x-5,y); g.lineTo(x+5,y); g.moveTo(x,y-5); g.lineTo(x,y+5); g.stroke();
+  }
+  /* 항구는 발견해야 보이므로 draw()에서 동적으로 그린다 */
+}
+
+/* ══════════════════ 캔버스 / 카메라 ══════════════════ */
+const cv = $("sea"), ctx = cv.getContext("2d");
+let W=0, H=0, DPR=1;
+let cam = { x:0, y:0, s:1, follow:true };
+function resize(){
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = window.innerWidth; H = window.innerHeight;
+  cv.width = W*DPR; cv.height = H*DPR;
+  cv.style.width = W+"px"; cv.style.height = H+"px";
+}
+window.addEventListener("resize", resize);
+
+/* ══════════════════ 게임 오브젝트 ══════════════════ */
+let sail = null;            /* {pts:[{x,y}], i, port} */
+let dockedAt = null;        /* 정박 항구 id */
+let trail = [];             /* 항적 */
+let salvages = [];          /* 표류물 */
+let bobT = 0;
+const routePaths = {};      /* 항로 표시용 경로 캐시 */
+
+function spawnSalvage(n){
+  for(let i=0;i<n;i++){
+    for(let t=0;t<60;t++){
+      const x = 30+Math.random()*(WORLD_W-60), y = 30+Math.random()*(WORLD_H-60);
+      if(isLand(x,y)) continue;
+      if(PORTS.some(p=>dist(x,y,p.x,p.y)<130)) continue;
+      salvages.push({ x, y, r: 2.5+Math.random()*3, a: Math.random()*Math.PI });
+      break;
+    }
+  }
+}
+function relocateSalvage(s){
+  for(let t=0;t<60;t++){
+    const x = 30+Math.random()*(WORLD_W-60), y = 30+Math.random()*(WORLD_H-60);
+    if(isLand(x,y)) continue;
+    s.x = x; s.y = y; return;
+  }
+}
+
+/* 출항 보급: 부족분을 골드로 자동 구매 (물 우선, 투자 항구는 할인/무료) */
+function resupply(){
+  const cap = effStats(state.flagship).sup;
+  const needF = Math.max(0, cap - state.food);
+  const needW = Math.max(0, cap - state.water);
+  if(needF + needW < 1) return;
+  const lv = investLv(dockedAt);
+  if(lv >= 5){
+    state.food = cap; state.water = cap;
+    toast(`🧺 단골 항구의 무료 보급! 식량+${fmt(needF)} 물+${fmt(needW)}`);
+    updateHUD(); save(); return;
+  }
+  const disc = 1 - lv*0.1;
+  const wc = WATER_COST*disc, fc = FOOD_COST*disc;
+  let budget = state.gold;
+  const w = Math.min(needW, Math.floor(budget / wc));
+  budget -= w * wc;
+  const f = Math.min(needF, Math.floor(budget / fc));
+  const cost = Math.round(w*wc + f*fc);
+  if(f + w < 1){ toast("⚠️ 골드가 부족해 보급을 받지 못하고 출항합니다!"); return; }
+  state.gold -= cost;
+  state.water = Math.min(cap, state.water + w);
+  state.food  = Math.min(cap, state.food + f);
+  const full = state.food >= cap-1 && state.water >= cap-1;
+  toast(`🧺 출항 보급${full?" 완료":" (일부)"} · 식량+${fmt(f)} 물+${fmt(w)} · −${fmt(cost)}골드${lv?` (투자 할인 ${lv*10}%)`:""}`);
+  updateHUD(); save();
+}
+function requestSail(wx,wy,portId){
+  const pts = findPath(state.x, state.y, wx, wy);
+  if(!pts){ toast("🧭 그곳까지 뱃길이 이어지지 않습니다"); return false; }
+  if(dockedAt) resupply();
+  lowWarn.f = false; lowWarn.w = false;
+  sail = { pts, i:0, port: portId||null };
+  return true;
+}
+
+/* ── 해상 이벤트 ── */
+/* ── 극지 전용 이벤트 ── */
+function rollIceEvent(st){
+  const cap = st.sup;
+  const E = [];
+  const add = (w,fn)=>E.push([w,fn]);
+  add(10, ()=>{ const c = Math.min(state.gold, 150+Math.floor(Math.random()*250));
+    state.gold -= c;
+    state.buff = { t:"병", until: state.day+1.5 };
+    toast(`💥 유빙과 충돌했습니다! 선체 응급 수리 −${fmt(c)}골드 (1.5일 감속)`); });
+  add(7, ()=>{ state.day += 1;
+    const lf = 0.06+Math.random()*0.06;
+    state.food = Math.max(0, state.food*(1-lf));
+    state.water = Math.max(0, state.water*(1-lf));
+    toast("🧊 유빙 사이에 갇혔습니다... 하루 종일 얼음을 깨며 나아갑니다"); });
+  add(6, ()=>{ state.water = Math.max(0, state.water*(1-(0.08+Math.random()*0.07)));
+    toast("🥶 혹한에 물통이 얼어 터졌습니다. 식수가 줄었습니다"); });
+  add(5, ()=>{ state.food = Math.min(cap, state.food+cap*0.15);
+    toast("🦭 물개 무리를 만나 사냥에 성공했습니다! 식량을 보충합니다"); });
+  add(3, ()=>{ const g = 150+Math.floor(Math.random()*250);
+    state.gold += g;
+    toast(`🧊 얼음에 갇힌 옛 난파선에서 은화 ${fmt(g)}골드를 수습했습니다`, true); });
+  add(3, ()=>{ if(state.mates.length){
+      const mid = state.mates[Math.floor(Math.random()*state.mates.length)];
+      state.aff[mid] = Math.min(100, (state.aff[mid]||0)+4);
+      toast(`🌌 오로라가 하늘을 물들입니다... ${NAV_MAP[mid].name}와(과) 말없이 바라봅니다 (호감도 +4)`);
+    } else toast("🌌 오로라가 밤하늘을 물들입니다. 선원들이 넋을 잃고 바라봅니다"); });
+  let tot = E.reduce((a,e)=>a+e[0],0), r = Math.random()*tot;
+  for(const [w,fn] of E){ if(r<w){ fn(); break; } r-=w; }
+  updateHUD(); save();
+}
+
+function rollEvent(st){
+  /* 소굴 세력권에서는 해적이 우선 출몰 */
+  if(dangerDen && Math.random() < 0.55){ pirateEncounter(st); updateHUD(); save(); return; }
+  const luck = st.luck, cap = st.sup, b = navBonus();
+  const bad = Math.max(0.4, 1 - luck/80);      /* 행운↑ → 악재↓ */
+  const good = 1 + luck/60;                    /* 행운↑ → 호재↑ */
+  const E = [];
+  const add = (w,fn)=>E.push([w,fn]);
+  add(10*bad, ()=>{ const lf = 0.08+Math.random()*0.08;
+    state.food = Math.max(0, state.food*(1-lf));
+    state.water = Math.max(0, state.water*(1-lf));
+    state.day += 1;
+    toast("🌀 태풍이 몰아칩니다! 하루를 표류하며 보급품이 쓸려나갔습니다"); });
+  add(9*bad, ()=>pirateEncounter(st));
+  add(8*bad, ()=>{ state.food = Math.max(0, state.food*(1-(0.10+Math.random()*0.10)));
+    toast("🐀 선창에 쥐 떼가 들끓습니다! 식량이 축났습니다"); });
+  add(7*bad, ()=>{ state.water = Math.max(0, state.water*(1-(0.12+Math.random()*0.08)));
+    toast("🛢️ 물통에 금이 가 있었습니다. 식수가 줄었습니다"); });
+  add(7*bad, ()=>{ state.buff = { t:"병", until: state.day+2 };
+    toast("🤒 선원들 사이에 열병이 돕니다 (2일간 속도 저하)"); });
+  add(6*bad, ()=>{ state.buff = { t:"무풍", until: state.day+1 };
+    toast("🪶 무풍지대에 들어섰습니다... 돛이 축 늘어집니다 (1일간)"); });
+  add(5*bad, ()=>{ const c = Math.min(state.gold, 100+Math.floor(Math.random()*150));
+    state.gold -= c;
+    toast(`🪨 암초에 선체를 긁혔습니다. 응급 수리 −${fmt(c)}골드`); });
+  add(4*bad, ()=>{ state.food = Math.max(0, state.food*0.94); state.gold += 120;
+    toast("🕵️ 밀항자를 발견! 식량은 축났지만 뱃삯 120골드를 받았습니다"); });
+  add(8*good, ()=>{ const g = Math.round((60+Math.random()*240)*(1+luck/100));
+    state.gold += g;
+    toast(`💰 떠다니는 궤짝에서 금화 ${fmt(g)}골드를 건졌습니다!`, true); });
+  add(7*good, ()=>{ state.food = Math.min(cap, state.food+cap*0.18);
+    toast("🐟 물고기 떼를 만났습니다! 식량을 넉넉히 보충했습니다"); });
+  add(7*good, ()=>{ state.water = Math.min(cap, state.water+cap*0.25);
+    toast("🌧️ 스콜이 지나갑니다. 빗물을 받아 식수를 가득 채웠습니다"); });
+  add(6*good, ()=>{ state.buff = { t:"순풍", until: state.day+1 };
+    toast("⛵ 등 뒤에서 순풍이 불어옵니다! (1일간 가속)"); });
+  add(4*good, ()=>{ const g = GOODS[Math.floor(Math.random()*GOODS.length)];
+    const n = Math.min(5+Math.floor(Math.random()*8), SHIP_MAP[state.flagship].cargo-cargoUsed());
+    if(n>0){ state.cargo[g.id] = (state.cargo[g.id]||0)+n;
+      toast(`🛟 표류하던 상인을 구조했습니다. 보답으로 ${g.name} ${n}개를 받았습니다`, true); }
+    else { state.gold += 150; toast("🛟 표류 상인을 구조하고 사례금 150골드를 받았습니다"); } });
+  add(3*good, ()=>{ state.food = Math.min(cap, state.food+cap*0.10);
+    state.water = Math.min(cap, state.water+cap*0.10);
+    toast("🏝️ 이름 없는 섬에 잠시 상륙해 야자열매와 샘물을 실었습니다"); });
+  add(2*good, ()=>{ const g = 500+Math.floor(Math.random()*1000);
+    state.gold += g;
+    toast(`🗺️ 침몰선의 보물을 인양했습니다! +${fmt(g)}골드`, true); });
+  add(3, ()=>{ toast("🐋 고래 무리가 뱃전을 나란히 따라 헤엄칩니다"); });
+  if(state.navs.length) add(7, ()=>navMoment());   /* 동료 항해사 이벤트 */
+  let tot = E.reduce((a,e)=>a+e[0],0), r = Math.random()*tot;
+  for(const [w,fn] of E){ if(r<w){ fn(); break; } r-=w; }
+  updateHUD(); save();
+}
+
+/* ── 해적 전투 ── */
+const GRADE_POW = { N:12, R:22, SR:38, SSR:60, UR:85 };
+function pirateEncounter(st){
+  const s = SHIP_MAP[state.flagship];
+  const pp = Math.round(GRADE_POW[s.g] + Math.min(state.ships[s.id]||0,5)*4 + st.luck*0.4);
+  const ep = Math.round(pp*(0.55+Math.random()*0.9));
+  const tier = ep<25 ? "소형 해적선" : ep<45 ? "해적 갤리선" : "해적 함대";
+  const mateAid = [0,8,12,16,20][Math.min(state.mates.length,4)];  /* 승선 항해사들의 조력 */
+  const fleeP = Math.max(15, Math.min(94, Math.round(30+(st.speed-55)*0.9+st.luck*0.5) + mateAid));
+  const winP  = Math.max(10, Math.min(94, Math.round(pp/(pp+ep)*100) + mateAid));
+  const bribe = Math.min(Math.max(80, Math.floor(state.gold*0.10)), 500);
+  combat = { ep, fleeP, winP, bribe };
+  paused = true; forcedModal = true;
+  openModal("🏴‍☠️ 해적 출현!", tier, `
+    <div class="card" style="text-align:center;padding:20px 14px">
+      <div style="font-size:36px">🏴‍☠️</div>
+      <div style="font-size:13px;color:#888;margin:10px 0 4px">
+        ${tier}이 뱃머리를 돌려 다가옵니다!<br>
+        전투력 — 아군 <b style="color:#3a3a3a">${pp}</b> vs 해적 <b style="color:#b3502a">${ep}</b></div>
+      ${state.mates.length ? `<div class="navBonus" style="margin-top:4px">⚓ ${state.mates.map(m=>NAV_MAP[m].name).join("·")}이(가) 곁에서 힘을 보탭니다 (도주·승률 +${mateAid}%)</div>` : ""}
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+        <button class="btn" style="width:100%" onclick="combatAct('flee')">⛵ 도주한다 · 성공률 ${fleeP}%</button>
+        <button class="btn orange" style="width:100%" onclick="combatAct('fight')">⚔️ 싸운다 · 승률 ${winP}% (승리 시 전리품)</button>
+        <button class="btn ghost" style="width:100%" ${state.gold<bribe?"disabled":""}
+          onclick="combatAct('bribe')">💰 뇌물을 바친다 · −${fmt(bribe)}골드 (안전)</button>
+      </div>
+    </div>`);
+}
+function combatAct(act){
+  const c = combat; if(!c) return;
+  combat = null; forcedModal = false; paused = false;
+  closeModal();
+  if(act==="bribe"){
+    state.gold -= c.bribe;
+    toast(`💰 뇌물 ${fmt(c.bribe)}골드를 바치자 해적들이 순순히 길을 내줍니다`);
+  } else if(act==="flee"){
+    if(Math.random()*100 < c.fleeP){
+      toast("⛵ 전속력으로 도주! 해적선이 수평선 너머로 멀어집니다");
+    } else {
+      const loss = Math.min(Math.floor(state.gold*0.10), 500);
+      state.gold -= loss;
+      state.food = Math.max(0, state.food*0.95);
+      state.water = Math.max(0, state.water*0.95);
+      toast(`💥 따라잡혔습니다! 약탈로 ${fmt(loss)}골드와 보급 일부를 잃었습니다`);
+    }
+  } else {
+    if(Math.random()*100 < c.winP){
+      const loot = 150 + Math.floor(Math.random()*350) + c.ep*5;
+      state.gold += loot;
+      toast(`⚔️ 승리! 해적선을 나포해 전리품 ${fmt(loot)}골드를 획득했습니다`, true);
+    } else {
+      const loss = Math.min(Math.floor(state.gold*0.15), 900);
+      state.gold -= loss;
+      state.food = Math.max(0, state.food*0.9);
+      state.water = Math.max(0, state.water*0.9);
+      state.buff = { t:"병", until: state.day+2 };
+      toast(`💥 패배... ${fmt(loss)}골드를 빼앗기고 선원들이 다쳤습니다 (2일 감속)`);
+    }
+  }
+  updateHUD(); save();
+}
+
+/* ── 해적 소굴 토벌 ── */
+function grantShip(g){
+  const pool = SHIPS.filter(s=>s.g===g);
+  const s = pool[Math.floor(Math.random()*pool.length)];
+  if(!(s.id in state.ships)){ state.ships[s.id] = 0; return `⛵ 새 함선 「${s.name}」 획득!`; }
+  if(state.ships[s.id] < 5){ state.ships[s.id]++; return `⛵ 「${s.name}」 ★+1 강화!`; }
+  state.gold += DUP_GOLD[g];
+  return `⛵ 「${s.name}」 중복 → +${fmt(DUP_GOLD[g])}골드 환급`;
+}
+function openRaid(id){
+  const dn = DENS.find(d=>d.id===id);
+  if(!dn) return;
+  const remnant = !!state.dens[id];
+  if(remnant && !remnantReady(dn)){
+    toast(`잔당 재집결까지 ${Math.max(1,Math.ceil((state.denRe[id]||0)+DEN_RESPAWN-state.day))}일 남았습니다`);
+    return;
+  }
+  const s = SHIP_MAP[state.flagship], st = effStats(state.flagship);
+  const pp = Math.round(GRADE_POW[s.g] + Math.min(state.ships[s.id]||0,5)*4 + st.luck*0.4);
+  const dPow = remnant ? Math.round(dn.pow*0.6) : dn.pow;
+  const dGold = remnant ? Math.round(dn.gold*0.4) : dn.gold;
+  const mateAid = [0,8,12,16,20][Math.min(state.mates.length,4)];
+  const winP = Math.max(5, Math.min(95, Math.round(pp/(pp+dPow)*100) + mateAid));
+  raid = { id, winP, remnant, dGold };
+  paused = true; forcedModal = true;
+  openModal(remnant ? "🔁 해적 잔당 출몰" : "💀 해적 소굴 발견", dn.name, `
+    <div class="card" style="text-align:center;padding:20px 14px">
+      <div style="font-size:36px">${remnant?"⚔️":"💀"}</div>
+      <div style="font-size:14px;font-weight:800;margin:8px 0 2px">${dn.name}${remnant?" 잔당":""}</div>
+      <div class="stat">${dn.region} · ${remnant?"패잔병이 다시 모여들고 있습니다":"요새화된 소굴"}</div>
+      <div style="font-size:13px;color:#888;margin:10px 0 4px">
+        전투력 — 아군 <b style="color:#3a3a3a">${pp}</b> vs 적 <b style="color:#b3502a">${dPow}</b></div>
+      ${state.mates.length ? `<div class="navBonus">⚓ ${state.mates.map(m=>NAV_MAP[m].name).join("·")}이(가) 곁에서 힘을 보탭니다 (+${mateAid}%)</div>` : ""}
+      <div class="stat" style="margin-top:8px">보상 — <b style="color:#d96f32">${fmt(dGold)}골드${remnant?"":` + ${GRADES[dn.ship].name}(${dn.ship})급 함선`}</b></div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+        <button class="btn orange" style="width:100%" onclick="raidAct(1)">⚔️ ${remnant?"잔당 소탕":"토벌 개시"} · 승률 ${winP}%</button>
+        <button class="btn ghost" style="width:100%" onclick="raidAct(0)">물러난다</button>
+      </div>
+    </div>`);
+}
+function raidAct(go){
+  const r = raid; if(!r) return;
+  raid = null; forcedModal = false; paused = false;
+  closeModal();
+  const dn = DENS.find(d=>d.id===r.id);
+  if(!go){ toast("💀 물러났습니다. 전력을 갖추고 다시 도전하세요"); return; }
+  if(r.remnant){
+    /* 주간 반복 잔당전 */
+    if(Math.random()*100 < r.winP){
+      state.denRe[dn.id] = state.day;
+      state.gold += r.dGold;
+      toast(`⚔️ 「${dn.name}」 잔당 소탕! +${fmt(r.dGold)}골드 (${DEN_RESPAWN}일 후 재집결)`, true);
+    } else {
+      const loss = Math.min(Math.floor(state.gold*0.10), 800);
+      state.gold -= loss;
+      state.food = Math.max(0, state.food*0.9);
+      state.water = Math.max(0, state.water*0.9);
+      toast(`💥 잔당 소탕 실패... ${fmt(loss)}골드를 잃고 퇴각했습니다`);
+    }
+    updateHUD(); save();
+    return;
+  }
+  if(Math.random()*100 < r.winP){
+    state.dens[dn.id] = true;
+    state.denRe[dn.id] = state.day;
+    state.gold += dn.gold;
+    const shipNote = grantShip(dn.ship);
+    const cleared = DENS.filter(d=>state.dens[d.id]).length;
+    let allNote = "";
+    if(cleared === DENS.length){
+      state.gold += DEN_CLEAR_GOLD;
+      allNote = `<div class="navBonus" style="margin-top:12px">🏆 모든 해적 소굴 소탕! 바다에 평화가 찾아옵니다<br>
+        추가 보상 +${fmt(DEN_CLEAR_GOLD)}골드<br>${grantShip("UR")}</div>`;
+    }
+    openModal("🎉 토벌 성공!", dn.name, `
+      <div class="card" style="text-align:center;padding:22px 16px">
+        <div style="font-size:38px">⚔️</div>
+        <div style="font-size:15px;font-weight:800;margin:8px 0">「${dn.name}」 소탕 완료!</div>
+        <div class="stat">전리품 <b style="color:#d96f32">+${fmt(dn.gold)}골드</b></div>
+        <div class="stat">${shipNote}</div>
+        ${allNote}
+        <div class="stat" style="margin-top:10px">토벌 진행 ${cleared}/${DENS.length}</div>
+        <button class="btn orange" style="margin-top:14px;padding:10px 36px" onclick="closeModal()">확인</button>
+      </div>`);
+    toast(`🎉 「${dn.name}」 토벌! +${fmt(dn.gold)}골드`, true);
+  } else {
+    const loss = Math.min(Math.floor(state.gold*0.20), 1500);
+    state.gold -= loss;
+    state.food = Math.max(0, state.food*0.8);
+    state.water = Math.max(0, state.water*0.8);
+    state.buff = { t:"병", until: state.day+2 };
+    toast(`💥 토벌 실패... ${fmt(loss)}골드를 잃고 퇴각했습니다 (2일 감속)`);
+  }
+  updateHUD(); save();
+}
+function openDens(){
+  const cleared = DENS.filter(d=>state.dens[d.id]).length;
+  let html = `<div class="card row" style="background:#fdf3ec;border-color:#eed0b8">
+    <div class="grow" style="font-size:13px;font-weight:700">토벌 진행 ${cleared}/${DENS.length}</div>
+    <div class="stat">전체 소탕 시 +${fmt(DEN_CLEAR_GOLD)}골드 + 전설(UR) 함선</div>
+  </div>`;
+  for(const dn of DENS){
+    const done = state.dens[dn.id];
+    const ready = done && remnantReady(dn);
+    const near = dist(state.x, state.y, dn.x, dn.y) < 60;
+    const cooldown = done && !ready ? Math.max(1, Math.ceil((state.denRe[dn.id]||0)+DEN_RESPAWN-state.day)) : 0;
+    html += `<div class="card row" style="${done&&!ready?"opacity:.55":""}">
+      <div class="grow">
+        <div style="font-size:13.5px;font-weight:700">${done?(ready?"🔁":"✓"):"💀"} ${dn.name}${done?(ready?" 잔당":" (토벌 완료)"):""}</div>
+        <div class="stat">${dn.region} · 전투력 <b>${done?Math.round(dn.pow*0.6):dn.pow}</b></div>
+        <div class="stat">보상 <b style="color:#d96f32">${done
+          ? `${fmt(Math.round(dn.gold*0.4))}골드 (반복)`
+          : `${fmt(dn.gold)}골드 + ${dn.ship}급 함선`}</b></div>
+      </div>
+      ${done && !ready ? `<span class="lockNote">재집결 D-${cooldown}</span>`
+        : near ? `<button class="btn sm orange" onclick="closeModal();openRaid('${dn.id}')">⚔️ ${done?"잔당 소탕":"토벌 개시"}</button>`
+        : `<button class="btn sm" onclick="closeModal();if(requestSail(${Math.round(dn.x)},${Math.round(dn.y)}))toast('💀 ${dn.name}(으)로 출격합니다')">🧭 출격</button>`}
+    </div>`;
+  }
+  html += `<div class="stat" style="text-align:center;margin-top:4px">미토벌 소굴 주변(점선 원)은 해적 조우율이 급증합니다.<br>토벌한 소굴엔 ${DEN_RESPAWN}일마다 잔당이 재집결해 반복 보상을 줍니다</div>`;
+  openModal("해적 소굴 토벌", `바다의 무법자들을 소탕하세요`, html);
+}
+
+/* ── 일일 납품 의뢰 ── */
+function todayKey(){ const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }
+function ensureQuests(){
+  const key = todayKey();
+  if(state.quests && state.quests.date === key) return;
+  const rnd = mulberry32(hash("quest"+key));
+  const list = [];
+  for(let i=0;i<3;i++){
+    const good = GOODS[Math.floor(rnd()*GOODS.length)];
+    const pool = (i<2 && state.visited.length>=3) ? state.visited : PORTS.map(p=>p.id);
+    const port = pool[Math.floor(rnd()*pool.length)];
+    const qty = 4 + Math.floor(rnd()*8) + i*5;
+    const reward = Math.round(good.base * qty * (1.5 + i*0.35));
+    list.push({ good: good.id, port, qty, reward, done:false });
+  }
+  state.quests = { date:key, list, bonus:false };
+  save();
+}
+function openQuests(){
+  ensureQuests();
+  const qs = state.quests.list;
+  const doneN = qs.filter(q=>q.done).length;
+  let html = `<div class="card row" style="background:#fdf3ec;border-color:#eed0b8">
+    <div class="grow">
+      <div style="font-size:13px;font-weight:700">오늘의 납품 의뢰 ${doneN}/3</div>
+      <div class="stat">매일 자정 새 의뢰로 갱신 · 3건 모두 완료 시 보너스 +500골드</div>
+    </div>${state.quests.bonus?`<span style="color:#d96f32;font-weight:700;font-size:12px">보너스 ✓</span>`:""}
+  </div>`;
+  qs.forEach((q,i)=>{
+    const g = GOOD_MAP[q.good], p = PORT_MAP[q.port];
+    const have = state.cargo[q.good]||0;
+    const here = dockedAt===q.port;
+    html += `<div class="card row" style="${q.done?"opacity:.55":""}">
+      <div class="grow">
+        <div style="font-size:13px;font-weight:700">${q.done?"✅":"📦"} ${g.name} ${q.qty}개 → ${p.name}</div>
+        <div class="stat">보상 <b style="color:#d96f32">${fmt(q.reward)}골드</b>${q.done?"":` · 보유 <b>${have}/${q.qty}</b>${here?" · 현재 정박 중":""}`}</div>
+      </div>
+      ${q.done ? "" : here
+        ? `<button class="btn sm orange" ${have>=q.qty?"":"disabled"} onclick="deliverQuest(${i})">납품</button>`
+        : `<button class="btn sm" onclick="closeModal();if(requestSail(${Math.round(p.x)},${Math.round(p.y)},'${p.id}'))toast('📜 ${p.name}(으)로 향합니다')">🧭 출항</button>`}
+    </div>`;
+  });
+  html += `<div class="stat" style="text-align:center;margin-top:4px">의뢰 상품은 산지(▼)에서 싸게 사서 가져가면 이득이 큽니다.<br>지도에서 📜 표시가 붙은 항구가 납품처입니다</div>`;
+  openModal("납품 의뢰", todayKey(), html);
+}
+function deliverQuest(i){
+  const q = state.quests && state.quests.list[i];
+  if(!q || q.done || dockedAt!==q.port) return;
+  if((state.cargo[q.good]||0) < q.qty){ toast("📦 물량이 부족합니다"); return; }
+  state.cargo[q.good] -= q.qty;
+  if(!state.cargo[q.good]) delete state.cargo[q.good];
+  q.done = true;
+  state.gold += q.reward;
+  state.stats.quests++;
+  toast(`📜 납품 완료! +${fmt(q.reward)}골드`, true);
+  if(state.quests.list.every(x=>x.done) && !state.quests.bonus){
+    state.quests.bonus = true;
+    state.gold += 500;
+    toast("🎉 오늘의 의뢰를 모두 완수했습니다! 보너스 +500골드", true);
+  }
+  updateHUD(); save(); openQuests();
+}
+
+/* ── 항해사 호감도 이벤트 ── */
+function navMoment(){
+  /* 승선 중인 항해사의 이벤트가 우선적으로 발생 */
+  const id = (state.mates.length && Math.random() < 0.65)
+    ? state.mates[Math.floor(Math.random()*state.mates.length)]
+    : state.navs[Math.floor(Math.random()*state.navs.length)];
+  const n = NAV_MAP[id], x = NAV_EXTRA[id];
+  const aff = state.aff[id]||0;
+  paused = true; forcedModal = true;
+  if(aff >= 80 && !state.affDone[id]){
+    openModal("💞 특별한 순간", n.name, `
+      <div class="card" style="text-align:center;padding:22px 16px">
+        <div style="display:flex;justify-content:center">${portraitSVG(n,100)}</div>
+        <div style="font-size:16px;font-weight:800;margin-top:8px">${n.name}</div>
+        <div class="navTitle" style="margin:2px 0 8px">${n.title}</div>
+        <div class="navDesc" style="max-width:300px;margin:0 auto">"${x.talk}"</div>
+        <div class="navBonus" style="margin:12px 0 16px">${n.name}의 선물 — ${x.gname}</div>
+        <button class="btn orange" style="padding:11px 40px" onclick="navSpecial('${id}')">받아들인다</button>
+      </div>`);
+    return;
+  }
+  openModal("항해의 한때", n.name, `
+    <div class="card" style="text-align:center;padding:22px 16px">
+      <div style="display:flex;justify-content:center">${portraitSVG(n,90)}</div>
+      <div style="font-size:15px;font-weight:800;margin-top:8px">${n.name}</div>
+      <div class="navDesc" style="max-width:300px;margin:8px auto 4px">${n.name}이(가) ${NAV_LINES[Math.floor(Math.random()*NAV_LINES.length)]}</div>
+      <div class="stat" style="margin-bottom:14px">💗 호감도 ${aff} · ${affName(aff)}</div>
+      <div class="row" style="justify-content:center;gap:10px">
+        <button class="btn orange" onclick="navChat('${id}',1)">함께 시간을 보낸다</button>
+        <button class="btn ghost" onclick="navChat('${id}',0)">지금은 바빠서…</button>
+      </div>
+    </div>`);
+}
+function navChat(id, yes){
+  forcedModal = false; paused = false; closeModal();
+  const n = NAV_MAP[id];
+  if(yes){
+    const g = 6 + Math.floor(Math.random()*5);
+    state.aff[id] = Math.min(100, (state.aff[id]||0)+g);
+    toast(`💗 ${n.name}의 호감도 +${g} (현재 ${state.aff[id]} · ${affName(state.aff[id])})`);
+    if(state.aff[id]>=80 && !state.affDone[id])
+      toast(`✨ ${n.name}와(과)의 특별한 순간이 다가오고 있습니다…`);
+  } else {
+    state.aff[id] = Math.min(100, (state.aff[id]||0)+1);
+  }
+  updateHUD(); save();
+}
+function navSpecial(id){
+  forcedModal = false; paused = false; closeModal();
+  const n = NAV_MAP[id], x = NAV_EXTRA[id];
+  state.affDone[id] = true; state.aff[id] = 100;
+  applyGift(x.gift);
+  toast(`💞 ${n.name}와(과)의 인연이 깊어졌습니다! ${x.gname}`, true);
+  updateHUD(); save();
+}
+function applyGift(g){
+  if(g.gold) state.gold += g.gold;
+  if(g.good){
+    const nq = Math.min(g.good[1], SHIP_MAP[state.flagship].cargo - cargoUsed());
+    if(nq>0) state.cargo[g.good[0]] = (state.cargo[g.good[0]]||0)+nq;
+    else state.gold += g.good[1]*30;
+  }
+  if(g.sup){ const c = effStats(state.flagship).sup; state.food = c; state.water = c; }
+  if(g.buff) state.buff = { t:g.buff, until: state.day+(g.d||1) };
+}
+
+/* ── 조난 & 부활 ── */
+function gameOver(){
+  dead = true; sail = null;
+  state.stats.deaths++;
+  $("gameover").style.display = "flex";
+  save();
+}
+function respawn(){
+  const p = PORT_MAP[state.lastPort] || PORT_MAP.lisbon;
+  state.x = p.x; state.y = p.y;
+  const cap = effStats(state.flagship).sup;
+  state.food = Math.round(cap*0.5);
+  state.water = Math.round(cap*0.5);
+  state.cargo = {}; state.buff = null;
+  trail = []; dockedAt = null; dead = false;
+  lowWarn.f = false; lowWarn.w = false;
+  nextEventDay = state.day + 0.8;
+  $("gameover").style.display = "none";
+  cam.follow = true; cam.x = state.x; cam.y = state.y;
+  toast(`⚓ ${p.name}에서 전열을 가다듬습니다`);
+  updateHUD(); checkDock(); save();
+}
+
+function checkDock(){
+  const p = PORTS.find(p=>dist(state.x,state.y,p.x,p.y)<5);
+  if(p && dockedAt!==p.id){
+    dockedAt = p.id; sail = null;
+    state.lastPort = p.id;
+    if(!state.found.includes(p.id)) state.found.push(p.id);
+    $("hWind").textContent = "💨 —";
+    let first = false;
+    if(!state.visited.includes(p.id)){
+      state.visited.push(p.id); first = true;
+      const reward = 150 + state.visited.length*50;
+      state.gold += reward;
+      toast(`🗺️ 새로운 항구 「${p.name}」 발견! +${fmt(reward)}골드`, true);
+    } else toast(`⚓ ${p.name}에 입항했습니다`);
+    const nav = NAVIGATORS.find(n=>n.port===p.id);
+    if(nav && !state.navs.includes(nav.id) && !state.intro)
+      setTimeout(()=>{ meetNavigator(nav.id); }, first?900:400);
+    /* 동료의 고향에 들르면 호감도 상승 */
+    if(nav && state.navs.includes(nav.id)){
+      const before = state.aff[nav.id]||0;
+      if(before < 100){
+        state.aff[nav.id] = Math.min(100, before+4);
+        toast(`💗 ${nav.name}이(가) 고향에 들러 기뻐합니다 (호감도 ${state.aff[nav.id]})`);
+      }
+    }
+    /* 납품 의뢰 항구 안내 */
+    if(state.quests){
+      const q = state.quests.list.find(q=>!q.done && q.port===p.id);
+      if(q) toast(`📜 이 항구에 납품 의뢰가 있습니다 — ${GOOD_MAP[q.good].name} ${q.qty}개`);
+    }
+    /* 🌟 인연: 떠도는 항해사 조우 (1%, 한 번 등장하면 10일간 재등장 불가) */
+    if(!state.intro && state.day >= (state.rareCd||0) && Math.random() < 0.01){
+      const pool = NAVIGATORS.filter(n=>n.rare && !state.navs.includes(n.id));
+      if(pool.length){
+        state.rareCd = state.day + 10;
+        const rn = pool[Math.floor(Math.random()*pool.length)];
+        toast("🌟 선술집 구석에서 범상치 않은 항해사가 당신을 바라봅니다…", true);
+        setTimeout(()=>meetNavigator(rn.id), 1200);
+      }
+    }
+    updateHUD(); save();
+  }
+  else if(!p && dockedAt){ dockedAt = null; updateHUD(); }
+}
+
+/* ══════════════════ 루프 ══════════════════ */
+let lastT = 0, dead = false, nextEventDay = 0.8;
+let paused = false, forcedModal = false, combat = null, nextMateAffDay = 1;
+let raid = null, denNear = null, dangerDen = null, iceWarn = false;
+const remnantReady = dn => !!state.dens[dn.id] && state.day >= (state.denRe[dn.id]||0) + DEN_RESPAWN;
+const lowWarn = { f:false, w:false };
+function loop(t){
+  const dt = Math.min((t-lastT)/1000, 0.1); lastT = t;
+  bobT += dt;
+  if(state && !state.intro && !dead) update(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+function update(dt){
+  if(paused) return;               /* 전투·이벤트 선택 중에는 시간 정지 */
+  const st = effStats(state.flagship);
+  if(sail){
+    /* 둘 다 바닥나면 조난 */
+    if(state.food<=0 && state.water<=0){ gameOver(); return; }
+    const wp = sail.pts[sail.i];
+    const sea = seaFactor();
+    let sp = st.speed * sea;
+    /* 북극해 유빙 해역(계절 이동): 감속 + 보급 소모 증가 */
+    const arctic = state.y < PY(iceLat());
+    if(arctic){
+      sp *= 0.55;
+      state.stats.arctic = (state.stats.arctic||0) + dt/DAY_SEC;
+      if(!iceWarn){ iceWarn = true;
+        toast("🧊 유빙 해역에 진입했습니다! 속도가 느려지고 보급 소모가 늘어납니다"); }
+    } else iceWarn = false;
+    if(state.food<=0 || state.water<=0) sp *= 0.5;
+    let ddx = wp.x - state.x;
+    if(ddx > WORLD_W/2) ddx -= WORLD_W; else if(ddx < -WORLD_W/2) ddx += WORLD_W;
+    const ddy = wp.y - state.y;
+    const d = Math.hypot(ddx, ddy);
+    const ang = Math.atan2(ddy, ddx);
+    let da = ang - state.heading;
+    while(da>Math.PI) da-=Math.PI*2; while(da<-Math.PI) da+=Math.PI*2;
+    state.heading += da*Math.min(1, dt*5);
+    const step = Math.min(sp*dt, d);
+    state.x = ((state.x + Math.cos(state.heading)*step) % WORLD_W + WORLD_W) % WORLD_W;
+    state.y = Math.max(10, Math.min(WORLD_H-10, state.y + Math.sin(state.heading)*step));
+    /* 날짜 경과 (항해 중에만) */
+    state.day += dt/DAY_SEC;
+    /* 보급 소모 (유빙 해역에서는 1.6배) */
+    const drain = arctic ? 1.6 : 1;
+    state.food  = Math.max(0, state.food  - step*st.food*drain/100);
+    state.water = Math.max(0, state.water - step*st.food*WATER_RATE*drain/100);
+    if(state.food<=st.sup*0.2 && !lowWarn.f){ lowWarn.f=true; toast("⚠️ 식량이 얼마 남지 않았습니다! 가까운 항구로 향하세요"); }
+    if(state.water<=st.sup*0.2 && !lowWarn.w){ lowWarn.w=true; toast("⚠️ 식수가 얼마 남지 않았습니다! 가까운 항구로 향하세요"); }
+    if(state.food===0 && state.water>0 && lowWarn.f!=="zero"){ lowWarn.f="zero"; toast("🍞 식량 고갈! 선원들이 지쳐 속도가 절반으로 떨어집니다"); }
+    if(state.water===0 && state.food>0 && lowWarn.w!=="zero"){ lowWarn.w="zero"; toast("💧 식수 고갈! 선원들이 지쳐 속도가 절반으로 떨어집니다"); }
+    /* 위험 해역: 미토벌 소굴의 세력권 */
+    let dz = null;
+    for(const dn of DENS){
+      if(!state.dens[dn.id] && dist(state.x,state.y,dn.x,dn.y) < DEN_DANGER_R){ dz = dn; break; }
+    }
+    if(dz && dangerDen !== dz.id){
+      dangerDen = dz.id;
+      toast(`☠ ${dz.name}의 세력권에 들어섰습니다 — 해적 조우 위험 증가!`);
+    } else if(!dz) dangerDen = null;
+    /* 해상 이벤트 (위험 해역·유빙 해역에서는 두 배 잦게) */
+    if(state.day >= nextEventDay){
+      nextEventDay = state.day + (dangerDen||arctic ? 0.3+Math.random()*0.4 : 0.6+Math.random()*0.8);
+      if(arctic && Math.random() < 0.65) rollIceEvent(st);
+      else rollEvent(st);
+    }
+    /* 승선 항해사들과 함께한 나날 → 각자 호감도 +1/일 */
+    if(state.mates.length && state.day >= nextMateAffDay){
+      nextMateAffDay = state.day + 1;
+      for(const mid of state.mates){
+        const a0 = state.aff[mid]||0;
+        if(a0 < 100){
+          state.aff[mid] = a0 + 1;
+          if(state.aff[mid] === 80 && !state.affDone[mid])
+            toast(`✨ ${NAV_MAP[mid].name}와(과)의 특별한 순간이 다가오고 있습니다…`);
+        }
+      }
+    }
+    /* 바람 표시 */
+    const pct = Math.round((sea-1)*100);
+    $("hWind").innerHTML = `💨 ${pct>=0?"+":""}${pct}%` +
+      (arctic ? " · 🧊유빙" : "") +
+      (monsoonNow ? ` · ${monsoonNow}` : "") +
+      (state.buff && state.day<state.buff.until ? ` · ${state.buff.t}` : "");
+    if(!trail.length || dist(trail[trail.length-1].x,trail[trail.length-1].y,state.x,state.y)>14)
+      trail.push({ x:state.x, y:state.y, t:8 });
+    if(d<=step+1){
+      sail.i++;
+      if(sail.i>=sail.pts.length) sail = null;
+    }
+    checkDock();
+    /* 미지의 항구 발견: 접근하면 지도에 표시 */
+    for(const p of PORTS){
+      if(state.found.includes(p.id)) continue;
+      if(dist(state.x, state.y, p.x, p.y) < 130){
+        state.found.push(p.id);
+        toast(`🔭 수평선 너머로 항구가 보입니다 — ${p.name} 발견!`, true);
+        save();
+      }
+    }
+    /* 해적 소굴/잔당 접근 → 토벌 전투 */
+    for(const dn of DENS){
+      const avail = !state.dens[dn.id] || remnantReady(dn);
+      const dd = dist(state.x, state.y, dn.x, dn.y);
+      if(avail && dd < 40 && denNear !== dn.id){
+        denNear = dn.id; sail = null;
+        openRaid(dn.id);
+        break;
+      }
+      if(dd > 70 && denNear === dn.id) denNear = null;
+    }
+    for(const s of salvages){
+      if(dist(state.x,state.y,s.x,s.y)<34){
+        const b = navBonus();
+        let v = Math.round((20+Math.random()*60) * (1+st.luck/100) * (1+b.salv));
+        const lucky = Math.random()*100 < st.luck;
+        if(lucky) v *= 2;
+        state.gold += v;
+        toast(`${lucky?"✨ 행운! ":"🧡 "}표류물 회수 +${fmt(v)}골드`, lucky);
+        relocateSalvage(s);
+        updateHUD(); save();
+      }
+    }
+    updateHUD();
+  }
+  for(const p of trail) p.t -= dt;
+  trail = trail.filter(p=>p.t>0);
+  if(cam.follow){
+    let cdx = state.x - cam.x;
+    if(cdx > WORLD_W/2) cdx -= WORLD_W; else if(cdx < -WORLD_W/2) cdx += WORLD_W;
+    cam.x = ((cam.x + cdx*Math.min(1,dt*3)) % WORLD_W + WORLD_W) % WORLD_W;
+    cam.y += (state.y-cam.y)*Math.min(1,dt*3);
+  }
+  $("recenter").style.display = cam.follow ? "none":"block";
+}
+
+/* ══════════════════ 렌더 ══════════════════ */
+function routeDrawPath(a,b){
+  const key = a<b ? a+"_"+b : b+"_"+a;
+  if(!(key in routePaths)){
+    const pa = PORT_MAP[a], pb = PORT_MAP[b];
+    const pts = findPath(pa.x,pa.y,pb.x,pb.y) || [{x:pb.x,y:pb.y}];
+    pts.unshift({ x:pa.x, y:pa.y });
+    routePaths[key] = pts;
+  }
+  return routePaths[key];
+}
+function draw(){
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.fillStyle = "#faf9f7"; ctx.fillRect(0,0,W,H);
+  if(!worldCv || !state) return;
+  ctx.save();
+  ctx.translate(W/2, H/2);
+  ctx.scale(cam.s, cam.s);
+  ctx.translate(-cam.x, -cam.y);
+
+  /* 동서 순환: 카메라에 가장 가까운 사본 좌표로 변환 */
+  const relX = x => {
+    const d = x - cam.x;
+    if(d > WORLD_W/2) return x - WORLD_W;
+    if(d < -WORLD_W/2) return x + WORLD_W;
+    return x;
+  };
+  const halfView = W/(2*cam.s) + 60;
+  for(const off of [-WORLD_W, 0, WORLD_W]){
+    if(off + WORLD_W > cam.x - halfView && off < cam.x + halfView)
+      ctx.drawImage(worldCv, off, 0);
+  }
+
+  /* 계절별 유빙 지대 (여름엔 북상, 겨울엔 남하) */
+  const iy = PY(iceLat());
+  ctx.fillStyle = "rgba(214,228,238,.4)";
+  ctx.fillRect(cam.x-halfView-10, 0, halfView*2+20, iy);
+  ctx.setLineDash([7,7]);
+  ctx.strokeStyle = "#c3d4e0"; ctx.lineWidth = 1.3;
+  ctx.beginPath(); ctx.moveTo(cam.x-halfView-10, iy); ctx.lineTo(cam.x+halfView+10, iy); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.strokeStyle = "#cfdde8"; ctx.lineWidth = 1;
+  for(const f of floes){
+    if(f.y >= iy-4) continue;
+    const fx = relX(f.x);
+    if(Math.abs(fx-cam.x) > halfView+20) continue;
+    ctx.beginPath();
+    for(let k=0;k<f.vs.length;k++){
+      const v = f.vs[k];
+      k ? ctx.lineTo(fx+v[0], f.y+v[1]) : ctx.moveTo(fx+v[0], f.y+v[1]);
+    }
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+  }
+  ctx.font = "600 13px 'Segoe UI','Malgun Gothic',sans-serif"; ctx.textAlign = "center";
+  ctx.fillStyle = "#9fb4c2";
+  for(const lx of [WORLD_W/6, WORLD_W/2, WORLD_W*5/6]){
+    const rx = relX(lx);
+    if(Math.abs(rx-cam.x) < halfView) ctx.fillText("북 극 해 · 유 빙 해 역", rx, iy-14);
+  }
+
+  /* 발견한 항구만 표시 */
+  const foundSet = new Set(state.found);
+  ctx.textAlign = "center";
+  for(const p of PORTS){
+    if(!foundSet.has(p.id)) continue;
+    const ppx = relX(p.x);
+    if(Math.abs(ppx - cam.x) > halfView + 60) continue;
+    ctx.strokeStyle = "#4a4a4a"; ctx.lineWidth = 1.5; ctx.fillStyle = "#faf9f7";
+    ctx.beginPath(); ctx.arc(ppx, p.y, 9, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(ppx, p.y, 3.2, 0, 7); ctx.fillStyle = "#4a4a4a"; ctx.fill();
+    ctx.font = "600 13px 'Segoe UI','Malgun Gothic',sans-serif";
+    ctx.lineWidth = 4; ctx.strokeStyle = "rgba(250,249,247,.9)";
+    ctx.strokeText(p.name, ppx, p.y+26);
+    ctx.fillStyle = "#6a675f"; ctx.fillText(p.name, ppx, p.y+26);
+  }
+
+  /* 개설된 항로 (뱃길 따라 표시) */
+  ctx.setLineDash([2,7]); ctx.lineWidth = 1.4; ctx.strokeStyle = "rgba(217,111,50,.4)";
+  for(const r of state.routes){
+    const pts = routeDrawPath(r.from, r.to);
+    ctx.beginPath();
+    let lx = relX(pts[0].x);
+    ctx.moveTo(lx, pts[0].y);
+    for(let i=1;i<pts.length;i++){
+      const qx = relX(pts[i].x);
+      if(Math.abs(qx-lx) > WORLD_W/2) ctx.moveTo(qx, pts[i].y);
+      else ctx.lineTo(qx, pts[i].y);
+      lx = qx;
+    }
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  /* 해적 소굴 */
+  ctx.textAlign = "center";
+  for(const dn of DENS){
+    const dnx = relX(dn.x);
+    if(!state.dens[dn.id]){
+      /* 미토벌: 세력권(위험 해역) + 붉은 표식 */
+      ctx.setLineDash([3,7]);
+      ctx.strokeStyle = "rgba(179,80,42,.18)"; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(dnx, dn.y, DEN_DANGER_R, 0, 7); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.strokeStyle = "rgba(179,80,42,.5)";
+      ctx.beginPath(); ctx.arc(dnx, dn.y, 13+Math.sin(bobT*2.2)*2, 0, 7); ctx.stroke();
+      ctx.font = "14px sans-serif"; ctx.fillStyle = "#b3502a";
+      ctx.fillText("☠", dnx, dn.y+5);
+      ctx.font = "600 10px 'Malgun Gothic',sans-serif";
+      ctx.fillStyle = "rgba(179,80,42,.8)";
+      ctx.fillText(dn.name, dnx, dn.y+26);
+    } else if(remnantReady(dn)){
+      /* 잔당 재집결: 주황 표식 */
+      ctx.strokeStyle = "rgba(217,111,50,.45)"; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(dnx, dn.y, 10+Math.sin(bobT*2.2)*1.5, 0, 7); ctx.stroke();
+      ctx.font = "12px sans-serif"; ctx.fillStyle = "#d96f32";
+      ctx.fillText("☠", dnx, dn.y+4);
+      ctx.font = "600 9px 'Malgun Gothic',sans-serif";
+      ctx.fillStyle = "rgba(217,111,50,.85)";
+      ctx.fillText("잔당 출몰", dnx, dn.y+22);
+    } else {
+      /* 소탕 완료 */
+      ctx.globalAlpha = 0.25;
+      ctx.font = "13px sans-serif"; ctx.fillStyle = "#888";
+      ctx.fillText("☠", dnx, dn.y+5);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  /* 표류물 */
+  for(const s of salvages){
+    ctx.save(); ctx.translate(relX(s.x),s.y); ctx.rotate(s.a);
+    ctx.fillStyle = "#d96f32";
+    ctx.beginPath(); ctx.ellipse(0,0,s.r+1.5,s.r*0.6,0,0,7); ctx.fill();
+    ctx.fillStyle = "rgba(217,111,50,.45)";
+    ctx.beginPath(); ctx.ellipse(s.r+3,s.r,s.r*0.5,s.r*0.3,0.4,0,7); ctx.fill();
+    ctx.restore();
+  }
+
+  /* 정박 항구 강조 */
+  if(dockedAt){
+    const p = PORT_MAP[dockedAt];
+    ctx.strokeStyle = "rgba(217,111,50,.55)"; ctx.lineWidth = 2;
+    const rr = 16 + Math.sin(bobT*2.4)*2.5;
+    ctx.beginPath(); ctx.arc(relX(p.x),p.y,rr,0,7); ctx.stroke();
+  }
+  /* 미영입 항해사 항구 하트 (발견한 항구만, 떠도는 항해사 제외) */
+  for(const n of NAVIGATORS){
+    if(n.rare || state.navs.includes(n.id)) continue;
+    const p = PORT_MAP[n.port];
+    if(!p || !foundSet.has(p.id)) continue;
+    ctx.font = "11px sans-serif"; ctx.textAlign="center";
+    ctx.fillStyle = "rgba(217,111,50,.75)";
+    ctx.fillText("♥", relX(p.x)+14, p.y-10+Math.sin(bobT*2+p.x)*1.5);
+  }
+  /* 납품 의뢰 항구 표시 (발견한 항구만) */
+  if(state.quests) for(const q of state.quests.list){
+    if(q.done) continue;
+    const p = PORT_MAP[q.port];
+    if(!foundSet.has(p.id)) continue;
+    ctx.font = "10px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("📜", relX(p.x)-15, p.y-9+Math.sin(bobT*2+p.y)*1.5);
+  }
+  /* 투자 항구 배지 */
+  ctx.font = "800 10px sans-serif";
+  for(const pid in state.invest){
+    const lv = state.invest[pid];
+    const p = PORT_MAP[pid];
+    if(!lv || !p) continue;
+    ctx.fillStyle = lv>=5 ? "#d96f32" : "#e0a63f";
+    ctx.fillText("★"+lv, relX(p.x)-17, p.y+9);
+  }
+
+  /* 항해 경로 & 목적지 */
+  if(sail){
+    ctx.setLineDash([5,7]); ctx.strokeStyle = "#b7b3ac"; ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    let sx = relX(state.x);
+    ctx.moveTo(sx, state.y);
+    for(let i=sail.i;i<sail.pts.length;i++){
+      const qx = relX(sail.pts[i].x);
+      if(Math.abs(qx-sx) > WORLD_W/2) ctx.moveTo(qx, sail.pts[i].y);
+      else ctx.lineTo(qx, sail.pts[i].y);
+      sx = qx;
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    const e = sail.pts[sail.pts.length-1];
+    const ex = relX(e.x);
+    ctx.strokeStyle = "#8b8780"; ctx.lineWidth = 1.6;
+    const r = 7+Math.sin(bobT*3)*1.5;
+    ctx.beginPath(); ctx.arc(ex,e.y,r,0,7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ex-3,e.y); ctx.lineTo(ex+3,e.y);
+    ctx.moveTo(ex,e.y-3); ctx.lineTo(ex,e.y+3); ctx.stroke();
+  }
+
+  /* 항적 */
+  for(const p of trail){
+    const a = Math.min(1, p.t/8);
+    ctx.strokeStyle = `rgba(150,160,170,${a*0.55})`;
+    ctx.lineWidth = 1;
+    const perp = state.heading + Math.PI/2;
+    const w = (8-p.t)*1.0 + 2;
+    const tx = relX(p.x);
+    ctx.beginPath();
+    ctx.moveTo(tx+Math.cos(perp)*w-2.5, p.y+Math.sin(perp)*w);
+    ctx.lineTo(tx+Math.cos(perp)*w+2.5, p.y+Math.sin(perp)*w);
+    ctx.moveTo(tx-Math.cos(perp)*w-2.5, p.y-Math.sin(perp)*w);
+    ctx.lineTo(tx-Math.cos(perp)*w+2.5, p.y-Math.sin(perp)*w);
+    ctx.stroke();
+  }
+
+  drawShip(relX(state.x), state.y + Math.sin(bobT*1.8)*1.2, state.heading);
+  ctx.restore();
+
+  /* 낮·밤 색조 — 항해할수록 하루가 흐르는 것이 보인다 */
+  if(state){
+    const ph = dayPhase();
+    if(ph.warm > 0.01){
+      ctx.fillStyle = `rgba(232,150,70,${(ph.warm*0.07).toFixed(3)})`;
+      ctx.fillRect(0,0,W,H);
+    }
+    if(ph.dark > 0.01){
+      ctx.fillStyle = `rgba(45,55,90,${(ph.dark*0.14).toFixed(3)})`;
+      ctx.fillRect(0,0,W,H);
+    }
+  }
+}
+
+function drawShip(x,y,ang){
+  const L = SHIP_LOOK[state.flagship] || SHIP_LOOK.fish;
+  const hl = L.len/2, hw = L.wid/2;
+  const stroke = L.trim || "#3a3a3a";
+  ctx.save();
+  ctx.translate(x,y); ctx.rotate(ang); ctx.scale(0.6, 0.6);
+  /* 선체 윤곽 (s: 내부 데크라인용 축소 비율) */
+  const hullPath = s => {
+    const a = hl*s, b = hw*s;
+    ctx.beginPath();
+    ctx.moveTo(a, 0);
+    ctx.quadraticCurveTo(a*0.5, -b, -a*0.4, -b);
+    if(L.stern === "square"){
+      ctx.lineTo(-a, -b*0.85); ctx.lineTo(-a, b*0.85); ctx.lineTo(-a*0.4, b);
+    } else if(L.stern === "point"){
+      ctx.quadraticCurveTo(-a*0.9, -b*0.55, -a*1.02, 0);
+      ctx.quadraticCurveTo(-a*0.9, b*0.55, -a*0.4, b);
+    } else {
+      ctx.quadraticCurveTo(-a*1.06, -b*0.9, -a*1.06, 0);
+      ctx.quadraticCurveTo(-a*1.06, b*0.9, -a*0.4, b);
+    }
+    ctx.quadraticCurveTo(a*0.5, b, a, 0);
+    ctx.closePath();
+  };
+  /* 증기선 연기 */
+  if(L.funnel){
+    ctx.fillStyle = "rgba(120,120,125,.28)";
+    ctx.beginPath(); ctx.arc(-hl-5, 0, 2.6, 0, 7); ctx.fill();
+    ctx.fillStyle = "rgba(120,120,125,.15)";
+    ctx.beginPath(); ctx.arc(-hl-10, 1, 3.4, 0, 7); ctx.fill();
+  }
+  ctx.fillStyle = L.hull || "#ffffff";
+  ctx.strokeStyle = stroke; ctx.lineWidth = 1.6;
+  hullPath(1); ctx.fill(); ctx.stroke();
+  ctx.lineWidth = 0.9;
+  hullPath(0.66); ctx.stroke();
+  /* 작살 이물 (크라켄 헌터) */
+  if(L.harpoon){
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(hl, 0); ctx.lineTo(hl+8, 0);
+    ctx.moveTo(hl+5, -2.5); ctx.lineTo(hl+8, 0); ctx.lineTo(hl+5, 2.5);
+    ctx.stroke();
+  }
+  /* 선실 (돛이 적은 배) */
+  if((L.masts||0) <= 1 && !L.junk){
+    ctx.fillStyle = "#f2f0ec"; ctx.lineWidth = 1;
+    ctx.fillRect(-hl*0.55, -hw*0.45, hl*0.4, hw*0.9);
+    ctx.strokeRect(-hl*0.55, -hw*0.45, hl*0.4, hw*0.9);
+  }
+  /* 돛대와 활대 (정크선은 사선 배튼) */
+  const n = L.masts||0;
+  for(let i=0;i<n;i++){
+    const mx = n===1 ? hl*0.1 : hl*0.45 - (hl*0.95)*(i/(n-1));
+    ctx.lineWidth = 1.3; ctx.strokeStyle = stroke;
+    ctx.beginPath();
+    if(L.junk){ ctx.moveTo(mx-2.5, -hw*0.75); ctx.lineTo(mx+2.5, hw*0.75); }
+    else { ctx.moveTo(mx, -hw*0.85); ctx.lineTo(mx, hw*0.85); }
+    ctx.stroke();
+    ctx.fillStyle = stroke;
+    ctx.beginPath(); ctx.arc(mx, 0, 1.7, 0, 7); ctx.fill();
+  }
+  /* 굴뚝 */
+  if(L.funnel){
+    ctx.fillStyle = stroke;
+    ctx.beginPath(); ctx.arc(-hl*0.15, 0, 2.6, 0, 7); ctx.fill();
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 0.8;
+    ctx.beginPath(); ctx.arc(-hl*0.15, 0, 2.6, 0, 7); ctx.stroke();
+  }
+  /* 현측 함포 (프리깃) */
+  if(L.guns){
+    ctx.fillStyle = stroke;
+    for(const sgn of [-1,1]) for(let i=0;i<3;i++)
+      ctx.fillRect(-hl*0.35 + i*hl*0.3, sgn*hw*0.78 - 0.8, 2.2, 1.6);
+  }
+  ctx.restore();
+}
+
+/* ══════════════════ 입력 ══════════════════ */
+let pdown=null, moved=false;
+cv.addEventListener("pointerdown", e=>{
+  pdown = { x:e.clientX, y:e.clientY, cx:cam.x, cy:cam.y }; moved = false;
+});
+cv.addEventListener("pointermove", e=>{
+  if(!pdown) return;
+  const dx = e.clientX-pdown.x, dy = e.clientY-pdown.y;
+  if(Math.hypot(dx,dy)>8) moved = true;
+  if(moved){
+    cam.follow = false;
+    cam.x = ((pdown.cx - dx/cam.s) % WORLD_W + WORLD_W) % WORLD_W;
+    cam.y = Math.max(0, Math.min(WORLD_H, pdown.cy - dy/cam.s));
+  }
+});
+cv.addEventListener("pointerup", e=>{
+  if(pdown && !moved && state && !state.intro){
+    let wx = cam.x + (e.clientX-W/2)/cam.s;
+    wx = ((wx % WORLD_W) + WORLD_W) % WORLD_W;
+    const wy = cam.y + (e.clientY-H/2)/cam.s;
+    if(wy>10 && wy<WORLD_H-10){
+      const port = PORTS.find(p=>state.found.includes(p.id) && dist(wx,wy,p.x,p.y)<34);
+      if(port){
+        if(requestSail(port.x, port.y, port.id)){
+          toast(`🧭 ${port.name}(으)로 항해합니다`);
+          cam.follow = true;
+        }
+      } else if(isLand(wx,wy)){
+        toast("🏔️ 육지로는 항해할 수 없습니다");
+      } else if(requestSail(wx,wy)){
+        cam.follow = true;
+      }
+    }
+  }
+  pdown = null;
+});
+cv.addEventListener("wheel", e=>{
+  setZoom(e.deltaY>0 ? 0.9 : 1.1);
+}, { passive:true });
+function setZoom(mult){
+  cam.s = Math.max(0.22, Math.min(1.8, cam.s * mult));
+  $("hZoom").textContent = `🔍 ${Math.round(cam.s*100)}%`;
+}
+function recenter(){ cam.follow = true; }
+
+/* ══════════════════ HUD ══════════════════ */
+function checkAchievements(){
+  for(const a of ACHV){
+    if(state.titles.includes(a.id)) continue;
+    if(a.cond(state)){
+      state.titles.push(a.id);
+      state.gold += a.gold;
+      if(!state.title) state.title = a.id;
+      toast(`🏅 업적 달성 「${a.name}」! +${fmt(a.gold)}골드 · 칭호 획득`, true);
+      save();
+    }
+  }
+  /* 도감 수집 보상 */
+  const ownedN = Object.keys(state.ships).length;
+  for(const m of DEX_MILE){
+    if(state.dexRw.includes(m.id) || ownedN < m.need) continue;
+    state.dexRw.push(m.id);
+    state.gold += m.gold;
+    const extra = m.ur ? " · " + grantShip("UR") : "";
+    toast(`📖 도감 ${m.need}종 달성! +${fmt(m.gold)}골드${extra}`, true);
+    save();
+  }
+  for(const gr of DEX_GRADE){
+    if(state.dexRw.includes(gr.id)) continue;
+    const all = SHIPS.filter(s=>s.g===gr.grade);
+    if(!all.every(s=>s.id in state.ships)) continue;
+    state.dexRw.push(gr.id);
+    state.gold += gr.gold;
+    toast(`📖 ${gr.grade}·${GRADES[gr.grade].name} 등급 도감 완성! +${fmt(gr.gold)}골드`, true);
+    save();
+  }
+}
+function equipTitle(id){
+  if(!state.titles.includes(id)) return;
+  state.title = id;
+  toast(`🏅 칭호 「${ACHV_MAP[id].name}」 장착 (${bonusTextB(ACHV_MAP[id].bonus)||"기념 칭호"})`);
+  save(); openFleet('achv');
+}
+function updateHUD(){
+  checkAchievements();
+  $("hGold").textContent = fmt(state.gold);
+  $("hFood").textContent = fmt(state.food);
+  $("hWater").textContent = fmt(state.water);
+  const ph = dayPhase();
+  /* 시각: 하루 위상 0 = 06:00(새벽) 기준 */
+  const tmin = Math.floor(((6 + (((state.day%1)+1)%1)*24) % 24) * 60);
+  const hh = String(Math.floor(tmin/60)).padStart(2,"0");
+  const mm = String(tmin%60).padStart(2,"0");
+  $("hDate").textContent = `${ph.icon} ${dateStr(state.day)} ${hh}:${mm} · ${Math.floor(state.day)+1}일차`;
+  $("hZoom").textContent = `🔍 ${Math.round(cam.s*100)}%`;
+  if(state.mates.length){
+    const first = NAV_MAP[state.mates[0]];
+    $("hMate").style.display = "block";
+    $("hMate").innerHTML = `⚓ <b>${first.name}</b>${state.mates.length>1?` 외 ${state.mates.length-1}명`:""} 승선 (${state.mates.length}/${mateCap()})`;
+  } else $("hMate").style.display = "none";
+  const s = SHIP_MAP[state.flagship];
+  const st = state.ships[state.flagship]||0;
+  $("shipPill").innerHTML =
+    `<span class="gtag" style="background:${GRADES[s.g].color}">${s.g}</span> ${s.name}${st>0?" ★"+Math.min(st,5):""}`;
+  $("btnTrade").classList.toggle("off", !dockedAt);
+  const navHere = dockedAt && NAVIGATORS.some(n=>n.port===dockedAt && !state.navs.includes(n.id));
+  $("btnNav").classList.toggle("hot", !!navHere);
+  const questReady = !!(state.quests && dockedAt &&
+    state.quests.list.some(q=>!q.done && q.port===dockedAt && (state.cargo[q.good]||0)>=q.qty));
+  $("btnQuest").classList.toggle("hot", questReady);
+}
+
+/* ══════════════════ 모달 공통 ══════════════════ */
+function openModal(title, sub, html){
+  $("mTitle").textContent = title;
+  $("mSub").textContent = sub||"";
+  $("mBody").innerHTML = html;
+  $("shade").classList.add("on");
+}
+function closeModal(){ if(forcedModal) return; $("shade").classList.remove("on"); }
+
+/* ══════════════════ 함대 / 도감 ══════════════════ */
+let fleetTab = "fleet";
+function openFleet(tab){
+  if(tab) fleetTab = tab;
+  const owned = Object.keys(state.ships);
+  let html = `<div class="tabs">
+    <div class="tab ${fleetTab==="fleet"?"on":""}" onclick="openFleet('fleet')">함대 (${owned.length})</div>
+    <div class="tab ${fleetTab==="dex"?"on":""}" onclick="openFleet('dex')">도감 (${owned.length}/${SHIPS.length})</div>
+    <div class="tab ${fleetTab==="achv"?"on":""}" onclick="openFleet('achv')">업적 (${state.titles.length}/${ACHV.length})</div>
+  </div>`;
+
+  if(fleetTab==="fleet"){
+    const assigned = new Set(state.routes.map(r=>r.ship));
+    for(const s of SHIPS){
+      if(!(s.id in state.ships)) continue;
+      const st = Math.min(state.ships[s.id],5);
+      const e = effStats(s.id);
+      const isFlag = state.flagship===s.id;
+      const onRoute = assigned.has(s.id);
+      html += `<div class="card row">
+        <div class="grow">
+          <span class="gtag" style="background:${GRADES[s.g].color}">${s.g}</span>
+          <span class="shipName"> ${s.name}</span>
+          <span class="stars">${"★".repeat(st)}${"☆".repeat(5-st)}</span>
+          <div class="stat">속도 <b>${e.speed.toFixed(0)}</b> · 적재 <b>${s.cargo}</b> · 보급 <b>${e.sup}</b> · 행운 <b>${s.luck}</b></div>
+          <div class="stat">소모 <b>${e.food.toFixed(1)}</b>/100해리 · 항속거리 약 <b>${fmt(e.sup/(e.food*WATER_RATE)*100)}</b>해리</div>
+          ${onRoute?`<div class="stat" style="color:#d96f32">🧭 항로 운항 중</div>`:""}
+        </div>
+        ${isFlag
+          ? `<button class="btn sm ghost" disabled>⚓ 기함</button>`
+          : `<button class="btn sm" ${onRoute?"disabled":""} onclick="setFlagship('${s.id}')">기함 지정</button>`}
+      </div>`;
+    }
+    html += `<div class="stat" style="text-align:center;margin-top:6px">중복 획득 시 ★이 오르며 속도·연비가 강화됩니다 (최대 ★5)</div>`;
+  } else if(fleetTab==="achv"){
+    const cur = state.title ? ACHV_MAP[state.title] : null;
+    html += `<div class="card row" style="background:#fdf3ec;border-color:#eed0b8">
+      <div class="grow">
+        <div style="font-size:13px;font-weight:700">현재 칭호 — ${cur?`「${cur.name}」`:"없음"}</div>
+        <div class="stat">${cur ? (bonusTextB(cur.bonus)||"기념 칭호") : "업적을 달성하면 칭호를 얻습니다"}</div>
+      </div>
+    </div>`;
+    for(const a of ACHV){
+      const got = state.titles.includes(a.id);
+      const pr = !got && a.prog ? a.prog(state) : null;
+      html += `<div class="card row" style="${got?"":"opacity:.6"}">
+        <div class="grow">
+          <div style="font-size:13px;font-weight:700">${got?"🏅":"🔒"} ${a.name}</div>
+          <div class="stat">${a.desc}${pr?` — <b>${fmt(pr[0])}/${fmt(pr[1])}</b>`:""}</div>
+          <div class="stat">보상 <b>${fmt(a.gold)}골드</b> · 칭호 효과: <b>${bonusTextB(a.bonus)||"기념"}</b></div>
+        </div>
+        ${got ? (state.title===a.id
+          ? `<span style="font-size:12px;color:#d96f32;font-weight:700">장착 중</span>`
+          : `<button class="btn sm" onclick="equipTitle('${a.id}')">장착</button>`) : ""}
+      </div>`;
+    }
+  } else {
+    const ownedN = owned.length;
+    html += `<div class="card" style="background:#fdf3ec;border-color:#eed0b8">
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px">📖 도감 수집 보상 <span style="color:#999;font-weight:600">— 달성 시 자동 지급</span></div>
+      ${DEX_MILE.map(m=>{
+        const got = state.dexRw.includes(m.id);
+        return `<div class="stat">${got?"✅":"▫️"} <b>${m.need}종</b> 수집 — ${fmt(m.gold)}골드${m.ur?" + UR 함선 획득/강화":""}${got?"":` <span style="color:#bbb">(${Math.min(ownedN,m.need)}/${m.need})</span>`}</div>`;
+      }).join("")}
+      <div style="border-top:1px solid #f0e4d8;margin:6px 0"></div>
+      ${DEX_GRADE.map(gr=>{
+        const all = SHIPS.filter(s=>s.g===gr.grade);
+        const have = all.filter(s=>s.id in state.ships).length;
+        const got = state.dexRw.includes(gr.id);
+        return `<div class="stat">${got?"✅":"▫️"} <b style="color:${GRADES[gr.grade].color}">${gr.grade}등급</b> 전종 수집 — ${fmt(gr.gold)}골드${got?"":` <span style="color:#bbb">(${have}/${all.length})</span>`}</div>`;
+      }).join("")}
+    </div>`;
+    for(const g of ["UR","SSR","SR","R","N"]){
+      html += `<div style="margin:10px 4px 6px;font-size:12px;font-weight:800;color:${GRADES[g].color}">${g} · ${GRADES[g].name}</div>`;
+      for(const s of SHIPS.filter(s=>s.g===g)){
+        const has = s.id in state.ships;
+        html += `<div class="card row" style="${has?"":"opacity:.45"}">
+          <div class="grow">
+            <span class="shipName">${has?s.name:"???"}</span>
+            <div class="stat">${has
+              ? `속도 <b>${s.speed}</b> · 적재 <b>${s.cargo}</b> · 보급 <b>${s.sup}</b> · 행운 <b>${s.luck}</b>`
+              : "조선소에서 건조하면 도감에 등록됩니다"}</div>
+          </div>
+          ${has?`<span style="font-size:16px">✓</span>`:""}
+        </div>`;
+      }
+    }
+  }
+  openModal("함대", "기함이 지도 위를 항해합니다", html);
+}
+function setFlagship(id){
+  const cap = SHIP_MAP[id].cargo;
+  if(cargoUsed()>cap){ toast(`⚠️ 화물(${cargoUsed()})이 이 배의 적재량(${cap})을 초과합니다. 먼저 판매하세요.`); return; }
+  state.flagship = id;
+  /* 새 기함의 승선 정원 초과분은 자동 하선 */
+  while(state.mates.length > mateCap()){
+    const out = state.mates.pop();
+    toast(`⚓ 정원 축소로 ${NAV_MAP[out].name}이(가) 하선했습니다`);
+  }
+  save(); updateHUD(); openFleet();
+  toast(`⚓ 기함을 「${SHIP_MAP[id].name}」(으)로 변경했습니다 (승선 정원 ${mateCap()}명)`);
+}
+
+/* ══════════════════ 조선소(뽑기) ══════════════════ */
+function openGacha(){
+  const rates = Object.entries(GRADES).map(([g,v])=>
+    `<span style="color:${v.color};font-weight:700">${g} ${v.rate}%</span>`).join(" · ");
+  openModal("조선소", "새로운 배를 건조합니다", `
+    <div class="card" style="text-align:center;padding:22px 14px">
+      <div style="font-size:38px">⛵</div>
+      <div style="font-size:13px;color:#888;margin:8px 0 14px">설계도를 펼치고 장인들에게 건조를 맡깁니다.<br>어떤 배가 완성될까요?</div>
+      <div class="row" style="justify-content:center;gap:10px">
+        <button class="btn orange" onclick="doGacha(1)">1회 건조 · ${fmt(GACHA_COST)}🪙</button>
+        <button class="btn" onclick="doGacha(10)">10회 건조 · ${fmt(GACHA_TEN)}🪙</button>
+      </div>
+      <div class="stat" style="margin-top:14px">${rates}</div>
+      <div class="stat">중복 획득 시 ★+1 (최대 5), 초과분은 골드로 환급</div>
+    </div>
+    <div id="pullWrap"></div>`);
+}
+function rollGrade(){
+  let r = Math.random()*100;
+  for(const [g,v] of Object.entries(GRADES)){ if(r < v.rate) return g; r -= v.rate; }
+  return "N";
+}
+function doGacha(n){
+  const cost = n===10 ? GACHA_TEN : GACHA_COST*n;
+  if(state.gold < cost){ toast("🪙 골드가 부족합니다"); return; }
+  state.gold -= cost;
+  state.stats.pulls += n;
+  const results = [];
+  for(let i=0;i<n;i++){
+    const g = rollGrade();
+    const pool = SHIPS.filter(s=>s.g===g);
+    const s = pool[Math.floor(Math.random()*pool.length)];
+    let note;
+    if(!(s.id in state.ships)){ state.ships[s.id]=0; note="NEW!"; }
+    else if(state.ships[s.id]<5){ state.ships[s.id]++; note="★+1"; }
+    else { state.gold += DUP_GOLD[g]; note=`+${DUP_GOLD[g]}🪙`; }
+    results.push({ s, note });
+  }
+  save(); updateHUD();
+  const wrap = $("pullWrap");
+  if(wrap){
+    wrap.innerHTML = results.map((r,i)=>`
+      <div class="pullCard" style="border-color:${GRADES[r.s.g].color};animation-delay:${i*0.09}s">
+        <div class="gd" style="color:${GRADES[r.s.g].color}">${r.s.g} ${GRADES[r.s.g].name}</div>
+        <div style="font-size:22px">${r.s.g==="UR"?"🚢":r.s.g==="SSR"?"⛵":"🛶"}</div>
+        <div class="nm">${r.s.name}</div>
+        <div class="dup" style="${r.note==="NEW!"?"color:#d96f32;font-weight:800":""}">${r.note}</div>
+      </div>`).join("");
+  }
+  const best = results.reduce((a,b)=>Object.keys(GRADES).indexOf(b.s.g)>Object.keys(GRADES).indexOf(a.s.g)?b:a);
+  if(best.s.g==="SSR"||best.s.g==="UR") toast(`🎉 ${GRADES[best.s.g].name} 등급 「${best.s.name}」 건조!`, true);
+}
+
+/* ══════════════════ 항해사 ══════════════════ */
+function portraitSVG(n, size){
+  const pc = NAV_PIC[n.id];
+  if(pc){
+    const sh = SHEETS[pc[0]];
+    /* 개별 실측한 원 중심 + 실제 원 지름의 88%만 표시
+       → 원 테두리 바깥(이웃 초상화의 머리카락·모자 등)이 절대 보이지 않음 */
+    const cx = pc[1], cy = pc[2];
+    const d = sh.d * 0.84;
+    const bgW = (sh.w/d*100).toFixed(2), bgH = (sh.h/d*100).toFixed(2);
+    const x = ((cx - d/2) / (sh.w - d) * 100).toFixed(2);
+    const y = ((cy - d/2) / (sh.h - d) * 100).toFixed(2);
+    return `<div style="width:${size}px;height:${size}px;border-radius:50%;flex:none;` +
+      `border:1px solid #e6e3de;background-color:#f6f1ea;` +
+      `background-image:url('image/character_${pc[0]}.png');` +
+      `background-repeat:no-repeat;background-size:${bgW}% ${bgH}%;` +
+      `background-position:${x}% ${y}%"></div>`;
+  }
+  const L = n.look, hc = L.hc, sk = L.skin;
+  const S = "#4a4038";
+  let back="", front="", acc="";
+  switch(L.hair){
+    case 0: /* 긴 생머리 */
+      back = `<path d="M28 52 Q24 18 50 16 Q76 18 72 52 Q76 74 69 90 L31 90 Q24 74 28 52" fill="${hc}"/>`;
+      front = `<path d="M29 50 Q28 22 50 20 Q72 22 71 50 Q69 33 58 30 Q50 38 40 36 Q31 40 29 50" fill="${hc}"/>`;
+      break;
+    case 1: /* 짧은 머리 */
+      back = `<path d="M30 52 Q26 20 50 18 Q74 20 70 52 Q72 40 64 34 Q50 26 38 34 Q28 40 30 52" fill="${hc}"/>`;
+      front = `<path d="M31 47 Q32 27 50 24 Q66 26 68 44 Q62 32 52 33 Q40 32 31 47" fill="${hc}"/>`;
+      break;
+    case 2: /* 포니테일 */
+      back = `<path d="M30 50 Q26 18 50 16 Q74 18 70 50 Q73 36 62 30 Q48 24 36 32 Q27 38 30 50" fill="${hc}"/>
+              <path d="M68 34 Q84 40 80 62 Q77 78 70 86 Q74 66 68 50 Z" fill="${hc}"/>`;
+      front = `<path d="M31 46 Q34 26 52 24 Q66 27 68 42 Q60 31 48 33 Q37 34 31 46" fill="${hc}"/>`;
+      break;
+    case 3: /* 웨이브 롱 */
+      back = `<path d="M28 50 Q24 16 50 15 Q76 16 72 50 Q78 66 72 80 Q76 88 70 92 L30 92 Q24 88 28 80 Q22 66 28 50" fill="${hc}"/>`;
+      front = `<path d="M29 48 Q28 22 50 19 Q72 22 71 48 Q68 32 57 29 Q49 37 39 34 Q31 38 29 48" fill="${hc}"/>`;
+      break;
+    case 4: /* 올백 */
+      back = `<path d="M31 50 Q27 18 50 16 Q73 18 69 50 Q71 34 60 28 Q50 24 40 28 Q29 34 31 50" fill="${hc}"/>`;
+      front = `<path d="M33 42 Q36 26 50 24 Q64 26 67 42 Q60 30 50 30 Q40 30 33 42" fill="${hc}"/>`;
+      break;
+    default: /* 단발 보브 */
+      back = `<path d="M28 52 Q25 18 50 16 Q75 18 72 52 Q73 66 66 70 L34 70 Q27 66 28 52" fill="${hc}"/>`;
+      front = `<path d="M29 50 Q28 22 50 20 Q72 22 71 50 Q68 32 56 30 Q48 37 39 35 Q30 39 29 50" fill="${hc}"/>`;
+  }
+  if(L.acc==="ear") acc = `<circle cx="70.5" cy="63" r="2" fill="#e0a63f"/>`;
+  if(L.acc==="glass") acc = `<circle cx="41" cy="55" r="7" fill="none" stroke="${S}" stroke-width="1.2"/>
+    <circle cx="59" cy="55" r="7" fill="none" stroke="${S}" stroke-width="1.2"/>
+    <path d="M48 55 h4" stroke="${S}" stroke-width="1.2"/>`;
+  const blush = L.blush ? `<circle cx="38" cy="62" r="3.2" fill="#f2b09a" opacity=".55"/>
+    <circle cx="62" cy="62" r="3.2" fill="#f2b09a" opacity=".55"/>` : "";
+  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100">
+    ${back}
+    <path d="M36 80 Q30 92 26 100 L74 100 Q70 92 64 80 Z" fill="#fff" stroke="${S}" stroke-width="1.4"/>
+    <rect x="44" y="72" width="12" height="12" fill="${sk}"/>
+    <ellipse cx="50" cy="55" rx="21" ry="25" fill="${sk}" stroke="${S}" stroke-width="1.5"/>
+    <path d="M36 50 Q41 47 46 50" stroke="${S}" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <path d="M54 50 Q59 47 64 50" stroke="${S}" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <path d="M37 57 Q41 53.5 45 57" stroke="${S}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M55 57 Q59 53.5 63 57" stroke="${S}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M50 60 q1.6 2.6 -0.6 4.4" stroke="${S}" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    <path d="M45 69 Q50 73.5 55 69" stroke="${S}" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    ${blush}${front}${acc}
+  </svg>`;
+}
+function bonusText(n){ return bonusTextB(n.bonus); }
+function bonusTextB(b){
+  const parts = [];
+  if(b.sell)  parts.push(`판매가 +${Math.round(b.sell*100)}%`);
+  if(b.buy)   parts.push(`구매가 -${Math.round(b.buy*100)}%`);
+  if(b.route) parts.push(`항로 수익 +${Math.round(b.route*100)}%`);
+  if(b.luck)  parts.push(`행운 +${b.luck}`);
+  if(b.salv)  parts.push(`표류물 보상 +${Math.round(b.salv*100)}%`);
+  if(b.food)  parts.push(`식량 소모 -${Math.round(b.food*100)}%`);
+  if(b.speed) parts.push(`항해 속도 +${Math.round(b.speed*100)}%`);
+  return parts.join(" · ");
+}
+function openNavs(){
+  let html = "";
+  const rareGot = NAVIGATORS.filter(n=>n.rare && state.navs.includes(n.id)).length;
+  html += `<div class="card row" style="background:#fdf3ec;border-color:#eed0b8">
+    <div class="grow">
+      <div style="font-size:13px;font-weight:700">🌟 떠도는 항해사 ${rareGot}/${RARE_NAVS.length}</div>
+      <div class="stat">항구에 기항할 때 낮은 확률(1%)로 인연이 닿는 실력자들.<br>
+      한 번 나타나면 10일간 다시 나타나지 않으며, 그 자리에서 놓치면 떠나갑니다.</div>
+    </div>
+  </div>`;
+  const sorted = [...NAVIGATORS].sort((a,b)=>{
+    const ra = state.mates.includes(a.id)?-1 : state.navs.includes(a.id)?0 : a.port===dockedAt?1 : state.visited.includes(a.port)?2:3;
+    const rb = state.mates.includes(b.id)?-1 : state.navs.includes(b.id)?0 : b.port===dockedAt?1 : state.visited.includes(b.port)?2:3;
+    return ra-rb;
+  });
+  for(const n of sorted){
+    const has = state.navs.includes(n.id);
+    if(n.rare && !has) continue;    /* 미영입 떠도는 항해사는 목록에 없음 */
+    const here = dockedAt===n.port;
+    const known = state.visited.includes(n.port);
+    html += `<div class="card navCard" style="${has?"":known?"":"opacity:.55"}">
+      ${has||here ? portraitSVG(n,64) : `<div style="width:64px;height:64px;border-radius:50%;background:#efede9;display:flex;align-items:center;justify-content:center;font-size:22px;color:#bbb">?</div>`}
+      <div class="grow">
+        <span class="navName">${has||here?n.name:"???"}</span>
+        <span class="navTitle">${n.rare?"🌟 "+n.title:PORT_MAP[n.port].name}</span>
+        <div class="navDesc">${has||here?n.desc:known?"이 항구 어딘가에서 만날 수 있을 것 같다.":"아직 가보지 않은 항구의 소문 속 인물."}</div>
+        ${has||here?`<div class="navBonus">동료 효과 · ${bonusText(n)}</div>`:""}
+        ${has?`<div class="stat">💗 <b>${state.aff[n.id]||0}</b> · ${affName(state.aff[n.id]||0)} · 효과 +${Math.round((state.aff[n.id]||0)/2)}%${
+          state.affDone[n.id] ? " · 💞전용 이벤트 완료" :
+          (state.aff[n.id]||0)>=80 ? " · ✨전용 이벤트 대기 중!" : ""}</div>`:""}
+      </div>
+      ${has ? (state.mates.includes(n.id)
+          ? `<div style="text-align:center;flex:none"><div style="font-size:11px;color:#d96f32;font-weight:800;margin-bottom:4px">⚓ 승선 중</div><button class="btn sm ghost" onclick="unboard('${n.id}')">하선</button></div>`
+          : `<button class="btn sm" ${state.mates.length>=mateCap()?"disabled":""} onclick="board('${n.id}')">⚓ 승선</button>`)
+        : here ? `<button class="btn sm orange" onclick="recruit('${n.id}')">${fmt(n.cost)}🪙 영입</button>`
+        : `<span class="lockNote">항구 방문 필요</span>`}
+    </div>`;
+  }
+  openModal("항해사",
+    `동료 ${state.navs.length}/${NAVIGATORS.length} · 승선 ${state.mates.length}/${mateCap()} (${SHIP_MAP[state.flagship].name}) · 승선 효과 2배`,
+    html);
+}
+function board(id){
+  if(!state.navs.includes(id) || state.mates.includes(id)) return;
+  if(state.mates.length >= mateCap()){
+    toast(`⚓ ${SHIP_MAP[state.flagship].name}에는 ${mateCap()}명까지만 승선할 수 있습니다 (좋은 배일수록 정원↑)`);
+    return;
+  }
+  state.mates.push(id);
+  nextMateAffDay = state.day + 1;
+  toast(`⚓ ${NAV_MAP[id].name}이(가) 기함에 올랐습니다! (${state.mates.length}/${mateCap()} · 효과 2배)`);
+  save(); updateHUD(); openNavs();
+}
+function unboard(id){
+  if(!state.mates.includes(id)) return;
+  state.mates = state.mates.filter(m=>m!==id);
+  toast(`${NAV_MAP[id].name}이(가) 기함에서 내렸습니다`);
+  save(); updateHUD(); openNavs();
+}
+function meetNavigator(id){
+  const n = NAV_MAP[id];
+  const sub = n.port ? PORT_MAP[n.port].name
+    : (dockedAt ? PORT_MAP[dockedAt].name + "의 선술집" : "우연한 만남");
+  openModal(n.rare ? "🌟 운명적인 인연" : "운명적인 만남", sub, `
+    <div class="card" style="text-align:center;padding:24px 16px">
+      <div style="display:flex;justify-content:center">${portraitSVG(n,110)}</div>
+      <div style="font-size:17px;font-weight:800;margin-top:10px">${n.name}</div>
+      <div class="navTitle" style="margin:2px 0 8px">${n.title}</div>
+      <div class="navDesc" style="max-width:300px;margin:0 auto 10px">"${n.desc}"</div>
+      <div class="navBonus" style="margin-bottom:${n.rare?"6px":"16px"}">함께하면 · ${bonusText(n)}</div>
+      ${n.rare?`<div class="stat" style="color:#b3502a;margin-bottom:12px">떠도는 항해사입니다 — 지금 영입하지 않으면 언제 다시 만날지 모릅니다</div>`:""}
+      <div class="row" style="justify-content:center;gap:10px">
+        <button class="btn ghost" onclick="closeModal()">다음에</button>
+        <button class="btn orange" onclick="recruit('${n.id}')">${fmt(n.cost)}🪙 영입하기</button>
+      </div>
+    </div>`);
+}
+function recruit(id){
+  const n = NAV_MAP[id];
+  if(state.navs.includes(id)) return;
+  if(state.gold < n.cost){ toast("🪙 골드가 부족합니다"); return; }
+  state.gold -= n.cost;
+  state.navs.push(id);
+  save(); updateHUD();
+  toast(`💞 「${n.name}」이(가) 동료가 되었습니다! (${bonusText(n)})`, true);
+  openNavs();
+}
+
+/* ══════════════════ 무역 ══════════════════ */
+function openTrade(){
+  if(!dockedAt){ toast("⚓ 항구에 정박 중에만 거래할 수 있습니다"); return; }
+  renderTrade();
+}
+function renderTrade(){
+  const p = PORT_MAP[dockedAt];
+  const b = navBonus();
+  const cap = SHIP_MAP[state.flagship].cargo;
+  let rows = "";
+  const pLv = investLv(dockedAt);
+  for(const g of GOODS){
+    const base = goodPrice(dockedAt, g.id);
+    const buyP = Math.round(base*(1-b.buy-pLv*0.02));
+    const cls = p.p.includes(g.id) ? "cheap" : p.d.includes(g.id) ? "expensive" : "";
+    const tag = p.p.includes(g.id) ? " ▼" : p.d.includes(g.id) ? " ▲" : "";
+    const have = state.cargo[g.id]||0;
+    rows += `<div class="goodRow">
+      <div class="gname">${g.name}</div>
+      <div class="gprice ${cls}">${fmt(buyP)}🪙${tag}</div>
+      <div class="ghave">보유 ${have}</div>
+      <div class="tbtns">
+        <button class="btn sm ghost" onclick="buyGood('${g.id}',1)">구매</button>
+        <button class="btn sm ghost" onclick="buyGood('${g.id}',10)">+10</button>
+        <button class="btn sm" ${have?"":"disabled"} onclick="sellGood('${g.id}',999)">판매</button>
+      </div>
+    </div>`;
+  }
+  const supCap = effStats(state.flagship).sup;
+  const investCard = `
+    <div class="card row">
+      <div class="grow">
+        <div style="font-size:13px;font-weight:700">🏗️ 항구 투자
+          <span class="stars">${"★".repeat(pLv)}${"☆".repeat(5-pLv)}</span>
+          ${pLv>=5?`<span style="color:#d96f32;font-size:11px;font-weight:800"> 단골 항구</span>`:""}</div>
+        <div class="stat">구매 <b>-${pLv*2}%</b> · 판매 <b>+${pLv*2}%</b> · 보급비 <b>${pLv>=5?"무료":"-"+pLv*10+"%"}</b> · 연결 항로 수익 <b>+${pLv*6}%</b></div>
+        ${pLv<5
+          ? `<div class="stat">투자하면 이 항구의 모든 혜택이 커집니다 (최대 ★5 = 보급 무료)</div>`
+          : `<div class="stat" style="color:#d96f32">이 항구는 당신의 단골 항구입니다 — 출항 보급 무료!</div>`}
+      </div>
+      ${pLv<5?`<button class="btn sm orange" onclick="investPort()">투자<br>${fmt(INVEST_COST[pLv])}🪙</button>`:""}
+    </div>`;
+  openModal(`${p.name} 시장`, `적재 ${cargoUsed()}/${cap}`, `
+    <div class="card" style="padding:6px 14px">${rows}</div>
+    ${investCard}
+    <div class="card row">
+      <div class="grow">
+        <div style="font-size:13px;font-weight:700">🧺 보급 상태</div>
+        <div class="stat">식량 <b>${fmt(state.food)}</b>/${supCap} · 물 <b>${fmt(state.water)}</b>/${supCap}</div>
+        <div class="stat">출항할 때 자동으로 가득 채워집니다 (식량 1당 ${FOOD_COST}골드 · 물 1당 ${WATER_COST}골드)</div>
+      </div>
+    </div>
+    <div class="stat" style="text-align:center">▼ 산지(저렴) · ▲ 수요지(비쌈) — 현재 ${monthOf(state.day)+1}월, 시세는 계절 따라 오르내립니다</div>`);
+}
+function buyGood(id, n){
+  const b = navBonus();
+  const price = Math.round(goodPrice(dockedAt,id)*(1-b.buy-investLv(dockedAt)*0.02));
+  const cap = SHIP_MAP[state.flagship].cargo;
+  n = Math.min(n, cap-cargoUsed(), Math.floor(state.gold/price));
+  if(n<=0){ toast(cargoUsed()>=cap?"📦 적재 공간이 없습니다":"🪙 골드가 부족합니다"); return; }
+  state.gold -= price*n;
+  state.cargo[id] = (state.cargo[id]||0)+n;
+  save(); updateHUD(); renderTrade();
+}
+function sellGood(id, n){
+  const have = state.cargo[id]||0;
+  n = Math.min(n, have);
+  if(n<=0) return;
+  const b = navBonus();
+  const price = Math.round(goodPrice(dockedAt,id)*(1+b.sell+investLv(dockedAt)*0.02));
+  state.gold += price*n;
+  state.stats.sell += price*n;
+  state.cargo[id] -= n;
+  if(!state.cargo[id]) delete state.cargo[id];
+  toast(`💰 ${GOOD_MAP[id].name} ${n}개 판매 +${fmt(price*n)}골드`, price*n>1000);
+  save(); updateHUD(); renderTrade();
+}
+function investPort(){
+  if(!dockedAt) return;
+  const lv = investLv(dockedAt);
+  if(lv >= 5) return;
+  const cost = INVEST_COST[lv];
+  if(state.gold < cost){ toast("🪙 골드가 부족합니다"); return; }
+  state.gold -= cost;
+  state.invest[dockedAt] = lv+1;
+  const p = PORT_MAP[dockedAt];
+  toast(lv+1>=5
+    ? `🏗️ ${p.name}이(가) 당신의 단골 항구가 되었습니다! ★5 (보급 무료)`
+    : `🏗️ ${p.name} 투자 ★${lv+1} — 매매가·보급비·항로 수익이 개선됩니다`, lv+1>=5);
+  save(); updateHUD(); renderTrade();
+}
+
+/* ══════════════════ 항로 ══════════════════ */
+function routeIncome(r){
+  const a = PORT_MAP[r.from], bp = PORT_MAP[r.to];
+  const d = dist(a.x,a.y,bp.x,bp.y);
+  const s = SHIP_MAP[r.ship];
+  const b = navBonus();
+  const inv = 1 + (investLv(r.from)+investLv(r.to))*0.06;   /* 투자 항구 보너스 */
+  return Math.round((s.cargo*0.5 + s.speed*0.3 + d/50) * (1+b.route) * inv);  /* 골드/분 */
+}
+function pendingGold(r){
+  const mins = (Date.now()-r.last)/60000;
+  return Math.floor(Math.min(mins, 720) * routeIncome(r));   /* 최대 12시간 누적 */
+}
+function openRoutes(){
+  let html = "";
+  if(state.routes.length){
+    let total = 0;
+    for(let i=0;i<state.routes.length;i++){
+      const r = state.routes[i];
+      const pend = pendingGold(r); total += pend;
+      html += `<div class="card row">
+        <div class="grow">
+          <div style="font-size:13.5px;font-weight:700">${PORT_MAP[r.from].name} ⇄ ${PORT_MAP[r.to].name}</div>
+          <div class="stat">${SHIP_MAP[r.ship].name} 운항 중 · <b>${fmt(routeIncome(r))}🪙/분</b></div>
+          <div class="stat" style="color:#d96f32;font-weight:700">누적 수익 ${fmt(pend)}🪙</div>
+        </div>
+        <button class="btn sm ghost" onclick="removeRoute(${i})">철수</button>
+      </div>`;
+    }
+    html = `<div class="card row" style="background:#fdf3ec;border-color:#eed0b8">
+      <div class="grow" style="font-size:13px;font-weight:700">모든 항로 수익 회수</div>
+      <button class="btn orange sm" onclick="collectRoutes()">+${fmt(total)}🪙 회수</button>
+    </div>` + html;
+  } else {
+    html += `<div class="card" style="text-align:center;color:#999;font-size:12.5px;padding:20px">
+      아직 개설된 항로가 없습니다.<br>두 항구를 잇는 항로에 배를 배치하면<br>시간이 흐를수록 골드가 쌓입니다.</div>`;
+  }
+  const idle = SHIPS.filter(s=>s.id in state.ships && s.id!==state.flagship && !state.routes.some(r=>r.ship===s.id));
+  const vis = state.visited;
+  if(vis.length>=2 && idle.length){
+    const opts = ()=>vis.map(v=>`<option value="${v}">${PORT_MAP[v].name}</option>`).join("");
+    html += `<div class="card">
+      <div style="font-size:13px;font-weight:700;margin-bottom:8px">🧭 새 항로 개설</div>
+      <div class="row" style="gap:6px;flex-wrap:wrap">
+        <select id="rFrom" style="flex:1;padding:8px;border-radius:8px;border:1px solid #e2dfda">${opts()}</select>
+        <span>⇄</span>
+        <select id="rTo" style="flex:1;padding:8px;border-radius:8px;border:1px solid #e2dfda">${opts()}</select>
+      </div>
+      <div class="row" style="gap:6px;margin-top:8px">
+        <select id="rShip" style="flex:1;padding:8px;border-radius:8px;border:1px solid #e2dfda">
+          ${idle.map(s=>`<option value="${s.id}">[${s.g}] ${s.name} (적재${s.cargo})</option>`).join("")}
+        </select>
+        <button class="btn orange sm" onclick="addRoute()">개설</button>
+      </div>
+      <div class="stat" style="margin-top:6px">기함이 아닌 여분의 배만 배치할 수 있습니다. 좋은 배일수록, 먼 항로일수록 수익 ↑</div>
+    </div>`;
+  } else {
+    html += `<div class="stat" style="text-align:center;margin-top:8px">
+      ${vis.length<2 ? "항로 개설에는 방문한 항구가 2곳 이상 필요합니다" : "배치할 여분의 배가 없습니다 — 조선소에서 새 배를 건조하세요"}</div>`;
+  }
+  openModal("무역 항로", `${state.routes.length}개 운영 중`, html);
+}
+function addRoute(){
+  const from = $("rFrom").value, to = $("rTo").value, ship = $("rShip").value;
+  if(from===to){ toast("⚠️ 서로 다른 두 항구를 선택하세요"); return; }
+  if(state.routes.some(r=>(r.from===from&&r.to===to)||(r.from===to&&r.to===from))){
+    toast("⚠️ 이미 같은 항로가 운영 중입니다"); return; }
+  state.routes.push({ from, to, ship, last: Date.now() });
+  save(); toast(`🧭 ${PORT_MAP[from].name} ⇄ ${PORT_MAP[to].name} 항로 개설!`, true);
+  openRoutes();
+}
+function removeRoute(i){
+  const r = state.routes[i];
+  const pend = pendingGold(r);
+  if(pend>0) state.gold += pend;
+  state.routes.splice(i,1);
+  save(); updateHUD();
+  toast(`항로를 철수했습니다${pend?` (+${fmt(pend)}🪙 정산)`:""}`);
+  openRoutes();
+}
+function collectRoutes(){
+  let total = 0;
+  for(const r of state.routes){ total += pendingGold(r); r.last = Date.now(); }
+  if(total>0){ state.gold += total; toast(`💰 항로 수익 +${fmt(total)}골드 회수!`, true); }
+  save(); updateHUD(); openRoutes();
+}
+
+/* ══════════════════ 시작 ══════════════════ */
+function startGame(){
+  state.intro = false;
+  $("intro").style.display = "none";
+  save();
+  toast("⚓ 리스본에서 항해를 시작합니다 — 바다를 탭하세요");
+  if(dockedAt){
+    const nav = NAVIGATORS.find(n=>n.port===dockedAt && !state.navs.includes(n.id));
+    if(nav) setTimeout(()=>meetNavigator(nav.id), 800);
+  }
+}
+function init(){
+  resize();
+  landPaths = LAND.map(makeLandPath);
+  buildMask();
+  buildGrid();
+  fixPorts();
+  buildWorld();
+  makeFloes();
+  const had = load();
+  /* 구버전 좌표·육지 위 좌표 보정 */
+  if(isLand(state.x, state.y) || openCellNear(state.x, state.y, 3) < 0){
+    state.x = PORT_MAP.lisbon.x; state.y = PORT_MAP.lisbon.y;
+  }
+  /* 구버전 세이브 보정: 보급량을 배 한계에 맞춤 */
+  {
+    const cap = effStats(state.flagship).sup;
+    state.food = Math.min(state.food, cap);
+    state.water = Math.min(state.water==null ? cap : state.water, cap);
+    if(!PORT_MAP[state.lastPort]) state.lastPort = "lisbon";
+    /* 구세이브 호환: 단일 mate → mates 배열, found 목록 생성 */
+    if(!Array.isArray(state.mates)) state.mates = [];
+    if(state.mate){ if(state.navs.includes(state.mate)) state.mates = [state.mate]; delete state.mate; }
+    state.mates = state.mates.filter(m=>state.navs.includes(m));
+    if(!Array.isArray(state.found) || !state.found.length)
+      state.found = [...new Set(["lisbon", ...state.visited])];
+    state.stats = Object.assign({sell:0,pulls:0,deaths:0,quests:0,arctic:0}, state.stats||{});
+    state.titles = state.titles || [];
+    state.denRe = state.denRe || {};
+    for(const d of DENS)
+      if(state.dens[d.id] && state.denRe[d.id]==null) state.denRe[d.id] = state.day;
+    if(state.title && !state.titles.includes(state.title)) state.title = null;
+    state.dexRw = state.dexRw || [];
+    state.invest = state.invest || {};
+    nextEventDay = state.day + 0.8;
+    nextMateAffDay = state.day + 1;
+  }
+  spawnSalvage(90);
+  cam.x = state.x; cam.y = state.y;
+  if(had && state.routes.length){
+    const total = state.routes.reduce((a,r)=>a+pendingGold(r),0);
+    if(total>50) setTimeout(()=>toast(`🧭 자리를 비운 사이 항로 수익 ${fmt(total)}골드가 쌓였습니다 (항로 메뉴에서 회수)`, true), 1200);
+  }
+  if(had && !state.intro) $("intro").style.display = "none";
+  ensureQuests();
+  updateHUD();
+  checkDock();
+  setInterval(save, 10000);
+  requestAnimationFrame(t=>{ lastT=t; requestAnimationFrame(loop); });
+}
+init();
+</script>
+</body>
+</html>

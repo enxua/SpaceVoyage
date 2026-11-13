@@ -1,0 +1,4 @@
+# 줄바꿈은 저장소·작업 폴더 모두 LF 로 통일 (윈도 배치 파일만 CRLF)
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf

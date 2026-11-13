@@ -1,0 +1,24 @@
+# 의존성 · 빌드 결과
+node_modules/
+www/
+
+# 안드로이드: 빌드 산출물 · 기기별 설정 · 서명 키
+android/.gradle/
+android/build/
+android/app/build/
+android/capacitor-cordova-android-plugins/build/
+android/local.properties
+android/.idea/
+android/app/src/main/assets/public/
+*.apk
+*.aab
+*.jks
+*.keystore
+keystore.properties
+
+# 개인 설정 · 임시 파일
+.claude/settings.local.json*
+tools/todo-*.json
+.DS_Store
+Thumbs.db
+*.log

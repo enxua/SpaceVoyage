@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>우주 끝까지: VOYAGE</title>
+<link rel="icon" type="image/png" href="image/icon-192.png">
+<link rel="apple-touch-icon" href="image/icon-192.png">
+<meta name="theme-color" content="#050813">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { width:100%; height:100%; overflow:hidden; background:#faf9f7;
+    font-family:"Segoe UI","Apple SD Gothic Neo","Malgun Gothic","Hiragino Sans","Yu Gothic","Microsoft YaHei","Microsoft JhengHei","Noto Sans CJK KR","Noto Sans",sans-serif; color:#3a3a3a;
+    user-select:none; -webkit-user-select:none; }
+  #sea { position:absolute; inset:0; display:block; touch-action:none; }
+
+  /* 노치·둥근 모서리·내비게이션 바를 피해 여백을 둔다 (앱·모바일) */
+  #hud { padding-top:calc(10px + env(safe-area-inset-top)) !important; }
+  #hud2 { margin-top:env(safe-area-inset-top); }
+  #dock { padding-bottom:calc(14px + env(safe-area-inset-bottom)) !important; }
+  #modal { padding-bottom:env(safe-area-inset-bottom); }
+
+  /* ── HUD ── */
+  #hud { position:absolute; top:0; left:0; right:0; padding:10px 14px;
+    display:flex; gap:6px; align-items:center; pointer-events:none; z-index:10; flex-wrap:wrap; }
+  .pill { background:rgba(255,255,255,.92); border:1px solid #e2dfda; border-radius:20px;
+    padding:6px 12px; font-size:13px; font-weight:600; letter-spacing:.02em;
+    box-shadow:0 1px 4px rgba(0,0,0,.04); white-space:nowrap; }
+  .pill b { color:#d96f32; }
+  #pGold { pointer-events:auto; cursor:pointer; border-color:#d96f32; }
+  #pGem { pointer-events:auto; cursor:pointer; } #pGem b { color:#8e6fd8; }
+  #pGold .plus { display:inline-block; margin-left:4px; width:17px; height:17px; line-height:16px; text-align:center; border-radius:50%;
+    background:#d96f32; color:#fff; font-size:12px; font-weight:800; }
+  .pill.warn { border-color:#d9534f; } .pill.warn b { color:#d9534f; }
+  #shipPill { margin-left:auto; font-weight:500; color:#777; max-width:38%;
+    overflow:hidden; text-overflow:ellipsis; }
+  #hud2 { position:absolute; top:48px; left:14px; right:64px; display:flex; gap:6px; z-index:9;
+    pointer-events:none; flex-wrap:wrap; }
+  #hud2 .pill { font-size:11px; padding:4px 10px; color:#888; }
+  #hGoal { pointer-events:auto; cursor:pointer; border-color:#d96f32; color:#555 !important;
+    max-width:100%; overflow:hidden; text-overflow:ellipsis; }
+
+  .mapBtn { position:absolute; right:14px; width:42px; height:42px; border-radius:50%;
+    background:#fff; border:1px solid #e2dfda; font-size:19px; color:#666;
+    box-shadow:0 2px 6px rgba(0,0,0,.06); cursor:pointer; z-index:10; }
+  #zoomIn { bottom:264px; }
+  #zoomNum { position:absolute; right:8px; bottom:237px; width:54px; height:22px; line-height:20px; z-index:10; text-align:center;
+    background:#fff; border:1px solid #d96f32; border-radius:11px; font-size:12.5px; font-weight:800; color:#d96f32;
+    box-shadow:0 2px 6px rgba(0,0,0,.06); cursor:pointer; } #zoomOut { bottom:190px; } #recenter { bottom:142px; width:auto; right:14px; padding:0 12px 0 10px; border-radius:21px; font-size:15px; border-color:#d96f32; color:#d96f32; white-space:nowrap; }
+  #recenter span { font-size:11.5px; font-weight:700; margin-left:4px; }
+  #themeBtn { bottom:94px; font-size:17px; }
+  #muteBtn { top:92px; width:36px; height:36px; font-size:15px; }
+
+  /* 우주 스케일 미니맵 */
+  #mini { position:absolute; left:10px; bottom:96px; width:30px; z-index:10; display:flex;
+    flex-direction:column-reverse; gap:2px; }
+  #mini .mz { height:26px; border-radius:7px; background:rgba(255,255,255,.9); border:1px solid #e2dfda;
+    font-size:13px; display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; }
+  #mini .mz.lock { opacity:.4; }
+  #mini .mz.here { border-color:#d96f32; box-shadow:0 0 0 2px rgba(217,111,50,.25); }
+
+  /* ── 임명된 승무원 · 부기장 보고 ── */
+  #crewBar { position:absolute; left:0; right:0; bottom:86px; z-index:10; display:flex; flex-wrap:wrap-reverse; justify-content:center; gap:4px; pointer-events:none; padding:0 54px; }
+  .cb { pointer-events:auto; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:1px; min-width:50px;
+    background:rgba(255,255,255,.93); border:1px solid #e2dfda; border-radius:14px; padding:5px 6px 4px;
+    font-size:10px; font-weight:700; color:#777; box-shadow:0 1px 4px rgba(0,0,0,.05); }
+  .cb.vice { border-color:#d96f32; }
+  .cb .nm { color:#3a3a3a; font-size:10.5px; }
+  .cb .empty { width:38px; height:38px; border-radius:50%; background:#efede9; line-height:38px; text-align:center; color:#aaa; font-size:18px; }
+  #speech { position:absolute; left:50%; transform:translateX(-50%); bottom:178px; z-index:35; width:min(560px,92%);
+    display:none; gap:12px; align-items:center; background:#fff; border:1.5px solid #d96f32; border-radius:18px;
+    padding:12px 16px; box-shadow:0 6px 24px rgba(0,0,0,.16); cursor:pointer; }
+  #speech.on { display:flex; animation:pop .28s ease; }
+  body.modal-open #speech { bottom:auto; top:10px; }
+  #speech .who { font-size:12px; font-weight:800; color:#d96f32; }
+  #speech .more { color:#aaa; font-weight:600; }
+  #speech .say { font-size:13px; line-height:1.65; margin-top:3px; color:#3a3a3a; }
+
+  /* ── 연출: 번쩍임 · 발견 배너 · 부스트 ── */
+  #flash { position:absolute; inset:0; z-index:18; pointer-events:none; opacity:0; }
+  #banner { position:absolute; left:0; right:0; top:34%; z-index:17; pointer-events:none; text-align:center; opacity:0; }
+  #banner.on { animation:bannerPop 2.4s cubic-bezier(.2,1.5,.4,1) forwards; }
+  @keyframes bannerPop { 0% { opacity:0; transform:scale(.4); } 12% { opacity:1; transform:scale(1.12); } 20% { transform:scale(1); } 78% { opacity:1; transform:scale(1); } 100% { opacity:0; transform:scale(1.06) translateY(-14px); } }
+  .bBig { font-size:clamp(26px,5vw,46px); font-weight:800; letter-spacing:.08em; text-shadow:0 0 18px rgba(255,255,255,.95), 0 3px 14px rgba(0,0,0,.25); }
+  .bSmall { font-size:clamp(14px,2.2vw,20px); font-weight:700; color:#3a3a3a; margin-top:6px; text-shadow:0 0 12px #fff, 0 0 4px #fff; }
+  body.dark .bSmall { color:#e8ecf5; text-shadow:0 0 12px #000, 0 0 4px #000; }
+  #boostBtn { position:absolute; right:14px; bottom:312px; z-index:10; border:1.5px solid #4a90d9; background:#fff; color:#4a90d9; border-radius:21px;
+    height:42px; padding:0 14px; font-size:12.5px; font-weight:800; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.08); transition:transform .08s; white-space:nowrap; }
+  #boostBtn:active { transform:scale(.9); }
+  #boostBtn.hot { background:#4a90d9; color:#fff; box-shadow:0 0 18px rgba(92,200,255,.9); }
+  #boostBtn.cd { opacity:.5; border-color:#bbb; color:#999; }
+
+  /* ── 이야기 장면 ── */
+  #scene { position:absolute; inset:0; z-index:50; display:none; flex-direction:column; justify-content:space-between; cursor:pointer;
+    background:linear-gradient(rgba(8,10,20,.82) 0%, rgba(8,10,20,.18) 26%, rgba(8,10,20,.18) 52%, rgba(8,10,20,.9) 100%); }
+  #scene.on { display:flex; animation:scIn .5s ease; }
+  @keyframes scIn { from { opacity:0; } }
+  #scTop { display:flex; align-items:flex-start; padding:26px 28px; }
+  #scTitle { color:#fff; font-size:19px; font-weight:300; letter-spacing:.22em; text-shadow:0 2px 12px rgba(0,0,0,.6); flex:1; }
+  #scSkip { border:1px solid rgba(255,255,255,.4); background:rgba(0,0,0,.25); color:#fff; border-radius:16px; padding:6px 14px; font-size:12px; cursor:pointer; }
+  #scBottom { padding:0 16px 30px; display:flex; flex-direction:column; align-items:center; gap:10px; }
+  #scBox { width:min(760px,100%); display:flex; gap:16px; align-items:center; background:rgba(255,255,255,.97); border-radius:20px;
+    padding:18px 22px; box-shadow:0 10px 40px rgba(0,0,0,.4); min-height:112px; border:1.5px solid #d96f32; }
+  #scBox.narr { background:rgba(10,14,28,.78); border-color:rgba(255,255,255,.25); justify-content:center; text-align:center; }
+  #scBox.narr #scText { color:#f1ede6; font-size:15.5px; line-height:1.95; font-weight:300; letter-spacing:.02em; }
+  #scBox.narr #scFace, #scBox.narr #scWho { display:none; }
+  #scWho { font-size:15px; font-weight:800; color:#d96f32; margin-bottom:5px; }
+  #scWho span { font-size:11.5px; font-weight:600; color:#999; margin-left:6px; }
+  #scText { font-size:15px; line-height:1.8; color:#3a3a3a; min-height:54px; }
+  #scMore { color:#d96f32; font-size:12px; align-self:flex-end; animation:scBob 1s ease infinite; }
+  #scBox.narr #scMore { color:#fff; }
+  @keyframes scBob { 50% { transform:translateY(4px); } }
+  #scChoices { width:min(620px,100%); display:flex; flex-direction:column; gap:2px; }
+  .scChoice { background:rgba(255,255,255,.97); color:#3a3a3a; border:1.5px solid #d96f32; padding:14px 18px; font-size:14px; text-align:left; }
+  .scChoice:hover { background:#d96f32; color:#fff; }
+
+  /* ── 좁은 화면(폰) ── */
+  @media (max-width:520px){
+    #scTop { padding:calc(14px + env(safe-area-inset-top)) 16px 0; gap:8px; }
+    #scTitle { font-size:15px; letter-spacing:.06em; }
+    #scBox { padding:14px 16px; gap:12px; } #scText { font-size:14px; }
+    #hud { gap:4px; padding-left:8px !important; padding-right:8px !important; } .pill { padding:5px 9px; font-size:12px; }
+    #hud2 { top:86px; left:8px; right:52px; gap:4px; }            /* 윗줄이 두 줄로 접히므로 그 아래로 내린다 */
+    #hud2 .pill { font-size:10.5px; padding:4px 8px; }
+    #muteBtn { top:calc(128px + env(safe-area-inset-top)); right:8px; }
+    #toasts { top:calc(150px + env(safe-area-inset-top)); }
+    #shipPill { display:none; }
+  }
+
+  /* ── 하단 메뉴 ── */
+  #dock { position:absolute; left:0; right:0; bottom:0; z-index:10;
+    display:flex; justify-content:center; gap:5px; padding:10px 6px 14px;
+    background:linear-gradient(transparent, rgba(250,249,247,.95) 40%); }
+  body.dark #dock { background:linear-gradient(transparent, rgba(7,10,20,.92) 40%); }
+  .dockBtn { border:1px solid #e2dfda; background:#fff; border-radius:14px;
+    padding:8px 1px 7px; flex:1 1 0; max-width:62px; min-width:38px; font-size:11px; font-weight:600; color:#555;
+    cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.05); transition:transform .1s; text-align:center; position:relative; }
+  .dockBtn:active { transform:scale(.94); }
+  .dockBtn .ic { display:block; font-size:18px; margin-bottom:2px; }
+  .dockBtn.hot { border-color:#d96f32; color:#d96f32; }
+  .dockBtn .dot { position:absolute; top:4px; right:6px; width:8px; height:8px; border-radius:50%;
+    background:#d9534f; display:none; }
+  .dockBtn.badge .dot { display:block; }
+
+  /* ── 모달 ── */
+  #shade { position:absolute; inset:0; background:rgba(60,55,50,.34); z-index:20;
+    display:none; align-items:flex-end; justify-content:center; }
+  #shade.on { display:flex; }
+  #modal { background:#faf9f7; width:100%; max-width:540px; max-height:84%;
+    border-radius:22px 22px 0 0; display:flex; flex-direction:column;
+    box-shadow:0 -6px 30px rgba(0,0,0,.18); animation:up .22s ease; }
+  @keyframes up { from { transform:translateY(60px); opacity:0; } to { transform:none; opacity:1; } }
+  #modal.wide { max-width:860px; max-height:92%; }
+  .pgrid { display:grid; grid-template-columns:repeat(auto-fit, minmax(330px, 1fr)); gap:8px; }
+  .pgrid .card { margin-bottom:0; padding:10px 12px; }
+  .pgrid .stat { font-size:11px; line-height:1.45; margin-top:2px; }
+  #mHead { display:flex; align-items:center; padding:16px 20px 10px; }
+  #mHead h2 { font-size:17px; letter-spacing:.03em; }
+  #mHead .sub { font-size:12px; color:#999; margin-left:10px; }
+  #mClose { margin-left:auto; border:none; background:#efede9; width:30px; height:30px;
+    border-radius:50%; font-size:14px; color:#777; cursor:pointer; }
+  #mBody { overflow-y:auto; padding:4px 16px 26px; }
+
+  .card { background:#fff; border:1px solid #e6e3de; border-radius:14px; padding:12px 14px; margin-bottom:10px; }
+  .card.dim { opacity:.55; }
+  .row { display:flex; align-items:center; gap:10px; }
+  .grow { flex:1; min-width:0; }
+  .btn { border:none; border-radius:10px; padding:9px 16px; font-size:13px; font-weight:700;
+    cursor:pointer; background:#3a3a3a; color:#fff; transition:transform .1s; }
+  .btn:active { transform:scale(.95); }
+  .btn.orange { background:#d96f32; }
+  .btn.ghost { background:#efede9; color:#555; }
+  .btn.sm { padding:6px 10px; font-size:12px; border-radius:8px; }
+  .btn.wide { width:100%; margin-top:8px; }
+  .btn:disabled { opacity:.35; pointer-events:none; }
+
+  .gtag { display:inline-block; font-size:10.5px; font-weight:800; padding:2px 8px;
+    border-radius:8px; color:#fff; letter-spacing:.05em; vertical-align:1px; }
+  .stat { font-size:11.5px; color:#888; margin-top:3px; line-height:1.55; }
+  .stat b { color:#555; font-weight:600; }
+  .stars { color:#e0a63f; font-size:11px; letter-spacing:1px; }
+  .ttl { font-size:14px; font-weight:700; }
+  .acc { color:#d96f32; font-weight:700; }
+  .sec { font-size:11.5px; font-weight:800; color:#aaa; letter-spacing:.12em; margin:14px 4px 8px; }
+
+  #pullWrap { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; padding:8px 0 4px; }
+  .pullCard { width:92px; background:#fff; border-radius:12px; border:2px solid #ccc;
+    padding:10px 6px; text-align:center; animation:pop .35s ease backwards; }
+  .pullCard .nm { font-size:11.5px; font-weight:700; margin-top:4px; line-height:1.3; }
+  .pullCard .gd { font-size:10px; font-weight:800; letter-spacing:.08em; }
+  .pullCard .dup { font-size:10px; color:#999; margin-top:2px; }
+  @keyframes pop { from { transform:scale(.3) rotate(-6deg); opacity:0; } to { transform:none; opacity:1; } }
+
+  .goodRow { display:flex; align-items:center; padding:9px 2px; border-bottom:1px solid #f0eee9; gap:6px; }
+  .goodRow:last-child { border:none; }
+  .gname { font-size:13px; font-weight:600; width:92px; }
+  .gprice { font-size:12.5px; width:70px; font-weight:700; }
+  .cheap { color:#3f7fbf; } .expensive { color:#d96f32; }
+  .ghave { font-size:11px; color:#999; width:46px; }
+  .tbtns { margin-left:auto; display:flex; gap:4px; }
+
+  .tabs { display:flex; gap:6px; margin:2px 4px 12px; }
+  .tab { flex:1; text-align:center; padding:8px 0; border-radius:10px; background:#efede9;
+    font-size:12.5px; font-weight:700; color:#888; cursor:pointer; }
+  .tab.on { background:#3a3a3a; color:#fff; }
+  .gtabs { gap:4px; } .gtabs .tab { padding:6px 0; font-weight:800; font-size:12px; min-width:0; }
+  .gtabs .gtc { display:block; font-size:10px; font-weight:600; opacity:.7; margin-top:1px; }
+
+  .bar { height:8px; border-radius:4px; background:#efede9; overflow:hidden; margin-top:5px; }
+  .bar i { display:block; height:100%; background:#d96f32; border-radius:4px; transition:width .25s; }
+  .bar.red i { background:#c8503c; } .bar.blue i { background:#4a90d9; }
+  .log { font-size:12px; color:#777; line-height:1.7; min-height:54px; margin-top:10px; text-align:left; }
+  .log b { color:#b3502a; }
+
+  #toasts { position:absolute; top:84px; left:0; right:0; display:flex; flex-direction:column;
+    align-items:center; gap:6px; z-index:30; pointer-events:none; }
+  .toast { background:rgba(58,58,58,.92); color:#fff; font-size:12.5px; padding:8px 18px;
+    border-radius:18px; animation:tin .25s ease, tout .4s ease 2.8s forwards; max-width:86%; text-align:center; }
+  .toast.gold { background:rgba(217,111,50,.95); }
+  @keyframes tin { from { transform:translateY(-12px); opacity:0; } }
+  @keyframes tout { to { transform:translateY(-8px); opacity:0; } }
+
+  .full { position:absolute; inset:0; z-index:40; background:rgba(250,249,247,.97);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:30px; }
+  .full h1 { font-size:34px; letter-spacing:.35em; font-weight:300; margin-bottom:6px; }
+  .full .kicker { font-size:13px; letter-spacing:.3em; color:#8a857d; margin-bottom:4px; }
+  .full .tag { color:#d96f32; font-size:12px; letter-spacing:.25em; margin-bottom:30px; }
+  .full p { font-size:13px; color:#777; line-height:2; margin-bottom:32px; max-width:460px; }
+  .full p b { color:#3a3a3a; }
+  /* ── 처음 화면: 깊은 우주 (테마와 상관없이 어둡게) ── */
+  #intro { background:radial-gradient(120% 90% at 50% 38%, #0b1430 0%, #050813 55%, #02030a 100%); color:#e6ebf5;
+    overflow:hidden auto; justify-content:safe center; padding:calc(30px + env(safe-area-inset-top)) 20px calc(30px + env(safe-area-inset-bottom)); }
+  #intro > :not(#introBg) { position:relative; z-index:1; }
+  #introBg { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+  #introSky { position:absolute; inset:0; width:100%; height:100%; }
+  /* 성운: 흐릿한 빛 덩어리가 천천히 떠돈다 */
+  #intro .neb { position:absolute; border-radius:50%; filter:blur(60px); mix-blend-mode:screen; opacity:.5; }
+  #intro .n1 { width:70vmax; height:50vmax; left:-25vmax; top:-18vmax; background:radial-gradient(closest-side, rgba(217,111,50,.55), rgba(140,40,90,.25) 60%, transparent);
+    animation:nebA 38s ease-in-out infinite alternate; }
+  #intro .n2 { width:60vmax; height:60vmax; right:-28vmax; top:12vh; background:radial-gradient(closest-side, rgba(60,120,255,.45), rgba(70,30,140,.25) 60%, transparent);
+    animation:nebB 46s ease-in-out infinite alternate; }
+  #intro .n3 { width:44vmax; height:30vmax; left:20vw; top:30vh; background:radial-gradient(closest-side, rgba(40,200,190,.22), transparent);
+    animation:nebA 54s ease-in-out infinite alternate-reverse; opacity:.4; }
+  @keyframes nebA { to { transform:translate(8vmax, 6vmax) rotate(25deg) scale(1.15); } }
+  @keyframes nebB { to { transform:translate(-10vmax, -5vmax) rotate(-30deg) scale(.9); } }
+  /* 지구: 화면 아래로 떠오른 수평선. 대륙·구름 무늬가 서로 다른 속도로 흐른다 */
+  #intro .planet { position:absolute; left:50%; bottom:0; width:max(135vw, 680px); aspect-ratio:1; transform:translate(-50%, 82%);
+    border-radius:50%; overflow:hidden; background:#0b2f5e;
+    box-shadow:0 0 30px 4px rgba(110,190,255,.6), 0 0 120px 26px rgba(60,130,255,.3); animation:planetIn 2.4s cubic-bezier(.2,.8,.2,1) both; }
+  #intro .pSurf, #intro .pCloud { position:absolute; inset:0; background-repeat:repeat-x; }
+  #intro .pSurf { background-image:
+      radial-gradient(14% 6% at 12% 7%, rgba(52,104,72,.85), rgba(52,104,72,.4) 55%, transparent 70%), radial-gradient(8% 4% at 30% 4%, rgba(70,110,70,.7), transparent 70%),
+      radial-gradient(18% 5% at 58% 8%, rgba(120,110,70,.6), rgba(60,100,70,.35) 55%, transparent 72%), radial-gradient(7% 3% at 80% 3.5%, rgba(52,104,72,.75), transparent 70%),
+      radial-gradient(5% 2% at 44% 3%, rgba(70,110,70,.6), transparent 70%), linear-gradient(#2a7cc4, #124a8c 6%, #0b2f5e 20%);
+    background-size:50% 100%; animation:spin 90s linear infinite; }
+  #intro .pCloud { background-image:
+      radial-gradient(16% 2.2% at 20% 6%, rgba(255,255,255,.75), transparent 70%), radial-gradient(24% 2.6% at 55% 3.5%, rgba(255,255,255,.6), transparent 70%),
+      radial-gradient(12% 1.8% at 85% 8%, rgba(255,255,255,.7), transparent 70%);
+    background-size:40% 100%; animation:spin 55s linear infinite; }
+  #intro .pShade { position:absolute; inset:0; border-radius:50%;
+    box-shadow:inset 0 14px 28px rgba(150,210,255,.55), inset 0 3px 4px rgba(220,240,255,.7);
+    background:radial-gradient(circle at 50% 50%, transparent 46%, rgba(2,4,12,.35) 50%),
+      linear-gradient(100deg, rgba(255,190,130,.28), transparent 32%, transparent 64%, rgba(2,4,12,.7)); }
+  @keyframes spin { to { background-position-x:-200%; } }
+  @keyframes planetIn { from { transform:translate(-50%, 100%); } }
+  /* 궤도를 지나가는 작은 함선 */
+  #intro .ship { position:absolute; width:46px; top:24vh; left:-60px; filter:drop-shadow(0 0 6px rgba(127,216,255,.6)); animation:shipFly 26s linear 1.5s infinite; }
+  #intro .ship .flame { transform-origin:14px 10px; animation:flame .12s ease-in-out infinite alternate; }
+  @keyframes shipFly { 0% { transform:translate(0, 0) rotate(-6deg); } 100% { transform:translate(calc(100vw + 120px), 14vh) rotate(4deg); } }
+  @keyframes flame { to { transform:scaleX(.6); opacity:.7; } }
+  /* HUD: 모서리 괄호 · 주사선 · 계기 숫자 */
+  #intro .scan { position:absolute; inset:0; background:repeating-linear-gradient(transparent 0 3px, rgba(140,180,255,.035) 3px 4px); }
+  #intro .scan::after { content:""; position:absolute; left:0; right:0; height:120px; top:-120px;
+    background:linear-gradient(transparent, rgba(120,190,255,.07), transparent); animation:sweep 7s linear infinite; }
+  @keyframes sweep { to { transform:translateY(calc(100vh + 120px)); } }
+  #intro .corner { position:absolute; width:26px; height:26px; border:solid rgba(140,200,255,.45); animation:cornerIn 1.2s ease both .3s; }
+  #intro .tl { top:calc(14px + env(safe-area-inset-top)); left:14px; border-width:2px 0 0 2px; }
+  #intro .tr { top:calc(14px + env(safe-area-inset-top)); right:14px; border-width:2px 2px 0 0; }
+  #intro .bl { bottom:calc(14px + env(safe-area-inset-bottom)); left:14px; border-width:0 0 2px 2px; }
+  #intro .br { bottom:calc(14px + env(safe-area-inset-bottom)); right:14px; border-width:0 2px 2px 0; }
+  @keyframes cornerIn { from { opacity:0; transform:scale(1.8); } }
+  #intro .hud { position:absolute; top:calc(20px + env(safe-area-inset-top)); display:flex; flex-direction:column; gap:3px;
+    font:600 10px/1.3 ui-monospace,"Consolas",monospace; letter-spacing:.12em; color:rgba(150,205,255,.6); animation:fadeIn 1s ease both .9s; }
+  #intro .hl { left:48px; text-align:left; } #intro .hr { right:48px; text-align:right; }
+  /* 제목: 글자가 하나씩 켜지고 빛이 훑고 지나간다. 뒤에서 조준 고리가 돈다 */
+  #intro .kicker { color:#9fb4d8; letter-spacing:.5em; font-size:12px; display:flex; align-items:center; gap:12px; margin-bottom:8px; animation:fadeUp .9s ease both .4s; }
+  #intro .kicker::before, #intro .kicker::after { content:""; width:34px; height:1px; background:linear-gradient(90deg, transparent, #7fb6ff); }
+  #intro .kicker::after { transform:scaleX(-1); }
+  #intro .titleWrap { position:relative; display:grid; place-items:center; margin:2px 0 8px; }
+  #intro .ring { position:absolute; width:min(270px, 70vw); height:auto; fill:none; stroke-linecap:round; animation:fadeIn 1.6s ease both .2s; }
+  #intro .ring circle { transform-origin:100px 100px; }
+  #intro .ring .r1 { stroke:rgba(127,182,255,.28); stroke-width:.6; stroke-dasharray:2 6; animation:rot 60s linear infinite; }
+  #intro .ring .r2 { stroke:rgba(217,111,50,.5); stroke-width:1; stroke-dasharray:60 30 8 30; animation:rot 24s linear infinite reverse; }
+  #intro .ring .r3 { stroke:rgba(127,182,255,.18); stroke-width:.5; }
+  #intro .ring .tick { stroke:rgba(127,182,255,.5); stroke-width:1; }
+  @keyframes rot { to { transform:rotate(360deg); } }
+  #intro h1 { font-size:clamp(38px, 11vw, 64px); font-weight:200; letter-spacing:.32em; margin:0 -.32em 0 0; padding:56px 0;
+    color:#f4f7ff; text-shadow:0 0 18px rgba(127,182,255,.65), 0 0 46px rgba(80,140,255,.35); }
+  #intro h1 span { display:inline-block; animation:letterIn .9s cubic-bezier(.2,.8,.2,1) both, glow 4s ease-in-out infinite; }
+  #intro h1 span:nth-child(1) { animation-delay:.5s, 2s; }   #intro h1 span:nth-child(2) { animation-delay:.6s, 2.3s; }
+  #intro h1 span:nth-child(3) { animation-delay:.7s, 2.6s; }  #intro h1 span:nth-child(4) { animation-delay:.8s, 2.9s; }
+  #intro h1 span:nth-child(5) { animation-delay:.9s, 3.2s; }  #intro h1 span:nth-child(6) { animation-delay:1s, 3.5s; }
+  @keyframes letterIn { from { opacity:0; transform:translateY(14px) scale(1.4); filter:blur(8px); } }
+  @keyframes glow { 50% { text-shadow:0 0 26px rgba(255,190,140,.9), 0 0 60px rgba(217,111,50,.55); color:#fff; } }
+  #intro .tag { color:#ff9a5c; letter-spacing:.28em; margin-bottom:22px; animation:fadeUp .9s ease both 1.2s; text-shadow:0 0 12px rgba(217,111,50,.5); }
+  /* 안내문: 반투명 계기판 */
+  #intro p { color:#aeb8cc; font-size:13px; line-height:1.95; max-width:470px; margin-bottom:26px; padding:16px 20px;
+    background:linear-gradient(180deg, rgba(20,32,64,.55), rgba(8,12,28,.55)); border:1px solid rgba(127,182,255,.2); border-radius:14px;
+    backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.35);
+    animation:fadeUp .9s ease both 1.4s; }
+  #intro p b { color:#ffc596; font-weight:700; }
+  /* 발진 버튼: 숨 쉬는 빛 고리 + 훑는 광택 */
+  #intro .launchBtn { position:relative; overflow:visible; padding:14px 54px; font-size:16px; letter-spacing:.3em; border-radius:12px;
+    background:linear-gradient(180deg, #f08a45, #d0602a); box-shadow:0 0 0 1px rgba(255,200,160,.4) inset, 0 8px 26px rgba(217,111,50,.5), 0 0 40px rgba(217,111,50,.35);
+    animation:fadeUp .9s ease both 1.7s; }
+  #intro .launchBtn::before { content:""; position:absolute; inset:0; border-radius:inherit; overflow:hidden;
+    background:linear-gradient(110deg, transparent 35%, rgba(255,255,255,.45) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat; animation:shine 3.2s ease-in-out infinite 2.6s; }
+  #intro .launchBtn::after { content:""; position:absolute; inset:-2px; border-radius:14px; border:2px solid rgba(255,150,90,.7); animation:pulse 2.2s ease-out infinite 2.4s; opacity:0; }
+  @keyframes shine { 0%, 60% { background-position:-150% 0; } 100% { background-position:250% 0; } }
+  @keyframes pulse { 0% { opacity:.9; transform:scale(1); } 100% { opacity:0; transform:scale(1.35, 1.8); } }
+  #intro #langPick { animation:fadeIn 1s ease both 2s; }
+  #intro .langBtn { background:rgba(14,22,44,.6); border-color:rgba(127,182,255,.25); color:#b9c4da; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
+  #intro .langBtn.on { background:#d96f32; border-color:#ff9a5c; color:#fff; box-shadow:0 0 14px rgba(217,111,50,.6); }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } }
+  @keyframes fadeIn { from { opacity:0; } }
+  /* 발진: 별이 빛줄기로 늘어나고 화면이 하얗게 번진다 */
+  #intro .flash { position:absolute; inset:0; background:radial-gradient(circle at 50% 42%, #fff, #cfe3ff 40%, rgba(160,200,255,0) 75%); opacity:0; }
+  #intro.launch > :not(#introBg) { transition:opacity .5s ease, transform .9s cubic-bezier(.6,0,.9,.4); opacity:0; transform:scale(1.25); }
+  #intro.launch .planet { transition:transform 1.1s cubic-bezier(.6,0,.9,.4); transform:translate(-50%, 110%); }
+  #intro.launch .flash { transition:opacity .45s ease .85s; opacity:1; }
+  #intro.launch .hud, #intro.launch .corner, #intro.launch .ship { transition:opacity .4s; opacity:0; }
+  #intro.gone { transition:opacity .6s ease; opacity:0; }
+  @media (prefers-reduced-motion: reduce) {
+    #intro *, #intro *::before, #intro *::after { animation-duration:.01s !important; animation-iteration-count:1 !important; }
+  }
+  @media (max-width:520px) {
+    #intro { padding-top:calc(58px + env(safe-area-inset-top)); }
+    #intro .kicker { letter-spacing:.28em; font-size:11px; max-width:86vw; text-align:center; }
+    #intro .kicker::before, #intro .kicker::after { width:18px; flex:none; }
+    #intro h1 { padding:44px 0; }
+    #intro .tag { letter-spacing:.14em; font-size:11.5px; max-width:90vw; }
+    #intro p { font-size:12.5px; line-height:1.75; padding:13px 15px; margin-bottom:20px; }
+    #intro .launchBtn { padding:13px 46px; }
+    #intro #langPick { margin-top:18px; }
+    #intro .hud { font-size:9px; } #intro .hl { left:44px; } #intro .hr { right:44px; }
+  }
+  @media (max-height:700px) { #intro h1 { padding:40px 0; } #intro p { line-height:1.75; padding:12px 16px; margin-bottom:18px; } #intro .tag { margin-bottom:14px; } }
+  #gameover, #ending { display:none; z-index:45; }
+  #gameover h1 { color:#b3502a; }
+
+  /* ══════════ 화면 배치: 상단 패널 · 조작 버튼 열 · 우주 단계 ══════════ */
+  #topWrap { position:absolute; top:0; left:0; right:0; z-index:10; pointer-events:none; display:flex; flex-direction:column; gap:6px;
+    padding:calc(8px + env(safe-area-inset-top)) 8px 0; }
+  #top { pointer-events:auto; width:100%; max-width:720px; margin:0 auto; background:rgba(255,255,255,.94); border:1px solid #e2dfda;
+    border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,.07); padding:8px; }
+  .tRow { display:flex; gap:6px; }
+  .tGrp { min-width:0; background:#f5f3ef; border-radius:11px; padding:5px 9px 6px; display:grid; grid-template-columns:repeat(3, auto); justify-content:space-between; gap:2px 8px; }
+  #grpRes { flex:1 1 46%; } #grpShip { flex:1 1 54%; }
+  /* 재화·함선을 한 판넬로 붙인다: 바깥 상자 하나 + 가운데 구분선 */
+  #top .tRow { gap:0; background:#f5f3ef; border-radius:11px; }
+  #top .tRow .tGrp { background:none; border-radius:0; flex:1 1 auto; }
+  body.dark #top .tRow { background:#1a2238; }
+  .tLbl { grid-column:1 / -1; font-size:10px; font-weight:800; color:#aaa59c; letter-spacing:.06em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .st { font-size:12.5px; font-weight:700; color:#777; white-space:nowrap; }
+  .st b { color:#d96f32; }
+  .st.warn b { color:#d9534f; } .st.warn { animation:stWarn 1s ease infinite; }
+  @keyframes stWarn { 50% { opacity:.45; } }
+  #top #shipPill { display:block; margin:0; max-width:none; font-weight:800; color:#aaa59c; }      /* 함선 구역 제목 = 기함 이름 */
+  #top #pGold, #top #pGem { cursor:pointer; border:none; pointer-events:auto; }
+  #top #pGem b { color:#8e6fd8; }
+  #top #pGold .plus { margin-left:3px; width:15px; height:15px; line-height:14px; font-size:11px; vertical-align:1px; }
+  .tInfo { display:flex; flex-wrap:wrap; gap:3px 12px; font-size:11px; color:#8a8680; padding:7px 4px 0; }
+  .tInfo b { color:#d96f32; }
+  #top #hGoal { margin-top:7px; border:1px solid #d96f32; border-radius:10px; padding:6px 10px; font-size:12px; font-weight:700; color:#555 !important;
+    background:#fff8f3; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:none; }
+  #under { display:flex; align-items:flex-start; gap:8px; width:100%; max-width:720px; margin:0 auto; }
+  #under #toasts { position:static; flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:6px; pointer-events:none; }
+  #ctrl { pointer-events:auto; display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+  #ctrl .mapBtn, #ctrl #boostBtn, #ctrl #zoomNum { position:static; right:auto; bottom:auto; top:auto; }
+  #ctrl .mapBtn { width:38px; height:38px; font-size:16px; }
+  #ctrl #recenter { width:auto; height:38px; padding:0 11px 0 9px; border-radius:19px; }
+  #ctrl #boostBtn { height:38px; padding:0 12px; }
+  #ctrl #zoomNum { width:50px; height:22px; }
+  #mini { left:8px; top:50%; bottom:auto; transform:translateY(-50%); }
+  /* 조작 버튼: 가로 도구 줄 (패널 바로 아래 한 줄). 순서: 소리 · 부스트 · － 배율 ＋ · 내 함선 · 테마 */
+  #under { flex-direction:column; align-items:stretch; gap:6px; }
+  #ctrl { flex-direction:row; align-items:center; align-self:flex-end; gap:2px; padding:4px 6px;
+    background:rgba(255,255,255,.94); border:1px solid #e2dfda; border-radius:22px; box-shadow:0 2px 10px rgba(0,0,0,.06); }
+  #ctrl .mapBtn { width:34px; height:34px; font-size:15px; border:none; box-shadow:none; background:transparent; }
+  #ctrl .mapBtn:hover { background:#f1eee9; }
+  #ctrl #muteBtn { order:1; }
+  #ctrl #boostBtn { order:2; height:32px; padding:0 12px; margin:0 6px 0 2px; box-shadow:none; font-size:12px; }
+  #ctrl #zoomOut { order:3; }
+  #ctrl #zoomNum { order:4; width:52px; height:24px; line-height:22px; box-shadow:none; }
+  #ctrl #zoomIn { order:5; }
+  #ctrl #recenter { order:6; height:32px; margin:0 2px 0 6px; padding:0 12px 0 9px; border:1.5px solid #d96f32; border-radius:16px; background:#fff; font-size:14px; }
+  #ctrl #themeBtn { order:7; }
+  #ctrl #langBtn { order:8; }
+  #under #ctrl { order:-1; }                      /* 도구 줄이 먼저, 알림은 그 아래에 뜬다 */
+  #under #toasts { flex:none; }
+
+  /* 도구 줄을 상단 패널 안으로: 패널의 마지막 줄 (구분선 아래) */
+  #top #ctrl { align-self:auto; justify-content:space-between; background:none; border:none; box-shadow:none; border-radius:0;
+    border-top:1px solid #eeebe6; margin-top:8px; padding:6px 2px 0; }
+
+  @media (max-width:520px){
+    #topWrap { padding-left:6px; padding-right:6px; }
+    .tGrp { padding:5px 7px 6px; gap:2px 5px; } .st { font-size:11.5px; }
+    #ctrl .mapBtn { width:36px; height:36px; }
+    #ctrl #recenter { height:32px; width:36px; padding:0; border-radius:50%; margin:0; } #ctrl #recenter span { display:none; }   /* 폰: 언어 버튼 자리를 위해 아이콘만 */
+    #ctrl #boostBtn { font-size:11.5px; padding:0 11px; height:32px; margin:0; }
+  }
+
+  /* 글자가 긴 언어(영어·유럽어)에서는 하단 메뉴 글씨를 조금 줄인다 */
+  html:not(:lang(ko)):not(:lang(ja)):not(:lang(zh)) .dockBtn { font-size:10px; letter-spacing:-.02em; overflow:hidden; }
+  /* 하단 패널: 가로는 고정, 글이 길면 줄을 바꿔 세로로만 늘어난다 (언어가 바뀌어도 폭이 변하지 않게) */
+  #crewBar { align-items:stretch; }
+  .cb { flex:0 0 76px; width:76px; min-width:0; box-sizing:border-box; justify-content:flex-start; font-size:9.5px; }
+  #crewBar { max-width:384px; margin:0 auto; padding:0 46px 0 6px; box-sizing:border-box; bottom:calc(92px + env(safe-area-inset-bottom)); }   /* 4명씩 2줄을 넘지 않게, 오른쪽은 접기 버튼 자리 */
+  @media (max-width:360px){ .cb { flex-basis:calc((100% - 12px)/4); width:auto; } }
+  .cb span { display:block; max-width:100%; white-space:normal; text-align:center; line-height:1.2; hyphens:auto; overflow-wrap:anywhere; }
+  .dockBtn span[data-t] { display:block; white-space:normal; line-height:1.15; hyphens:auto; }
+  html:not(:lang(ko)):not(:lang(ja)):not(:lang(zh)) .dockBtn { overflow:visible; }
+
+  /* 상단·하단 판넬 접기 */
+  .foldBtn { pointer-events:auto; position:absolute; z-index:12; width:44px; height:18px; border:1px solid #e2dfda; background:rgba(255,255,255,.96);
+    color:#8a8680; font-size:10px; line-height:16px; text-align:center; cursor:pointer; padding:0; box-shadow:0 2px 6px rgba(0,0,0,.06); }
+  #topFold { left:50%; transform:translateX(-50%); bottom:-17px; border-top:none; border-radius:0 0 10px 10px; }
+  #top { position:relative; }
+  body.fold-top #top .tInfo, body.fold-top #top #hGoal, body.fold-top #top #ctrl { display:none; }
+  /* 하단: 승무원 접기 · 메뉴 접기 두 버튼을 오른쪽에 위아래로 */
+  #botFolds { position:absolute; right:calc(4px + env(safe-area-inset-right)); bottom:calc(92px + env(safe-area-inset-bottom)); z-index:12; display:flex; flex-direction:column; gap:4px; pointer-events:none; }
+  #botFolds .foldBtn { position:static; width:40px; height:24px; line-height:22px; padding:0; border-radius:8px; white-space:nowrap; }
+  body.fold-bot #dock, body.fold-crew #crewBar { display:none; }
+  body.fold-bot #botFolds { bottom:calc(6px + env(safe-area-inset-bottom)); }
+
+  body.fold-bot #crewBar { bottom:calc(6px + env(safe-area-inset-bottom)); }
+  body.fold-bot #speech { bottom:40px; }
+  body.fold-bot:not(.fold-crew) #speech { bottom:200px; }
+
+  body.dark .foldBtn { background:rgba(20,28,51,.96); border-color:#2c3757; color:#8b96b0; }
+
+  /* 언어 고르기 */
+  #langPick { margin-top:26px; display:flex; flex-wrap:wrap; justify-content:center; gap:6px; max-width:520px; }
+  .langBtn { border:1px solid #e2dfda; background:#fff; color:#666; border-radius:16px; padding:6px 13px; font-size:12.5px; font-weight:600; cursor:pointer; }
+  .langBtn.on { border-color:#d96f32; background:#d96f32; color:#fff; }
+  .langList { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:8px; }
+  .langList .langBtn { padding:13px 10px; font-size:15px; border-radius:12px; }
+</style>
+</head>
+<body>
+<canvas id="sea"></canvas>
+
+<div id="topWrap">
+  <div id="top">
+    <div class="tRow">
+      <div class="tGrp" id="grpRes"><div class="tLbl" data-t>재화 · 연구</div>
+        <div class="st" id="pGold" onclick="openShop()" data-t-title title="상점 열기">💠 <b id="hGold">0</b><span class="plus">＋</span></div>
+        <div class="st" id="pGem" onclick="openShop()" data-t-title title="보석 - 상점에서 사용">💎 <b id="hGem">0</b></div>
+        <div class="st" data-t-title title="연구 데이터">🔬 <b id="hSci">0</b></div>
+      </div>
+      <div class="tGrp" id="grpShip"><div class="tLbl" id="shipPill">함선</div>
+        <div class="st" id="pFuel" data-t-title title="연료">⛽ <b id="hFuel">0</b></div>
+        <div class="st" id="pO2" data-t-title title="산소">🫧 <b id="hO2">0</b></div>
+        <div class="st" id="pHull" data-t-title title="선체">🛡 <b id="hHull">0</b></div>
+      </div>
+    </div>
+    <div class="tInfo"><span id="hDate">📅 -</span><span id="hZone">🌌 -</span><span id="hFlow">🌬 -</span><span id="hZoom" style="display:none"></span></div>
+    <div id="hGoal" onclick="openQuests()">🎯 -</div>
+    <button class="foldBtn" id="topFold" onclick="foldUI('top')" data-t-title title="상단 판넬 접기·펼치기">▲</button>
+    <div id="ctrl">
+      <button class="mapBtn" id="muteBtn" onclick="openAudio()" data-t-title title="소리·화면 효과 설정">🔊</button>
+      <button id="boostBtn" onclick="boost()" data-t-title title="부스트: 4초간 속도 2.2배, 연료 2.5배 소모 (Shift 또는 B)">🔥 부스트</button>
+      <button class="mapBtn" id="zoomIn" onclick="setZoom(1.25)">＋</button>
+      <div id="zoomNum" onclick="resetZoom()" data-t-title title="현재 화면 배율 · 누르면 100%로">100%</div>
+      <button class="mapBtn" id="zoomOut" onclick="setZoom(0.8)">－</button>
+      <button class="mapBtn" id="recenter" onclick="recenter()" data-t-title title="내 함선 위치로 이동 · 기본 배율">🚀<span data-t>내 함선</span></button>
+      <button class="mapBtn" id="themeBtn" onclick="toggleTheme()" data-t-title title="밝은 지도 / 어두운 우주">🌓</button>
+      <button class="mapBtn" id="langBtn" onclick="openLang()" title="Language">🌐</button>
+    </div>
+  </div>
+  <div id="under">
+    <div id="toasts"></div>
+  </div>
+</div>
+<div id="mini"></div>
+
+<div id="botFolds"><button class="foldBtn" id="crewFold" onclick="foldUI('crew')" data-t-title title="승무원 판넬 접기·펼치기">👥 ▼</button><button class="foldBtn" id="botFold" onclick="foldUI('bot')" data-t-title title="메뉴 판넬 접기·펼치기">☰ ▼</button></div>
+<div id="dock">
+  <button class="dockBtn" onclick="openFleet()"><span class="ic">🚀</span><span data-t>함대</span></button>
+  <button class="dockBtn" onclick="openGacha()"><span class="ic">🎲</span><span data-t>조선소</span></button>
+  <button class="dockBtn" id="btnCrew" onclick="openCrew()"><span class="ic">💞</span><span data-t>승무원</span></button>
+  <button class="dockBtn" id="btnTrade" onclick="openTrade()"><span class="ic">⚖️</span><span data-t>무역</span></button>
+  <button class="dockBtn" id="btnTech" onclick="openTech()"><span class="ic">🔬</span><span data-t>연구</span><i class="dot"></i></button>
+  <button class="dockBtn" onclick="openDens()"><span class="ic">💀</span><span data-t>토벌</span></button>
+  <button class="dockBtn" id="btnQuest" onclick="openQuests()"><span class="ic">📜</span><span data-t>임무</span><i class="dot"></i></button>
+  <button class="dockBtn" onclick="openCodex()"><span class="ic">📖</span><span data-t>도감</span></button>
+</div>
+
+<div id="shade" onclick="if(event.target===this)closeModal()">
+  <div id="modal">
+    <div id="mHead"><h2 id="mTitle"></h2><span class="sub" id="mSub"></span>
+      <button id="mClose" onclick="closeModal()">✕</button></div>
+    <div id="mBody"></div>
+  </div>
+</div>
+
+<div id="crewBar"></div>
+<div id="speech" onclick="nextSpeech()"></div>
+
+<div id="flash"></div>
+<div id="banner"></div>
+
+<!-- 이야기 장면 (프롤로그·시나리오) -->
+<div id="scene" onclick="storyNext()">
+  <div id="scTop"><div id="scTitle"></div><button id="scSkip" onclick="event.stopPropagation();storySkip()" data-t>건너뛰기 ▶▶</button></div>
+  <div id="scBottom">
+    <div id="scChoices"></div>
+    <div id="scBox"><div id="scFace"></div><div class="grow"><div id="scWho"></div><div id="scText"></div></div><div id="scMore">▼</div></div>
+  </div>
+</div>
+
+<div id="intro" class="full">
+  <!-- 처음 화면 배경 연출 (js/intro.js): 별 흐름 · 성운 · 지구 · 궤도선 · HUD -->
+  <div id="introBg" aria-hidden="true">
+    <canvas id="introSky"></canvas>
+    <div class="neb n1"></div><div class="neb n2"></div><div class="neb n3"></div>
+    <div class="planet"><div class="pSurf"></div><div class="pCloud"></div><div class="pShade"></div></div>
+    <svg class="ship" viewBox="0 0 60 20"><defs><linearGradient id="shipFlame" x1="1" x2="0"><stop offset="0" stop-color="#ffd9a8"/><stop offset=".4" stop-color="#ff8a3d" stop-opacity=".8"/><stop offset="1" stop-color="#ff5a1f" stop-opacity="0"/></linearGradient></defs>
+      <path class="flame" d="M14 7.5 L0 10 L14 12.5 Z" fill="url(#shipFlame)"/>
+      <path d="M14 6 L40 6 L54 10 L40 14 L14 14 L18 10 Z" fill="#cfd6e4"/><path d="M28 6 L22 1 L33 1 L38 6 Z M28 14 L22 19 L33 19 L38 14 Z" fill="#8f9ab0"/>
+      <path d="M40 8 L48 10 L40 12 Z" fill="#7fd8ff"/></svg>
+    <div class="scan"></div>
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <div class="hud hl"><span>RA 06h45m · DEC −16°43′</span><span id="introT">T+ 00:00:00</span></div>
+    <div class="hud hr"><span>⊕ 1.000 AU</span><span id="introZ">z 0.0000</span></div>
+    <div class="flash"></div>
+  </div>
+  <div class="kicker" data-t>우주 끝까지</div>
+  <div class="titleWrap">
+    <svg class="ring" viewBox="0 0 200 200" aria-hidden="true">
+      <circle class="r1" cx="100" cy="100" r="96"/><circle class="r2" cx="100" cy="100" r="84"/><circle class="r3" cx="100" cy="100" r="72"/>
+      <path class="tick" d="M100 0 V10 M100 190 V200 M0 100 H10 M190 100 H200"/></svg>
+    <h1 aria-label="VOYAGE"><span>V</span><span>O</span><span>Y</span><span>A</span><span>G</span><span>E</span></h1>
+  </div>
+  <div class="tag" data-t>- 지구에서 빅뱅까지, 우주 대항해 -</div>
+  <p data-t><b>우주를 탭</b>하면 그곳으로 항해합니다. 지도는 위로 갈수록 더 멀고 더 오래된 우주입니다.<br>
+     출항할 때마다 <b>연료와 산소</b>가 자동 보급되고, 항해 중 소모됩니다.<br>
+     천체를 <b>발견</b>해 연구 데이터를 모으고 <b>워프 드라이브</b>를 연구해 다음 우주로 나아가세요.<br>
+     기지에서 <b>무역</b>으로 돈을 벌고, <b>승무원</b>을 영입하고, <b>해적</b>을 물리치세요.<br>
+     최종 목적지는 138억 년 전, <b>우주의 시작</b>입니다.</p>
+  <button class="btn orange launchBtn" onclick="introLaunch()" data-t>발진</button>
+  <div id="langPick"></div>
+</div>
+
+<div id="gameover" class="full">
+  <h1 data-t>조 난</h1>
+  <div class="tag" id="goTag">- 산소가 바닥났습니다 -</div>
+  <p id="goText"></p>
+  <button class="btn orange" id="goBtn" style="padding:12px 44px;font-size:15px" onclick="respawn()" data-t>지구에서 다시 시작</button>
+  <button class="btn" id="goAd" style="padding:11px 26px;font-size:13.5px;margin-top:10px;display:none" onclick="adRevive()"></button>
+</div>
+
+<div id="ending" class="full">
+  <h1 data-t>태 초</h1>
+  <div class="tag" data-t>- 138억 년의 항해 끝에 -</div>
+  <p id="endText"></p>
+  <button class="btn orange" style="padding:12px 44px;font-size:15px" onclick="closeEnding()" data-t>항해를 계속한다</button>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script src="js/guard.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/world.js"></script>
+<script src="js/fate.js"></script>
+<script src="js/ads.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/cuts.js"></script>
+<script src="js/story.js"></script>
+<script src="js/mobile.js"></script>
+<script src="js/intro.js"></script>
+</body>
+</html>

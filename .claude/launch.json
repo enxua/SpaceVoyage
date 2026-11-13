@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "voyage", "runtimeExecutable": "npx", "runtimeArgs": ["--yes", "http-server", "-p", "8377", "-c-1", "."], "port": 8377 }
+  ]
+}

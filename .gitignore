@@ -25,3 +25,6 @@ Thumbs.db
 
 # 스토어 스크린샷 원본 (node tools/shots.js 로 다시 찍을 수 있다)
 store/raw/
+
+# 사업자 서류 (작성 후 개인정보가 들어간다)
+store/legal/

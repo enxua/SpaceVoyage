@@ -740,7 +740,7 @@ const SHOP_PACKS = [
   { id:"p3", name:__("크레딧 금고"),     won:12000,  gold:10000,  bonus:.20, ic:"🧰" },
   { id:"p4", name:__("크레딧 화물칸"),   won:37000,  gold:30000,  bonus:.35, ic:"🚚", tag:__("인기") },
   { id:"p5", name:__("크레딧 수송선"),   won:65000,  gold:50000,  bonus:.50, ic:"🚀" },
-  { id:"p6", name:__("크레딧 은하 금고"),won:119000, gold:100000, bonus:.80, ic:"🌌", tag:__("최고 효율") },
+  { id:"p6", name:__("크레딧 은하 금고"),won:120000, gold:100000, bonus:.80, ic:"🌌", tag:__("최고 효율") },
 ];
 /* 초보 지원 패키지: 한 번씩만 살 수 있다 */
 const STARTER_PACKS = [

@@ -2054,4 +2054,7 @@ I18N.it = {"일반":"Comune",
 "광고를 준비하고 있습니다. 잠시 후 다시 시도해 주세요":"L'annuncio si sta ancora caricando. Riprova tra poco.",
 "광고를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요":"Impossibile caricare l'annuncio. Riprova più tardi.",
 "🧪 테스트 모드 - 웹 버전에서는 광고 대신 잠시 기다리면 보상을 받습니다.":"🧪 Modalità test - nella versione web basta attendere un momento, senza annuncio, per ricevere la ricompensa.",
-"광고 개인정보 설정":"Privacy annunci"};
+"광고 개인정보 설정":"Privacy annunci",
+"무료로 받기":"Ricevi gratis",
+"광고 제거 이용 중 - 광고 없이 바로 받습니다. 횟수는 매일 다시 채워집니다.":"Senza pubblicità attivo - ricevi subito senza annunci. Gli utilizzi si ricaricano ogni giorno.",
+"🎁 기함 되살리기 (오늘 {0}회 남음)":"🎁 Rianima l'ammiraglia ({0} rimasti oggi)"};

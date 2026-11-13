@@ -2054,4 +2054,7 @@ I18N.fr = {"일반":"Commun",
 "광고를 준비하고 있습니다. 잠시 후 다시 시도해 주세요":"La publicité est en cours de chargement. Réessayez dans un instant.",
 "광고를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요":"Impossible de charger la publicité. Réessayez plus tard.",
 "🧪 테스트 모드 - 웹 버전에서는 광고 대신 잠시 기다리면 보상을 받습니다.":"🧪 Mode test - sur la version web, patientez un instant au lieu de regarder une publicité pour obtenir la récompense.",
-"광고 개인정보 설정":"Confidentialité des pubs"};
+"광고 개인정보 설정":"Confidentialité des pubs",
+"무료로 받기":"Obtenir gratuitement",
+"광고 제거 이용 중 - 광고 없이 바로 받습니다. 횟수는 매일 다시 채워집니다.":"Sans pub actif - obtenez-le tout de suite, sans publicité. Les utilisations se rechargent chaque jour.",
+"🎁 기함 되살리기 (오늘 {0}회 남음)":"🎁 Ranimer le vaisseau amiral ({0} restant(s) aujourd'hui)"};

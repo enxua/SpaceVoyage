@@ -1,6 +1,8 @@
 "use strict";
 /* ══════════════════ 우주 끝까지: VOYAGE - 보상형 광고 ══════════════════
+   광고는 플레이어가 직접 눌러서 보는 보상형 광고만 쓴다. 게임 시작·종료·화면 전환 때 저절로 뜨는 광고(전면·앱 열기·배너)는 없다.
    광고를 끝까지 보면 보상을 준다: 상점의 무료 크레딧·보석, 전투·임무·납품 보상 2배, 조난 시 기함 되살리기.
+   광고 제거(30일·무제한) 이용 중에는 광고 없이 같은 보상을 바로 준다 (하루 횟수 제한은 같다).
    안드로이드 앱에서는 js/admob.js 가 AD_PLAY 를 AdMob 보상형 광고로 바꾼다. 웹에서는 5초짜리 테스트 화면이다.
    광고 방식을 바꿀 때는 AD_PLAY 하나만 바꾸면 된다: AD_PLAY(onDone, onCancel) - 끝까지 보면 onDone, 중간에 닫으면 onCancel. */
 const AD_LIMIT = { credit:5, gem:3, revive:2, double:20 };           /* 하루에 받을 수 있는 횟수 */
@@ -81,8 +83,9 @@ function adDouble(gold, gems){
 const adCreditAmount = () => 500;
 function adShopHTML(){
   const c = adLeft("credit"), g = adLeft("gem");
-  return `<div class="card" style="border-color:#4a90d9"><div class="row"><div style="font-size:28px;width:38px;text-align:center">📺</div>
-    <div class="grow"><div class="ttl">${__("광고 보고 무료로 받기")}</div><div class="stat">${__("광고를 끝까지 보면 보상을 받습니다. 횟수는 매일 다시 채워집니다.")}</div></div></div>
+  const free = adFree();                                        /* 광고 제거 이용 중: 광고 없이 바로 받는다 */
+  return `<div class="card" style="border-color:#4a90d9"><div class="row"><div style="font-size:28px;width:38px;text-align:center">${free ? "🎁" : "📺"}</div>
+    <div class="grow"><div class="ttl">${free ? __("무료로 받기") : __("광고 보고 무료로 받기")}</div><div class="stat">${free ? __("광고 제거 이용 중 - 광고 없이 바로 받습니다. 횟수는 매일 다시 채워집니다.") : __("광고를 끝까지 보면 보상을 받습니다. 횟수는 매일 다시 채워집니다.")}</div></div></div>
     <div class="row" style="margin-top:10px;gap:8px">
       <button class="btn orange" style="flex:1" ${c?"":"disabled"} onclick="adShop('credit')">💠 ${fmt(adCreditAmount())}<br><span style="font-size:11px;font-weight:600">${__`오늘 ${c}회 남음`}</span></button>
       <button class="btn" style="flex:1" ${g?"":"disabled"} onclick="adShop('gem')">💎 1<br><span style="font-size:11px;font-weight:600">${__`오늘 ${g}회 남음`}</span></button></div></div>`;
@@ -101,7 +104,7 @@ function adReviveSetup(){
   const b = $("goAd"); if(!b) return;
   const n = goSnap ? adLeft("revive") : 0;
   b.style.display = n ? "" : "none";
-  b.innerHTML = __`📺 광고 보고 기함 되살리기 (오늘 ${n}회 남음)`;
+  b.innerHTML = adFree() ? __`🎁 기함 되살리기 (오늘 ${n}회 남음)` : __`📺 광고 보고 기함 되살리기 (오늘 ${n}회 남음)`;
 }
 function adRevive(){
   if(!goSnap) return;

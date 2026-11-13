@@ -1,6 +1,8 @@
 "use strict";
 /* ══════════════════ 우주 끝까지: VOYAGE - AdMob 보상형 광고 ══════════════════
    안드로이드 앱(Capacitor)에서만 동작한다. 웹에서는 js/ads.js 의 테스트 화면이 그대로 쓰인다.
+   보상형 광고만 쓴다. 전면·앱 열기·배너 광고는 불러오지도 보여 주지도 않는다.
+   광고 제거 이용 중에는 광고를 미리 불러오지 않고 동의 창도 띄우지 않는다 (기간이 끝난 뒤 처음 광고를 볼 때 준비한다).
    · 시작할 때: AdMob 초기화 → 개인정보 동의(UMP, 유럽 등 필요한 지역만 동의 창) → 보상형 광고 미리 불러오기
    · AD_PLAY(onDone, onCancel) 를 실제 광고로 바꾼다. 끝까지 봐서 보상을 받은 경우에만 onDone
    · 광고가 닫히면 다음 광고를 미리 불러 둔다. 불러오기에 실패하면 점점 늦춰 가며 다시 시도한다
@@ -10,10 +12,25 @@ const ADMOB = {
   rewarded: "ca-app-pub-3940256099942544/5224354917",       /* 보상형 광고 단위 ID (지금은 구글 공식 테스트 ID) */
   testing: true,                                            /* 실제 ID 로 바꾸면 false */
 };
-const ADM = { plugin:null, ready:false, loading:false, canRequest:false, privacy:false, retry:0, cur:null };
+const ADM = { plugin:null, ready:false, loading:false, canRequest:false, privacy:false, retry:0, cur:null, consent:null };
+const admobOff = () => typeof adFree === "function" && state && adFree();      /* 광고 제거 이용 중 */
+
+/* 개인정보 동의(UMP): 처음 광고가 필요할 때 한 번만 묻는다 */
+function admobConsent(){
+  const A = ADM.plugin; if(!A) return Promise.resolve();
+  if(!ADM.consent) ADM.consent = (async () => {
+    try{
+      let info = await A.requestConsentInfo();
+      if(info.isConsentFormAvailable && info.status === "REQUIRED") info = await A.showConsentForm();
+      ADM.canRequest = info.canRequestAds; ADM.privacy = info.privacyOptionsRequirementStatus === "REQUIRED";
+    }catch(e){ ADM.canRequest = true; }                       /* 동의 정보를 못 받아도 광고 요청은 시도한다 (SDK 가 지역 규정을 따른다) */
+  })();
+  return ADM.consent;
+}
 
 function admobPrepare(){
-  const A = ADM.plugin; if(!A || !ADM.canRequest || ADM.ready || ADM.loading) return;
+  const A = ADM.plugin; if(!A || admobOff() || ADM.ready || ADM.loading) return;
+  if(!ADM.canRequest){ admobConsent().then(() => { if(ADM.canRequest) admobPrepare(); }); return; }
   ADM.loading = true;
   A.prepareRewardVideoAd({ adId:ADMOB.rewarded, isTesting:ADMOB.testing })
     .then(() => { ADM.ready = true; ADM.retry = 0; })
@@ -25,7 +42,7 @@ function admobPrepare(){
 function admobPlay(onDone, onCancel){
   const A = ADM.plugin;
   if(!ADM.ready){
-    toast(ADM.canRequest ? __("광고를 준비하고 있습니다. 잠시 후 다시 시도해 주세요") : __("광고를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요"));
+    toast(__("광고를 준비하고 있습니다. 잠시 후 다시 시도해 주세요"));
     admobPrepare(); onCancel && onCancel(); return;
   }
   ADM.ready = false;
@@ -59,12 +76,9 @@ async function admobInit(){
   A.addListener("onRewardedVideoAdReward", () => ADM.cur && ADM.cur.reward());
   A.addListener("onRewardedVideoAdDismissed", () => ADM.cur && ADM.cur.close());
   A.addListener("onRewardedVideoAdFailedToShow", () => ADM.cur && ADM.cur.fail());
-  try{
-    await A.initialize({ initializeForTesting:ADMOB.testing });
-    let info = await A.requestConsentInfo();
-    if(info.isConsentFormAvailable && info.status === "REQUIRED") info = await A.showConsentForm();
-    ADM.canRequest = info.canRequestAds; ADM.privacy = info.privacyOptionsRequirementStatus === "REQUIRED";
-  }catch(e){ ADM.canRequest = true; }                         /* 동의 정보를 못 받아도 광고 요청은 시도한다 (SDK 가 지역 규정을 따른다) */
+  try{ await A.initialize({ initializeForTesting:ADMOB.testing }); }catch(e){}
+  if(admobOff()) return;                                        /* 광고 제거 이용 중: 동의 창도, 미리 불러오기도 하지 않는다 */
+  await admobConsent();
   admobPrepare();
 }
 window.addEventListener("load", () => setTimeout(admobInit, 500));

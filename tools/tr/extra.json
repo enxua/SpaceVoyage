@@ -5108,5 +5108,35 @@
   "ja": "広告のプライバシー設定",
   "zhs": "广告隐私设置",
   "zht": "廣告隱私設定"
+ },
+ "무료로 받기": {
+  "en": "Claim for Free",
+  "es": "Recibir gratis",
+  "fr": "Obtenir gratuitement",
+  "it": "Ricevi gratis",
+  "pt": "Receber grátis",
+  "ja": "無料で受け取る",
+  "zhs": "免费领取",
+  "zht": "免費領取"
+ },
+ "광고 제거 이용 중 - 광고 없이 바로 받습니다. 횟수는 매일 다시 채워집니다.": {
+  "en": "Ad-free active - claim instantly without ads. Uses refill every day.",
+  "es": "Sin anuncios activo - recíbelo al instante sin anuncios. Los usos se recargan cada día.",
+  "fr": "Sans pub actif - obtenez-le tout de suite, sans publicité. Les utilisations se rechargent chaque jour.",
+  "it": "Senza pubblicità attivo - ricevi subito senza annunci. Gli utilizzi si ricaricano ogni giorno.",
+  "pt": "Sem anúncios ativo - receba na hora, sem anúncios. Os usos se renovam todo dia.",
+  "ja": "広告削除を利用中 - 広告なしですぐに受け取れます。回数は毎日リセットされます。",
+  "zhs": "已开启免广告 - 无需观看广告即可立即领取。次数每天重置。",
+  "zht": "已開啟免廣告 - 無需觀看廣告即可立即領取。次數每天重置。"
+ },
+ "🎁 기함 되살리기 (오늘 {0}회 남음)": {
+  "en": "🎁 Revive flagship ({0} left today)",
+  "es": "🎁 Revivir buque insignia (quedan {0} hoy)",
+  "fr": "🎁 Ranimer le vaisseau amiral ({0} restant(s) aujourd'hui)",
+  "it": "🎁 Rianima l'ammiraglia ({0} rimasti oggi)",
+  "pt": "🎁 Reviver nave capitânia ({0} restantes hoje)",
+  "ja": "🎁 旗艦を復活させる（本日あと{0}回）",
+  "zhs": "🎁 复活旗舰（今天剩余{0}次）",
+  "zht": "🎁 復活旗艦（今天剩餘{0}次）"
  }
 }

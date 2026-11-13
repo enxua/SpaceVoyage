@@ -2054,4 +2054,7 @@ I18N.es = {"일반":"Común",
 "광고를 준비하고 있습니다. 잠시 후 다시 시도해 주세요":"El anuncio aún se está cargando. Inténtalo de nuevo en un momento.",
 "광고를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요":"No se pudo cargar el anuncio. Inténtalo de nuevo más tarde.",
 "🧪 테스트 모드 - 웹 버전에서는 광고 대신 잠시 기다리면 보상을 받습니다.":"🧪 Modo de prueba - en la versión web, espera un momento en lugar de ver un anuncio para recibir la recompensa.",
-"광고 개인정보 설정":"Privacidad de anuncios"};
+"광고 개인정보 설정":"Privacidad de anuncios",
+"무료로 받기":"Recibir gratis",
+"광고 제거 이용 중 - 광고 없이 바로 받습니다. 횟수는 매일 다시 채워집니다.":"Sin anuncios activo - recíbelo al instante sin anuncios. Los usos se recargan cada día.",
+"🎁 기함 되살리기 (오늘 {0}회 남음)":"🎁 Revivir buque insignia (quedan {0} hoy)"};

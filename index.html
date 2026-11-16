@@ -70,7 +70,8 @@
   #speech { position:absolute; left:50%; transform:translateX(-50%); bottom:178px; z-index:35; width:min(560px,92%);
     display:none; gap:12px; align-items:center; background:#fff; border:1.5px solid #d96f32; border-radius:18px;
     padding:12px 16px; box-shadow:0 6px 24px rgba(0,0,0,.16); cursor:pointer; }
-  #speech.on { display:flex; animation:pop .28s ease; }
+  #speech.on { display:flex; animation:speechIn .22s ease; }   /* 제자리에서 나타난다 (가운데 맞춤 translateX 를 건드리지 않는다) */
+  @keyframes speechIn { from { opacity:0; } }
   body.modal-open #speech { bottom:auto; top:10px; }
   #speech .who { font-size:12px; font-weight:800; color:#d96f32; }
   #speech .more { color:#aaa; font-weight:600; }

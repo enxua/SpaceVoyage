@@ -974,6 +974,7 @@ function openAudio(){
 function openSettings(){
   const inGame = !state.intro && $("intro").style.display === "none";
   openModal(__("⚙️ 설정"), "", `<div class="sec">${__`계정`}</div>${typeof cloudHTML === "function" ? cloudHTML() : ""}
+    <button class="btn wide" style="margin:-2px 0 4px" onclick="openRanking()">${__`🏆 랭킹`}</button>
     <div class="sec">${__`소리`}</div><div class="card"><div class="row">
       <div class="grow"><div class="ttl">${__`전체 소리`}</div><div class="stat">${__`배경 음악 ${Math.round(state.vol.bgm*100)}% · 효과음 ${Math.round(state.vol.sfx*100)}%`}</div></div>
       <button class="btn ${state.mute?"ghost":"orange"}" onclick="toggleMute();openSettings()">${state.mute?__("🔇 꺼짐"):__("🔊 켜짐")}</button></div>

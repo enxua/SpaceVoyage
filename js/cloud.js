@@ -28,6 +28,8 @@ function cloudMock(){
     signIn:async () => { localStorage.setItem("voyage_cloud_mock_auth", "1"); return { auth:true, id:"mock-player", name:"Tester" }; },
     load:async () => ({ data:localStorage.getItem(K) || "" }),
     save:async o => { localStorage.setItem(K, o.data); },
+    submitScore:async o => { console.log("mock score", o.id, o.score); },
+    showLeaderboard:async o => { toast("[mock] leaderboard " + (o.id || "all")); },
   };
 }
 

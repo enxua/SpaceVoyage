@@ -4,6 +4,11 @@ import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
+import android.content.Intent;
+
+import androidx.activity.result.ActivityResult;
+
+import com.getcapacitor.annotation.ActivityCallback;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.google.android.gms.games.GamesSignInClient;
 import com.google.android.gms.games.PlayGames;
@@ -21,6 +26,8 @@ import java.nio.charset.StandardCharsets;
  *  signIn()            → { auth, id, name }       로그인 창을 띄운다 (플레이어가 직접 누른 경우에만)
  *  load({ name })      → { data }                 저장된 게임을 읽는다. 없으면 빈 문자열
  *  save({ name, data, desc, played }) → {}        저장된 게임에 쓴다
+ *  submitScore({ id, score }) → {}                리더보드에 점수를 올린다 (Play 게임즈가 최고 기록만 남긴다)
+ *  showLeaderboard({ id })    → {}                리더보드 화면을 띄운다. id 가 비면 전체 목록
  *
  * ※ Play 게임즈 v2 에는 앱 안에서 로그아웃하는 기능이 없다. 계정 전환·로그아웃은 Play 게임즈 앱에서 한다.
  */
@@ -97,5 +104,31 @@ public class PlayGamesPlugin extends Plugin {
                 if (c.isSuccessful()) call.resolve(); else call.reject("commit failed", c.getException());
             });
         });
+    }
+
+    @PluginMethod
+    public void submitScore(PluginCall call) {
+        String id = call.getString("id", "");
+        Long score = call.getLong("score", 0L);
+        if (id.isEmpty()) { call.reject("no id"); return; }
+        PlayGames.getLeaderboardsClient(getActivity()).submitScore(id, score);
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void showLeaderboard(PluginCall call) {
+        String id = call.getString("id", "");
+        com.google.android.gms.tasks.Task<Intent> task = id.isEmpty()
+            ? PlayGames.getLeaderboardsClient(getActivity()).getAllLeaderboardsIntent()
+            : PlayGames.getLeaderboardsClient(getActivity()).getLeaderboardIntent(id);
+        task.addOnCompleteListener(t -> {
+            if (!t.isSuccessful() || t.getResult() == null) { call.reject("leaderboard failed", t.getException()); return; }
+            startActivityForResult(call, t.getResult(), "leaderboardClosed");
+        });
+    }
+
+    @ActivityCallback
+    private void leaderboardClosed(PluginCall call, ActivityResult result) {
+        if (call != null) call.resolve();
     }
 }

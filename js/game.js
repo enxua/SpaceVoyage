@@ -877,7 +877,8 @@ function dock(id){
   } else narrate(__`⚓ ${p.name} 입항`, `${__`<b>${p.name}</b>에 입항했습니다. 특산품은 <b>${p.p.map(g=>GOOD_MAP[g].name).join(", ")}</b>, 수요가 높은 것은 <b>${p.d.map(g=>GOOD_MAP[g].name).join(", ")}</b>입니다.`}`);
   sfx("dock"); fxDock(p); rocks = [];
   storyOnce(id);                                              /* 이야기가 있는 기지(은하 중심·안드로메다·우주배경복사) */
-  if(p.final && !state.ended){ state.ended = true; storyOnce("bigbang", showEnding); }
+  if(p.final && !state.ended){ state.ended = true; state.endDay = Math.max(1, Math.ceil(state.day));   /* 랭킹: 빅뱅 최단 도달 */
+    storyOnce("bigbang", showEnding); }
   else rollCrew();
   fateDock(id);
   if(!(p.final && state.ended)) firstLand ? cutTry("land") : (id === "earth" && cutTry("home")) || cutTry("rest");          /* 서비스 컷 */

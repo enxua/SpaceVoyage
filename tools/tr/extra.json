@@ -5808,5 +5808,165 @@
   "ja": "設定",
   "zhs": "设置",
   "zht": "設定"
+ },
+ "🏆 랭킹": {
+  "en": "🏆 Rankings",
+  "es": "🏆 Clasificación",
+  "fr": "🏆 Classements",
+  "it": "🏆 Classifiche",
+  "pt": "🏆 Rankings",
+  "ja": "🏆 ランキング",
+  "zhs": "🏆 排行榜",
+  "zht": "🏆 排行榜"
+ },
+ "탐사가": {
+  "en": "Explorer",
+  "es": "Explorador",
+  "fr": "Explorateur",
+  "it": "Esploratore",
+  "pt": "Explorador",
+  "ja": "探検家",
+  "zhs": "探索家",
+  "zht": "探索家"
+ },
+ "발견한 천체와 떠돌이 별의 수": {
+  "en": "Celestial bodies and rogue stars discovered",
+  "es": "Astros y estrellas errantes descubiertos",
+  "fr": "Astres et étoiles errantes découverts",
+  "it": "Corpi celesti e stelle erranti scoperti",
+  "pt": "Astros e estrelas errantes descobertos",
+  "ja": "発見した天体と放浪星の数",
+  "zhs": "已发现的天体与流浪星数量",
+  "zht": "已發現的天體與流浪星數量"
+ },
+ "무역으로 번 누적 크레딧": {
+  "en": "Total credits earned from trade",
+  "es": "Créditos totales ganados con el comercio",
+  "fr": "Total des crédits gagnés par le commerce",
+  "it": "Crediti totali guadagnati col commercio",
+  "pt": "Total de créditos ganhos com comércio",
+  "ja": "交易で稼いだ累計クレジット",
+  "zhs": "通过贸易赚取的累计信用点",
+  "zht": "透過貿易賺取的累計信用點"
+ },
+ "물리친 해적의 수": {
+  "en": "Pirates defeated",
+  "es": "Piratas derrotados",
+  "fr": "Pirates vaincus",
+  "it": "Pirati sconfitti",
+  "pt": "Piratas derrotados",
+  "ja": "倒した海賊の数",
+  "zhs": "击败的海盗数量",
+  "zht": "擊敗的海盜數量"
+ },
+ "빅뱅 최단 도달": {
+  "en": "Fastest to the Big Bang",
+  "es": "Récord hasta el Big Bang",
+  "fr": "Record jusqu’au Big Bang",
+  "it": "Record fino al Big Bang",
+  "pt": "Recorde até o Big Bang",
+  "ja": "ビッグバン最速到達",
+  "zhs": "最快抵达大爆炸",
+  "zht": "最快抵達大爆炸"
+ },
+ "우주의 시작에 닿기까지 걸린 날 (적을수록 높은 순위)": {
+  "en": "Days taken to reach the beginning of the universe (fewer ranks higher)",
+  "es": "Días hasta llegar al origen del universo (menos es mejor)",
+  "fr": "Jours pour atteindre l’origine de l’univers (moins = mieux classé)",
+  "it": "Giorni per raggiungere l’inizio dell’universo (meno è meglio)",
+  "pt": "Dias até chegar ao início do universo (menos é melhor)",
+  "ja": "宇宙の始まりに到達するまでの日数 (少ないほど上位)",
+  "zhs": "抵达宇宙起点所用天数 (越少排名越高)",
+  "zht": "抵達宇宙起點所用天數 (越少排名越高)"
+ },
+ "구글 Play 게임즈 리더보드에서 전 세계 항해사들과 기록을 겨룹니다.": {
+  "en": "Compete with voyagers worldwide on Google Play Games leaderboards.",
+  "es": "Compite con viajeros de todo el mundo en las clasificaciones de Google Play Juegos.",
+  "fr": "Affrontez les voyageurs du monde entier dans les classements Google Play Jeux.",
+  "it": "Sfida i viaggiatori di tutto il mondo nelle classifiche di Google Play Giochi.",
+  "pt": "Dispute com viajantes do mundo todo nos rankings do Google Play Games.",
+  "ja": "Google Play ゲームズのリーダーボードで世界中の航海士と記録を競います。",
+  "zhs": "在 Google Play 游戏排行榜上与全球航海者一较高下。",
+  "zht": "在 Google Play 遊戲排行榜上與全球航海者一較高下。"
+ },
+ "랭킹은 안드로이드 앱에서 구글 Play 게임즈로 참여할 수 있습니다.": {
+  "en": "Rankings are available in the Android app with Google Play Games.",
+  "es": "Las clasificaciones están disponibles en la app de Android con Google Play Juegos.",
+  "fr": "Les classements sont disponibles dans l’app Android avec Google Play Jeux.",
+  "it": "Le classifiche sono disponibili nell’app Android con Google Play Giochi.",
+  "pt": "Os rankings estão disponíveis no app Android com o Google Play Games.",
+  "ja": "ランキングはAndroidアプリでGoogle Play ゲームズから参加できます。",
+  "zhs": "排行榜需在 Android 应用中通过 Google Play 游戏参与。",
+  "zht": "排行榜需在 Android 應用程式中透過 Google Play 遊戲參與。"
+ },
+ "{0}일": {
+  "en": "{0} days",
+  "es": "{0} días",
+  "fr": "{0} jours",
+  "it": "{0} giorni",
+  "pt": "{0} dias",
+  "ja": "{0}日",
+  "zhs": "{0} 天",
+  "zht": "{0} 天"
+ },
+ "아직 도달하지 못함": {
+  "en": "Not reached yet",
+  "es": "Aún no alcanzado",
+  "fr": "Pas encore atteint",
+  "it": "Non ancora raggiunto",
+  "pt": "Ainda não alcançado",
+  "ja": "まだ到達していません",
+  "zhs": "尚未抵达",
+  "zht": "尚未抵達"
+ },
+ "내 기록: {0}": {
+  "en": "My record: {0}",
+  "es": "Mi récord: {0}",
+  "fr": "Mon record : {0}",
+  "it": "Il mio record: {0}",
+  "pt": "Meu recorde: {0}",
+  "ja": "自分の記録: {0}",
+  "zhs": "我的记录: {0}",
+  "zht": "我的紀錄: {0}"
+ },
+ "순위 보기": {
+  "en": "View",
+  "es": "Ver",
+  "fr": "Voir",
+  "it": "Vedi",
+  "pt": "Ver",
+  "ja": "順位を見る",
+  "zhs": "查看排名",
+  "zht": "查看排名"
+ },
+ "🏆 전체 랭킹 보기": {
+  "en": "🏆 View all rankings",
+  "es": "🏆 Ver todas las clasificaciones",
+  "fr": "🏆 Voir tous les classements",
+  "it": "🏆 Vedi tutte le classifiche",
+  "pt": "🏆 Ver todos os rankings",
+  "ja": "🏆 すべてのランキングを見る",
+  "zhs": "🏆 查看全部排行榜",
+  "zht": "🏆 查看全部排行榜"
+ },
+ "랭킹을 열지 못했습니다. 잠시 뒤 다시 시도하세요": {
+  "en": "Couldn’t open rankings. Please try again later.",
+  "es": "No se pudo abrir la clasificación. Inténtalo más tarde.",
+  "fr": "Impossible d’ouvrir les classements. Réessayez plus tard.",
+  "it": "Impossibile aprire le classifiche. Riprova più tardi.",
+  "pt": "Não foi possível abrir os rankings. Tente mais tarde.",
+  "ja": "ランキングを開けませんでした。しばらくしてからお試しください",
+  "zhs": "无法打开排行榜,请稍后再试",
+  "zht": "無法開啟排行榜,請稍後再試"
+ },
+ "랭킹": {
+  "en": "Rankings",
+  "es": "Clasificación",
+  "fr": "Classements",
+  "it": "Classifiche",
+  "pt": "Rankings",
+  "ja": "ランキング",
+  "zhs": "排行榜",
+  "zht": "排行榜"
  }
 }

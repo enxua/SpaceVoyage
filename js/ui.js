@@ -982,7 +982,8 @@ function openSettings(){
     <div class="sec">🌐 Language · ${(LANGS.find(l=>l[0] === LANG)||[])[1] || ""}</div><div class="card" style="display:flex;flex-wrap:wrap;gap:6px">${langButtons()}</div>
     ${inGame ? `<div class="sec">${__`게임`}</div><div class="card">
       <div class="stat" style="margin:0 0 4px">${__`진행 상황을 저장하고 처음 화면으로 돌아갑니다. 발진을 누르면 이어서 합니다.`}</div>
-      <button class="btn wide" onclick="goTitle()">${__`🏠 초기 화면으로`}</button></div>` : ""}
+      <button class="btn wide" onclick="goTitle()">${__`🏠 초기 화면으로`}</button>
+      <button class="btn ghost wide" onclick="tutStart(true)">${__`📘 게임 도움말`}</button></div>` : ""}
     ${typeof admobPrivacyHTML === "function" ? admobPrivacyHTML() : ""}
     <div class="sec">${__`데이터`}</div><div class="card dangerCard">
       <div class="ttl">${__`⚠️ 데이터 초기화`}</div>

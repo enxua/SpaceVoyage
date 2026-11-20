@@ -16,16 +16,16 @@ function freshState(){
   const e = BODY_MAP.earth;
   return {
     gold:1000, fuel:120, o2:120, hull:60, sci:0, day:0, lastPort:"earth", buff:null,
-    aff:{}, affDone:{}, stars:{}, mates:[], rareCd:0, dens:{}, denRe:{},
+    aff:{ seraphine:0, isabella:0, amin:0 }, affDone:{}, stars:{}, mates:[], rareCd:0, dens:{}, denRe:{},
     stats:{ sell:0, pulls:0, deaths:0, quests:0, wins:0, mined:0, sling:0 },
     quests:null, invest:{}, titles:[], title:null, mission:0,
-    ships:{ shuttle:0 }, flagship:"shuttle", cargo:{}, crew:[],
+    ships:{ shuttle:0 }, flagship:"shuttle", cargo:{}, crew:["seraphine","isabella","amin"],   /* 처음부터 함께하는 N등급 승무원 3명 (직위 배치는 튜토리얼에서 배운다) */
     visited:["earth"], found:["earth","moon"], routes:[],
     tech:{ warp:0, tank:0, hull:0, gun:0, shield:0, scan:0, hold:0, scoop:0 }, maxZ:0,
     x:e.x, y:e.y, heading:-Math.PI/2, docked:"earth",
     starSeed:(Math.random()*1e9)|0, starsFound:[],
     shop:{ paid:0, count:{} }, vol:{ bgm:0.6, sfx:0.8 }, fx:{ shake:1, flash:true },
-    gems:0, starCd:{}, posts:{}, story:{ seen:{}, flags:{} },                 /* 보석 / 별 재조사 가능 시점 */         /* 상점: 누적 결제액(원), 묶음별 구매 횟수 */
+    gems:0, starCd:{}, posts:{}, story:{ seen:{ firstCrew:true }, flags:{} },   /* 처음 동료 이야기는 시작 승무원으로 대신한다 */                 /* 보석 / 별 재조사 가능 시점 */         /* 상점: 누적 결제액(원), 묶음별 구매 횟수 */
     intro:true, theme:"paper", mute:false, ended:false,
   };
 }
@@ -281,7 +281,7 @@ function buildWorld(){
 /* ══════════════════ 캔버스 / 카메라 ══════════════════ */
 const cv = $("sea"), ctx = cv.getContext("2d");
 let W=0, H=0, DPR=1;
-let cam = { x:1000, y:WORLD_H-200, s:10, follow:true };   /* 지도 10배 확대가 기본 */
+let cam = { x:1000, y:WORLD_H-200, s:5, follow:true };    /* 지도 5배 확대가 기본 (처음 보는 사람도 주변이 보이게) */
 function resize(){
   DPR = Math.min(window.devicePixelRatio||1, 2);
   W = window.innerWidth; H = window.innerHeight;
@@ -290,7 +290,7 @@ function resize(){
 window.addEventListener("resize", resize);
 const toWorld = (sx,sy) => [ (sx-W/2)/cam.s + cam.x, (sy-H/2)/cam.s + cam.y ];
 function setZoom(f){ cam.s = clamp(cam.s*f, 0.6, 30); }
-const BASE_ZOOM = 10;      /* 기본 배율(100%) */
+const BASE_ZOOM = 5;       /* 기본 배율(100%) - 예전 10에서 절반으로 넓혔다 */
 function recenter(){ cam.follow = true; cam.s = BASE_ZOOM; cam.x = state.x; cam.y = state.y; sfx("tap"); }   /* 내 함선으로 + 기본 배율 */
 function resetZoom(){ cam.s = BASE_ZOOM; sfx("tap"); }   /* 배율만 100%로 */
 let zoomShown = -1;
@@ -1292,7 +1292,7 @@ function toggleTheme(){
   document.body.style.background = T.bg; document.body.classList.toggle("dark", T.dark); buildWorld(); save();
 }
 function toggleMute(){ state.mute = !state.mute; $("muteBtn").textContent = state.mute?"🔇":"🔊"; auApplyVolume(); save(); }
-function startGame(quiet){ rememberLang(); state.intro = false; $("intro").style.display = "none"; titleOff(); if(!quiet) sfx("warp"); storyOnce("prologue"); save(); }   /* quiet: 처음 화면 연출(js/intro.js)이 이미 소리를 냈다 */
+function startGame(quiet){ rememberLang(); state.intro = false; $("intro").style.display = "none"; titleOff(); if(!quiet) sfx("warp"); storyOnce("prologue", ()=>setTimeout(()=>tutStart(), 700)); save(); }   /* 프롤로그가 끝나면 튜토리얼 (한 번만) */   /* quiet: 처음 화면 연출(js/intro.js)이 이미 소리를 냈다 */
 function init(){
   i18nStatic(); setTimeout(fitLabels, 0);        /* 고정 문구 번역 (언어 고르기는 설정 창) */
   const had = load();

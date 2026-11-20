@@ -466,13 +466,18 @@
   /* 튜토리얼: 가운데 안내 카드 + 가리키는 버튼에 주황 테두리 */
   #tut { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); z-index:36; display:none; justify-content:center; pointer-events:none; padding:0 14px; }
   #tut.on { display:flex; }
+  #tut.top { top:calc(10px + env(safe-area-inset-top)); transform:none; }   /* 메뉴 설명: 열린 창을 가리지 않게 위쪽 */
   .tutCard { pointer-events:auto; width:min(420px, 100%); box-sizing:border-box; background:#fff; color:#3a3a3a; border:1.5px solid #d96f32; border-radius:18px;
     padding:14px 16px 16px; box-shadow:0 10px 32px rgba(0,0,0,.22); animation:fadeIn .25s ease; }
   body.dark .tutCard { background:#141c33; color:#e8ecf5; border-color:#ff9d5c; }
   .tutTop { display:flex; justify-content:space-between; align-items:center; }
   .tutStep { font-size:11px; font-weight:800; color:#aaa59c; letter-spacing:.08em; }
   .tutSkip { border:none; background:none; color:#8a8680; font-size:12px; cursor:pointer; padding:4px 2px; }
-  .tutIc { font-size:34px; margin:4px 0 2px; }
+  .tutFace { width:60px; height:60px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; font-size:30px;
+    background:radial-gradient(circle at 35% 30%, #5fe0ff, #1b2748 70%); border:2px solid #9ff3ff; box-shadow:0 0 14px rgba(95,224,255,.45); }
+  .tutWho { font-size:13px; font-weight:800; color:#d96f32; } .tutWho span { font-size:11px; font-weight:600; color:#8a8680; margin-left:4px; }
+  .tutSay { font-size:13.5px; line-height:1.7; margin-top:4px; min-height:5.1em; }
+  .tutCard { cursor:pointer; }
   .tutDots { display:flex; gap:5px; justify-content:center; margin:12px 0 8px; }
   .tutDots i { width:6px; height:6px; border-radius:50%; background:#e2dfda; } .tutDots i.on { background:#d96f32; width:16px; border-radius:3px; }
   .tutHi { outline:3px solid #ff8a3d !important; outline-offset:2px; border-radius:12px; position:relative; z-index:13; animation:tutPulse 1.2s ease-in-out infinite; }

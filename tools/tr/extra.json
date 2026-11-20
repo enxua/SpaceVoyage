@@ -5989,16 +5989,6 @@
   "zhs": "航行",
   "zht": "航行"
  },
- "우주를 탭하면 그곳으로 항해합니다. 행성이나 기지를 탭하면 그 천체로 곧장 날아갑니다.": {
-  "en": "Tap anywhere in space to sail there. Tap a planet or base to fly straight to it.",
-  "es": "Toca el espacio para navegar hasta allí. Toca un planeta o una base para volar directo hacia él.",
-  "fr": "Touchez l’espace pour y naviguer. Touchez une planète ou une base pour vous y rendre directement.",
-  "it": "Tocca lo spazio per navigare fin lì. Tocca un pianeta o una base per volarci direttamente.",
-  "pt": "Toque no espaço para navegar até lá. Toque em um planeta ou base para voar direto até ele.",
-  "ja": "宇宙をタップするとそこへ航海します。惑星や基地をタップすると、その天体へまっすぐ向かいます。",
-  "zhs": "点击宇宙中的任意位置即可航行过去。点击行星或基地会直接飞往该天体。",
-  "zht": "點擊宇宙中的任意位置即可航行過去。點擊行星或基地會直接飛往該天體。"
- },
  "연료와 산소": {
   "en": "Fuel and oxygen",
   "es": "Combustible y oxígeno",
@@ -6008,16 +5998,6 @@
   "ja": "燃料と酸素",
   "zhs": "燃料与氧气",
   "zht": "燃料與氧氣"
- },
- "항해하는 동안 연료와 산소가 줄어듭니다. 기지에 입항하면 자동으로 보급됩니다. 산소가 바닥나면 조난되니 너무 멀리 가기 전에 기지에 들르세요.": {
-  "en": "Fuel and oxygen drop while you sail. Docking at a base refills them automatically. If oxygen runs out you’ll be stranded, so stop at a base before going too far.",
-  "es": "El combustible y el oxígeno bajan mientras navegas. Al atracar en una base se reponen solos. Si te quedas sin oxígeno, quedarás a la deriva, así que para en una base antes de ir demasiado lejos.",
-  "fr": "Le carburant et l’oxygène baissent pendant le voyage. Ils se rechargent automatiquement à quai. Sans oxygène, vous serez en détresse : faites escale avant d’aller trop loin.",
-  "it": "Carburante e ossigeno calano durante la navigazione. Attraccando a una base si ricaricano da soli. Se finisci l’ossigeno resti alla deriva, quindi fermati a una base prima di andare troppo lontano.",
-  "pt": "Combustível e oxigênio diminuem durante a viagem. Ao atracar em uma base eles são reabastecidos automaticamente. Sem oxigênio você fica à deriva, então pare em uma base antes de ir longe demais.",
-  "ja": "航海中は燃料と酸素が減っていきます。基地に入港すると自動で補給されます。酸素が尽きると遭難するので、遠くへ行きすぎる前に基地へ寄りましょう。",
-  "zhs": "航行时燃料和氧气会逐渐减少。停靠基地会自动补给。氧气耗尽就会遇险,所以走得太远之前先去基地补给吧。",
-  "zht": "航行時燃料和氧氣會逐漸減少。停靠基地會自動補給。氧氣耗盡就會遇險,所以走得太遠之前先去基地補給吧。"
  },
  "지금 할 일": {
   "en": "What to do next",
@@ -6029,16 +6009,6 @@
   "zhs": "当前目标",
   "zht": "當前目標"
  },
- "주황색 목표 줄이 다음에 할 일을 알려 줍니다. 누르면 임무 창이 열립니다.": {
-  "en": "The orange goal bar shows what to do next. Tap it to open your missions.",
-  "es": "La barra naranja de objetivo te indica qué hacer. Tócala para abrir las misiones.",
-  "fr": "La barre d’objectif orange indique la prochaine étape. Touchez-la pour ouvrir les missions.",
-  "it": "La barra arancione dell’obiettivo indica cosa fare. Toccala per aprire le missioni.",
-  "pt": "A barra laranja de objetivo mostra o que fazer. Toque nela para abrir as missões.",
-  "ja": "オレンジ色の目標バーが次にやることを教えてくれます。タップすると任務画面が開きます。",
-  "zhs": "橙色的目标栏会告诉你下一步做什么。点击即可打开任务界面。",
-  "zht": "橙色的目標欄會告訴你下一步做什麼。點擊即可開啟任務介面。"
- },
  "함께하는 승무원": {
   "en": "Your first crew",
   "es": "Tu primera tripulación",
@@ -6048,16 +6018,6 @@
   "ja": "最初のクルー",
   "zhs": "初始船员",
   "zht": "初始船員"
- },
- "처음부터 함께할 승무원 세 명(세라핀 · 이자벨라 · 아민)이 합류했습니다. 아래 💞 승무원 버튼에서 만나 보세요.": {
-  "en": "Three crew members have joined you from the start: Seraphine, Isabella and Amin. Meet them with the 💞 Crew button below.",
-  "es": "Tres tripulantes te acompañan desde el principio: Seraphine, Isabella y Amin. Conócelos con el botón 💞 Tripulación de abajo.",
-  "fr": "Trois membres d’équipage vous rejoignent dès le départ : Séraphine, Isabella et Amin. Rencontrez-les avec le bouton 💞 Équipage en bas.",
-  "it": "Tre membri dell’equipaggio sono con te fin dall’inizio: Seraphine, Isabella e Amin. Incontrali con il pulsante 💞 Equipaggio qui sotto.",
-  "pt": "Três tripulantes estão com você desde o início: Seraphine, Isabella e Amin. Conheça-os no botão 💞 Tripulação abaixo.",
-  "ja": "最初から一緒に旅するクルー3人(セラフィン · イザベラ · アミン)が加わりました。下の 💞 クルー ボタンから会いに行きましょう。",
-  "zhs": "三名船员从一开始就加入了你:瑟拉芬 · 伊莎贝拉 · 阿明。点击下方的 💞 船员 按钮认识他们吧。",
-  "zht": "三名船員從一開始就加入了你:賽拉芬 · 伊莎貝拉 · 阿敏。點擊下方的 💞 船員 按鈕認識他們吧。"
  },
  "승무원 배치하기": {
   "en": "Assigning crew",
@@ -6069,16 +6029,6 @@
   "zhs": "配置船员",
   "zht": "配置船員"
  },
- "승무원 창의 「임무 배치」에서 직위의 <b>임명</b>을 누르고 승무원을 고르세요. 높은 직위일수록 능력이 크게 적용되고, 임명하지 않은 승무원은 능력의 절반만 발휘합니다. ⚡ 자동 배치로 한 번에 맡길 수도 있습니다.": {
-  "en": "In the Crew window, open Duty Posts, tap <b>Appoint</b> on a post and pick a crew member. Higher posts boost their abilities more, and unassigned crew work at only half strength. You can also use ⚡ Auto-assign to fill every post at once.",
-  "es": "En la ventana de Tripulación, abre Puestos, toca <b>Nombrar</b> en un puesto y elige a un tripulante. Los puestos más altos potencian más sus habilidades, y quien no tiene puesto rinde solo a la mitad. También puedes usar ⚡ Asignar automáticamente para cubrirlos todos.",
-  "fr": "Dans la fenêtre Équipage, ouvrez Affectations, touchez <b>Nommer</b> sur un poste et choisissez un membre. Plus le poste est élevé, plus ses compétences comptent ; sans poste, un membre ne donne que la moitié de sa force. ⚡ L’affectation auto remplit tous les postes d’un coup.",
-  "it": "Nella finestra Equipaggio apri Incarichi, tocca <b>Nomina</b> su un incarico e scegli un membro. Gli incarichi più alti potenziano di più le abilità, e chi non ha incarico rende solo la metà. Puoi anche usare ⚡ Assegna automaticamente per coprirli tutti.",
-  "pt": "Na janela Tripulação, abra Postos, toque em <b>Nomear</b> em um posto e escolha um tripulante. Postos mais altos aumentam mais as habilidades, e quem não tem posto rende só metade. Você também pode usar ⚡ Atribuir automaticamente para preencher todos.",
-  "ja": "クルー画面の「役職配置」で役職の<b>任命</b>を押し、クルーを選びましょう。上位の役職ほど能力が大きく発揮され、任命していないクルーは能力の半分しか発揮しません。⚡ 自動配置でまとめて任せることもできます。",
-  "zhs": "在船员界面的「任务配置」中点击职位的<b>任命</b>并选择船员。职位越高,能力发挥越大;未任命的船员只能发挥一半能力。也可以用 ⚡ 自动分配一次完成。",
-  "zht": "在船員介面的「職位配置」中點擊職位的<b>任命</b>並選擇船員。職位越高,能力發揮越大;未任命的船員只能發揮一半能力。也可以用 ⚡ 自動分配一次完成。"
- },
  "승무원 육성하기": {
   "en": "Training crew",
   "es": "Mejorar a la tripulación",
@@ -6088,16 +6038,6 @@
   "ja": "クルーの育成",
   "zhs": "培养船员",
   "zht": "培養船員"
- },
- "임명된 승무원은 함께 항해할수록 호감도가 올라 능력이 최대 50%까지 커집니다. 호감도 80이 되면 특별한 이야기와 선물이 열립니다. 승무원 뽑기에서 같은 승무원이 또 나오면 ★ 승성으로 능력이 10%씩 오릅니다.": {
-  "en": "Appointed crew gain affinity as you sail together, boosting their abilities by up to 50%. At affinity 80, a special story and gift unlock. Drawing the same crew member again in the Crew Draw gives a ★ star-up, raising their abilities by 10% each.",
-  "es": "La tripulación con puesto gana afinidad mientras navegáis juntos y sus habilidades suben hasta un 50%. Con afinidad 80 se desbloquean una historia y un regalo especiales. Si en el Sorteo de tripulación vuelve a salir el mismo tripulante, sube una ★ y gana un 10% más.",
-  "fr": "L’équipage nommé gagne en affinité au fil du voyage, ce qui augmente ses compétences jusqu’à 50 %. À 80 d’affinité, une histoire et un cadeau spéciaux se débloquent. Tirer à nouveau le même membre au Tirage d’équipage lui donne une ★ et +10 % de compétences.",
-  "it": "L’equipaggio con incarico guadagna affinità navigando insieme, aumentando le abilità fino al 50%. Con affinità 80 si sbloccano una storia e un regalo speciali. Se nell’Estrazione equipaggio esce di nuovo lo stesso membro, sale di una ★ e guadagna il 10%.",
-  "pt": "A tripulação nomeada ganha afinidade enquanto vocês navegam juntos, aumentando as habilidades em até 50%. Com afinidade 80, uma história e um presente especiais são liberados. Se o mesmo tripulante sair de novo no Sorteio de tripulação, ele sobe uma ★ e ganha 10%.",
-  "ja": "任命したクルーは一緒に航海するほど好感度が上がり、能力が最大50%まで伸びます。好感度80になると特別な物語と贈り物が開きます。乗組員ガチャで同じクルーがまた出ると ★ 昇星で能力が10%ずつ上がります。",
-  "zhs": "被任命的船员与你一同航行时好感度会提升,能力最多提高50%。好感度达到80会解锁特别剧情和礼物。在船员抽取中再次抽到同一船员会 ★ 升星,能力每次提升10%。",
-  "zht": "被任命的船員與你一同航行時好感度會提升,能力最多提高50%。好感度達到80會解鎖特別劇情和禮物。在船員抽取中再次抽到同一船員會 ★ 升星,能力每次提升10%。"
  },
  "무역으로 돈 벌기": {
   "en": "Earning through trade",
@@ -6109,16 +6049,6 @@
   "zhs": "通过贸易赚钱",
   "zht": "透過貿易賺錢"
  },
- "기지에 정박하면 무역 창에서 물건을 사고팔 수 있습니다. 싸게 파는 곳에서 사서 비싸게 사는 곳에 파세요.": {
-  "en": "When docked at a base, you can buy and sell goods in the Trade window. Buy where it’s cheap and sell where it’s expensive.",
-  "es": "Al atracar en una base puedes comprar y vender en la ventana de Comercio. Compra donde esté barato y vende donde se pague caro.",
-  "fr": "À quai, vous pouvez acheter et vendre dans la fenêtre Commerce. Achetez là où c’est bon marché et revendez là où c’est cher.",
-  "it": "Quando sei attraccato a una base puoi comprare e vendere nella finestra Commercio. Compra dove costa poco e vendi dove si paga caro.",
-  "pt": "Atracado em uma base, você pode comprar e vender na janela de Comércio. Compre onde está barato e venda onde pagam caro.",
-  "ja": "基地に停泊すると交易画面で品物を売り買いできます。安い場所で買って、高く買ってくれる場所で売りましょう。",
-  "zhs": "停靠基地时可在贸易界面买卖货物。在便宜的地方买进,到高价收购的地方卖出。",
-  "zht": "停靠基地時可在貿易介面買賣貨物。在便宜的地方買進,到高價收購的地方賣出。"
- },
  "발견과 연구": {
   "en": "Discovery and research",
   "es": "Descubrir e investigar",
@@ -6129,16 +6059,6 @@
   "zhs": "发现与研究",
   "zht": "發現與研究"
  },
- "새 천체에 가까이 가면 발견되고 연구 데이터가 쌓입니다. 연구에서 워프 드라이브를 올리면 다음 우주로 갈 수 있습니다.": {
-  "en": "Getting close to new celestial bodies discovers them and earns research data. Upgrade the Warp Drive in Research to reach the next universe.",
-  "es": "Al acercarte a astros nuevos los descubres y ganas datos de investigación. Mejora el motor de curvatura en Investigar para llegar al siguiente universo.",
-  "fr": "S’approcher de nouveaux astres les fait découvrir et rapporte des données de recherche. Améliorez la propulsion warp dans Rechercher pour atteindre l’univers suivant.",
-  "it": "Avvicinandoti a nuovi corpi celesti li scopri e ottieni dati di ricerca. Potenzia il motore a curvatura in Ricerca per raggiungere l’universo successivo.",
-  "pt": "Chegar perto de novos astros os descobre e rende dados de pesquisa. Melhore o motor de dobra em Pesquisar para chegar ao próximo universo.",
-  "ja": "新しい天体に近づくと発見され、研究データがたまります。研究でワープドライブを上げると次の宇宙へ行けます。",
-  "zhs": "靠近新天体即可发现它并获得研究数据。在研究中升级曲速引擎,就能前往下一片宇宙。",
-  "zht": "靠近新天體即可發現它並獲得研究資料。在研究中升級曲速引擎,就能前往下一片宇宙。"
- },
  "화면 조작": {
   "en": "Moving the view",
   "es": "Mover la vista",
@@ -6148,36 +6068,6 @@
   "ja": "画面の操作",
   "zhs": "画面操作",
   "zht": "畫面操作"
- },
- "두 손가락으로 벌리거나 오므려 확대·축소합니다. 지도를 끌어 둘러보다가 🚀 내 함선 버튼을 누르면 돌아옵니다.": {
-  "en": "Pinch with two fingers to zoom in and out. Drag the map to look around, then tap 🚀 My Ship to come back.",
-  "es": "Pellizca con dos dedos para acercar o alejar. Arrastra el mapa para explorar y toca 🚀 Mi nave para volver.",
-  "fr": "Pincez avec deux doigts pour zoomer. Faites glisser la carte pour explorer, puis touchez 🚀 Mon vaisseau pour revenir.",
-  "it": "Pizzica con due dita per ingrandire o ridurre. Trascina la mappa per guardarti intorno e tocca 🚀 La mia nave per tornare.",
-  "pt": "Use dois dedos para aproximar ou afastar. Arraste o mapa para explorar e toque em 🚀 Minha nave para voltar.",
-  "ja": "2本の指で広げたりつまんだりして拡大・縮小します。地図をドラッグして見回し、🚀 自分の艦船 ボタンで戻れます。",
-  "zhs": "用两根手指张开或捏合来缩放。拖动地图四处查看,点击 🚀 我的舰船 即可返回。",
-  "zht": "用兩根手指張開或捏合來縮放。拖動地圖四處查看,點擊 🚀 我的船艦 即可返回。"
- },
- "도움말 다시 보기": {
-  "en": "See this again",
-  "es": "Volver a verlo",
-  "fr": "Revoir l’aide",
-  "it": "Rivedere la guida",
-  "pt": "Ver novamente",
-  "ja": "もう一度見る",
-  "zhs": "再次查看说明",
-  "zht": "再次查看說明"
- },
- "이 안내는 ⚙️ 설정의 「게임 도움말」에서 언제든 다시 볼 수 있습니다. 좋은 항해 되세요!": {
-  "en": "You can see this guide again anytime from 📘 How to play in ⚙️ Settings. Bon voyage!",
-  "es": "Puedes volver a ver esta guía cuando quieras en 📘 Cómo jugar, dentro de ⚙️ Ajustes. ¡Buen viaje!",
-  "fr": "Vous pouvez revoir ce guide à tout moment via 📘 Comment jouer dans ⚙️ Paramètres. Bon voyage !",
-  "it": "Puoi rivedere questa guida in qualsiasi momento da 📘 Come si gioca in ⚙️ Impostazioni. Buon viaggio!",
-  "pt": "Você pode rever este guia quando quiser em 📘 Como jogar, nas ⚙️ Configurações. Boa viagem!",
-  "ja": "この案内は ⚙️ 設定の「遊び方」からいつでも見直せます。良い航海を!",
-  "zhs": "你可以随时在 ⚙️ 设置的「游戏说明」中再次查看本指南。一路顺风!",
-  "zht": "你可以隨時在 ⚙️ 設定的「遊戲說明」中再次查看本指南。一路順風!"
  },
  "건너뛰기": {
   "en": "Skip",
@@ -6218,5 +6108,175 @@
   "ja": "次へ",
   "zhs": "下一步",
   "zht": "下一步"
+ },
+ "선장님, 이 배의 항해 지능 노바입니다. 우주 아무 곳이나 탭하시면 그곳으로 항로를 잡겠습니다. 행성이나 기지를 탭하시면 곧장 그 천체로 모시죠.": {
+  "en": "Captain, I’m NOVA, this ship’s navigation intelligence. Tap anywhere in space and I’ll plot a course there. Tap a planet or a base and I’ll take you straight to it.",
+  "es": "Capitán, soy NOVA, la inteligencia de navegación de esta nave. Toque cualquier punto del espacio y trazaré un rumbo hasta allí. Si toca un planeta o una base, le llevaré directo.",
+  "fr": "Capitaine, je suis NOVA, l’intelligence de navigation de ce vaisseau. Touchez n’importe quel point de l’espace et j’y tracerai une route. Touchez une planète ou une base, et je vous y conduis directement.",
+  "it": "Capitano, sono NOVA, l’intelligenza di navigazione di questa nave. Tocca un punto qualsiasi dello spazio e traccerò la rotta. Tocca un pianeta o una base e ti ci porto subito.",
+  "pt": "Capitão, sou NOVA, a inteligência de navegação desta nave. Toque em qualquer ponto do espaço e eu traço a rota até lá. Toque em um planeta ou base e eu levo você direto.",
+  "ja": "船長、この艦の航海知能ノヴァです。宇宙のどこかをタップしていただければ、そこへ航路を取ります。惑星や基地をタップすれば、まっすぐその天体へお連れしましょう。",
+  "zhs": "舰长,我是本舰的航海智能诺瓦。点击宇宙中任意位置,我就会规划航线前往。点击行星或基地,我会直接带您过去。",
+  "zht": "艦長,我是本艦的航海智能NOVA。點擊宇宙中任意位置,我就會規劃航線前往。點擊行星或基地,我會直接帶您過去。"
+ },
+ "위쪽 계기판을 봐 주세요. 항해할수록 연료와 산소가 줄어듭니다. 기지에 입항하면 제가 알아서 보급합니다. 산소가 바닥나면… 조난입니다. 너무 멀리 가시기 전에 꼭 기지에 들러 주세요.": {
+  "en": "Look at the gauges up top. Fuel and oxygen drop as we sail. When we dock at a base, I’ll resupply automatically. If oxygen runs out… we’re stranded. Please stop at a base before going too far.",
+  "es": "Mire los indicadores de arriba. El combustible y el oxígeno bajan al navegar. Al atracar en una base, repostaré automáticamente. Si se acaba el oxígeno… quedaremos a la deriva. Pare en una base antes de alejarse demasiado.",
+  "fr": "Regardez les jauges en haut. Le carburant et l’oxygène baissent pendant le voyage. À quai, je ravitaille automatiquement. Sans oxygène… c’est la détresse. Faites escale avant d’aller trop loin.",
+  "it": "Guarda gli indicatori in alto. Carburante e ossigeno calano durante la navigazione. Quando attracchiamo a una base, faccio rifornimento da sola. Se finisce l’ossigeno… siamo alla deriva. Fermati a una base prima di andare troppo lontano.",
+  "pt": "Olhe os indicadores lá em cima. Combustível e oxigênio diminuem durante a viagem. Ao atracar em uma base, eu reabasteço automaticamente. Se o oxigênio acabar… ficamos à deriva. Pare em uma base antes de ir longe demais.",
+  "ja": "上の計器を見てください。航海するほど燃料と酸素が減ります。基地に入港すれば私が自動で補給します。酸素が尽きたら…遭難です。遠くへ行きすぎる前に、必ず基地へ寄ってください。",
+  "zhs": "请看上方的仪表。航行时燃料和氧气会不断减少。停靠基地时我会自动补给。要是氧气耗尽……就会遇险。走太远之前请务必去基地补给。",
+  "zht": "請看上方的儀表。航行時燃料和氧氣會不斷減少。停靠基地時我會自動補給。要是氧氣耗盡……就會遇險。走太遠之前請務必去基地補給。"
+ },
+ "주황색 목표 줄이 다음에 하실 일입니다. 막막하시면 이 줄만 따라가셔도 됩니다. 누르시면 임무 목록을 보여 드리죠.": {
+  "en": "The orange goal bar is your next task. If you’re unsure what to do, just follow it. Tap it and I’ll show you the mission list.",
+  "es": "La barra naranja es su próxima tarea. Si no sabe qué hacer, sígala. Tóquela y le mostraré la lista de misiones.",
+  "fr": "La barre orange indique votre prochaine tâche. En cas de doute, suivez-la simplement. Touchez-la et je vous montrerai la liste des missions.",
+  "it": "La barra arancione è il tuo prossimo compito. Se non sai cosa fare, seguila e basta. Toccala e ti mostrerò l’elenco delle missioni.",
+  "pt": "A barra laranja é a sua próxima tarefa. Se não souber o que fazer, é só segui-la. Toque nela e eu mostro a lista de missões.",
+  "ja": "オレンジ色の目標バーが次にやることです。迷ったら、このバーをたどるだけで大丈夫。タップすれば任務一覧をお見せします。",
+  "zhs": "橙色的目标栏就是您的下一步。不知道该做什么时,跟着它走就行。点击它,我会显示任务列表。",
+  "zht": "橙色的目標欄就是您的下一步。不知道該做什麼時,跟著它走就行。點擊它,我會顯示任務列表。"
+ },
+ "승무원은 직위에 임명해야 제 실력을 냅니다. 승무원 창의 「임무 배치」에서 직위의 <b>임명</b>을 누르고 사람을 고르시면 됩니다. 높은 직위일수록 능력이 크게 적용되고, 자리가 없는 승무원은 절반만 일합니다. 번거로우시면 ⚡ 자동 배치를 누르세요.": {
+  "en": "Crew only show their true skill once appointed to a post. In the Crew window, open Duty Posts, tap <b>Appoint</b> on a post and choose someone. Higher posts boost abilities more, and crew without a post work at half strength. If it’s a hassle, just press ⚡ Auto-assign.",
+  "es": "La tripulación solo rinde de verdad si tiene un puesto. En la ventana de Tripulación, abra Puestos, toque <b>Nombrar</b> en un puesto y elija a alguien. Los puestos altos potencian más las habilidades, y quien no tiene puesto rinde a la mitad. Si le da pereza, pulse ⚡ Asignar automáticamente.",
+  "fr": "L’équipage ne donne sa pleine mesure qu’une fois nommé à un poste. Dans la fenêtre Équipage, ouvrez Affectations, touchez <b>Nommer</b> sur un poste et choisissez quelqu’un. Plus le poste est élevé, plus les compétences comptent ; sans poste, un membre ne travaille qu’à moitié. Pour aller vite, touchez ⚡ Affectation auto.",
+  "it": "L’equipaggio rende davvero solo se ha un incarico. Nella finestra Equipaggio apri Incarichi, tocca <b>Nomina</b> su un incarico e scegli qualcuno. Gli incarichi più alti potenziano di più le abilità, e chi non ha incarico lavora a metà. Se è una seccatura, premi ⚡ Assegna automaticamente.",
+  "pt": "A tripulação só mostra seu verdadeiro talento quando nomeada para um posto. Na janela Tripulação, abra Postos, toque em <b>Nomear</b> em um posto e escolha alguém. Postos mais altos aumentam mais as habilidades, e quem não tem posto trabalha pela metade. Se der preguiça, toque em ⚡ Atribuir automaticamente.",
+  "ja": "クルーは役職に任命してこそ本領を発揮します。クルー画面の「役職配置」で役職の<b>任命</b>を押し、人を選んでください。上位の役職ほど能力が大きく発揮され、役職のないクルーは半分しか働きません。面倒なら ⚡ 自動配置 を押してください。",
+  "zhs": "船员只有被任命到职位上才能发挥真本事。在船员界面的「任务配置」中点击职位的<b>任命</b>,选一个人就行。职位越高,能力发挥越大;没有职位的船员只出一半力。嫌麻烦的话,就点 ⚡ 自动分配。",
+  "zht": "船員只有被任命到職位上才能發揮真本事。在船員介面的「職位配置」中點擊職位的<b>任命</b>,選一個人就行。職位越高,能力發揮越大;沒有職位的船員只出一半力。嫌麻煩的話,就點 ⚡ 自動分配。"
+ },
+ "임명된 승무원은 함께 항해할수록 선장님을 믿게 됩니다. 호감도가 오르면 능력이 최대 50%까지 커지고, 80이 되면 특별한 이야기와 선물이 열립니다. 승무원 뽑기에서 같은 사람이 또 오면 ★ 승성으로 10%씩 강해집니다.": {
+  "en": "Appointed crew trust you more the longer you sail together. As affinity rises, their abilities grow by up to 50%, and at 80 a special story and gift unlock. If the same person comes again in the Crew Draw, a ★ star-up makes them 10% stronger each time.",
+  "es": "La tripulación con puesto confía más en usted cuanto más navegan juntos. Al subir la afinidad, sus habilidades crecen hasta un 50%, y con 80 se desbloquean una historia y un regalo especiales. Si la misma persona vuelve a salir en el Sorteo de tripulación, sube una ★ y gana un 10% cada vez.",
+  "fr": "L’équipage nommé vous fait davantage confiance à mesure que vous voyagez ensemble. Avec l’affinité, ses compétences augmentent jusqu’à 50 %, et à 80 une histoire et un cadeau spéciaux se débloquent. Si la même personne revient au Tirage d’équipage, une ★ la rend 10 % plus forte à chaque fois.",
+  "it": "L’equipaggio con incarico si fida di più di te man mano che navigate insieme. Con l’affinità le abilità crescono fino al 50%, e a 80 si sbloccano una storia e un regalo speciali. Se la stessa persona torna nell’Estrazione equipaggio, una ★ la rende più forte del 10% ogni volta.",
+  "pt": "A tripulação nomeada confia mais em você quanto mais navegam juntos. Com a afinidade, as habilidades crescem até 50%, e com 80 uma história e um presente especiais são liberados. Se a mesma pessoa vier de novo no Sorteio de tripulação, uma ★ a deixa 10% mais forte a cada vez.",
+  "ja": "任命したクルーは、一緒に航海するほど船長を信頼するようになります。好感度が上がると能力が最大50%まで伸び、80になると特別な物語と贈り物が開きます。乗組員ガチャで同じ人がまた来たら、★ 昇星で10%ずつ強くなります。",
+  "zhs": "被任命的船员与您同行越久就越信任您。好感度提升后能力最多提高50%,达到80会解锁特别剧情和礼物。在船员抽取中再次抽到同一个人,★ 升星每次提升10%。",
+  "zht": "被任命的船員與您同行越久就越信任您。好感度提升後能力最多提高50%,達到80會解鎖特別劇情和禮物。在船員抽取中再次抽到同一個人,★ 升星每次提升10%。"
+ },
+ "돈은 무역으로 법니다. 기지에 정박해 무역 창을 여세요. 싸게 파는 곳에서 사서 비싸게 사는 곳에 파는 것, 우주에서도 진리입니다.": {
+  "en": "We make money through trade. Dock at a base and open the Trade window. Buy where it’s cheap, sell where it’s dear: that’s true even in space.",
+  "es": "El dinero se gana comerciando. Atraque en una base y abra la ventana de Comercio. Comprar barato y vender caro: es una verdad incluso en el espacio.",
+  "fr": "L’argent se gagne par le commerce. Accostez une base et ouvrez la fenêtre Commerce. Acheter bon marché, revendre cher : c’est vrai même dans l’espace.",
+  "it": "I soldi si fanno col commercio. Attracca a una base e apri la finestra Commercio. Comprare dove costa poco e vendere dove si paga caro: vale anche nello spazio.",
+  "pt": "O dinheiro vem do comércio. Atraque em uma base e abra a janela de Comércio. Comprar barato e vender caro: isso vale até no espaço.",
+  "ja": "お金は交易で稼ぎます。基地に停泊して交易画面を開いてください。安いところで買って、高いところで売る。宇宙でも変わらない真理です。",
+  "zhs": "钱要靠贸易来赚。停靠基地后打开贸易界面。低价买进、高价卖出,在宇宙中也是真理。",
+  "zht": "錢要靠貿易來賺。停靠基地後開啟貿易介面。低價買進、高價賣出,在宇宙中也是真理。"
+ },
+ "새 천체에 가까이 가시면 제가 기록해 연구 데이터를 모읍니다. 연구에서 워프 드라이브를 올리면 다음 우주로 넘어갈 수 있습니다.": {
+  "en": "When you get close to a new celestial body, I’ll log it and collect research data. Upgrade the Warp Drive in Research and we can cross into the next universe.",
+  "es": "Cuando se acerque a un astro nuevo, lo registraré y reuniré datos de investigación. Mejore el motor de curvatura en Investigar y podremos pasar al siguiente universo.",
+  "fr": "Quand vous approchez d’un nouvel astre, je l’enregistre et récolte des données de recherche. Améliorez la propulsion warp dans Rechercher et nous pourrons passer à l’univers suivant.",
+  "it": "Quando ti avvicini a un nuovo corpo celeste, lo registro e raccolgo dati di ricerca. Potenzia il motore a curvatura in Ricerca e potremo passare all’universo successivo.",
+  "pt": "Quando você chega perto de um novo astro, eu o registro e coleto dados de pesquisa. Melhore o motor de dobra em Pesquisar e poderemos passar para o próximo universo.",
+  "ja": "新しい天体に近づけば、私が記録して研究データを集めます。研究でワープドライブを上げれば、次の宇宙へ進めます。",
+  "zhs": "靠近新的天体时,我会记录下来并收集研究数据。在研究中升级曲速引擎,我们就能前往下一片宇宙。",
+  "zht": "靠近新的天體時,我會記錄下來並收集研究資料。在研究中升級曲速引擎,我們就能前往下一片宇宙。"
+ },
+ "두 손가락으로 벌리거나 오므리면 확대·축소됩니다. 지도를 끌어 둘러보시다가 🚀 내 함선 버튼을 누르면 제자리로 돌아옵니다.": {
+  "en": "Pinch with two fingers to zoom in and out. Drag the map to look around, then tap 🚀 My Ship to come back.",
+  "es": "Pellizque con dos dedos para acercar o alejar. Arrastre el mapa para explorar y toque 🚀 Mi nave para volver.",
+  "fr": "Pincez avec deux doigts pour zoomer. Faites glisser la carte pour explorer, puis touchez 🚀 Mon vaisseau pour revenir.",
+  "it": "Pizzica con due dita per ingrandire o ridurre. Trascina la mappa per guardarti intorno e tocca 🚀 La mia nave per tornare.",
+  "pt": "Use dois dedos para aproximar ou afastar. Arraste o mapa para explorar e toque em 🚀 Minha nave para voltar.",
+  "ja": "2本の指で広げたりつまんだりすると拡大・縮小できます。地図をドラッグして見回し、🚀 自分の艦船 ボタンを押せば元の位置に戻ります。",
+  "zhs": "用两根手指张开或捏合即可缩放。拖动地图四处查看,点击 🚀 我的舰船 就能回到原位。",
+  "zht": "用兩根手指張開或捏合即可縮放。拖動地圖四處查看,點擊 🚀 我的船艦 就能回到原位。"
+ },
+ "아래 메뉴": {
+  "en": "Bottom menu",
+  "es": "Menú inferior",
+  "fr": "Menu du bas",
+  "it": "Menu in basso",
+  "pt": "Menu inferior",
+  "ja": "下のメニュー",
+  "zhs": "下方菜单",
+  "zht": "下方選單"
+ },
+ "아래 메뉴는 처음 여실 때마다 제가 하나씩 알려 드리겠습니다. 다시 듣고 싶으시면 ⚙️ 설정의 「게임 도움말」을 눌러 주세요. 그럼, 출항하시죠. 선장님.": {
+  "en": "I’ll explain each menu below the first time you open it. If you want to hear it all again, tap 📘 How to play in ⚙️ Settings. Now then, let’s set sail, Captain.",
+  "es": "Le explicaré cada menú de abajo la primera vez que lo abra. Si quiere volver a oírlo, toque 📘 Cómo jugar en ⚙️ Ajustes. Bien, zarpemos, capitán.",
+  "fr": "Je vous présenterai chaque menu du bas la première fois que vous l’ouvrirez. Pour tout réentendre, touchez 📘 Comment jouer dans ⚙️ Paramètres. Bien, appareillons, capitaine.",
+  "it": "Ti spiegherò ogni menu in basso la prima volta che lo apri. Se vuoi risentire tutto, tocca 📘 Come si gioca in ⚙️ Impostazioni. Bene, salpiamo, capitano.",
+  "pt": "Vou explicar cada menu de baixo na primeira vez que você abri-lo. Se quiser ouvir tudo de novo, toque em 📘 Como jogar nas ⚙️ Configurações. Então, vamos zarpar, capitão.",
+  "ja": "下のメニューは、初めて開くたびに私がひとつずつご説明します。もう一度聞きたいときは ⚙️ 設定の「遊び方」を押してください。では、出航しましょう。船長。",
+  "zhs": "下方的菜单,您第一次打开时我会逐一说明。想再听一遍的话,请点 ⚙️ 设置中的「游戏说明」。那么,启航吧,舰长。",
+  "zht": "下方的選單,您第一次開啟時我會逐一說明。想再聽一遍的話,請點 ⚙️ 設定中的「遊戲說明」。那麼,啟航吧,艦長。"
+ },
+ "함대 창에서는 가진 함선을 보고 기함을 고릅니다. 기함 등급이 높을수록 승무원을 임명할 직위가 늘어납니다. 함선을 누르시면 자세한 제원을 볼 수 있습니다.": {
+  "en": "In the Fleet window you can see your ships and choose your flagship. The higher its grade, the more crew posts you can fill. Tap a ship to see its full specs.",
+  "es": "En la ventana de Flota ve sus naves y elige la nave insignia. Cuanto mayor sea su grado, más puestos de tripulación podrá cubrir. Toque una nave para ver sus detalles.",
+  "fr": "Dans la fenêtre Flotte, vous voyez vos vaisseaux et choisissez votre vaisseau amiral. Plus son rang est élevé, plus vous pouvez pourvoir de postes. Touchez un vaisseau pour voir ses caractéristiques.",
+  "it": "Nella finestra Flotta vedi le tue navi e scegli l’ammiraglia. Più alto è il suo grado, più incarichi puoi assegnare. Tocca una nave per vederne le caratteristiche.",
+  "pt": "Na janela Frota você vê suas naves e escolhe a nau capitânia. Quanto maior o grau dela, mais postos de tripulação você pode preencher. Toque em uma nave para ver os detalhes.",
+  "ja": "艦隊画面では持っている艦船を見て旗艦を選びます。旗艦の等級が高いほど、クルーを任命できる役職が増えます。艦船を押すと詳しい性能が見られます。",
+  "zhs": "在舰队界面可以查看拥有的舰船并选择旗舰。旗舰等级越高,可任命船员的职位就越多。点击舰船可查看详细参数。",
+  "zht": "在艦隊介面可以查看擁有的船艦並選擇旗艦。旗艦等級越高,可任命船員的職位就越多。點擊船艦可查看詳細參數。"
+ },
+ "조선소에서는 크레딧으로 설계도를 받아 새 함선을 건조합니다. 이미 있는 함선이 또 나오면 ★ 승성으로 제원이 10%씩 오릅니다.": {
+  "en": "At the Shipyard you spend credits on blueprints to build new ships. If you get a ship you already own, a ★ star-up raises its specs by 10% each time.",
+  "es": "En el Astillero gasta créditos en planos para construir naves nuevas. Si sale una nave que ya tiene, sube una ★ y sus datos mejoran un 10% cada vez.",
+  "fr": "Au Chantier naval, vous dépensez des crédits en plans pour construire de nouveaux vaisseaux. Si vous obtenez un vaisseau déjà possédé, il gagne une ★ et 10 % de caractéristiques à chaque fois.",
+  "it": "Al Cantiere spendi crediti in progetti per costruire nuove navi. Se esce una nave che hai già, sale di una ★ e le sue caratteristiche crescono del 10% ogni volta.",
+  "pt": "No Estaleiro você gasta créditos em projetos para construir novas naves. Se sair uma nave que você já tem, ela sobe uma ★ e melhora 10% a cada vez.",
+  "ja": "造船所ではクレジットで設計図を受け取り、新しい艦船を建造します。すでにある艦船がまた出たら、★ 昇星で性能が10%ずつ上がります。",
+  "zhs": "在造船厂用信用点获取设计图建造新舰船。再次抽到已有的舰船时,★ 升星每次让参数提升10%。",
+  "zht": "在造船廠用信用點取得設計圖建造新船艦。再次抽到已有的船艦時,★ 升星每次讓參數提升10%。"
+ },
+ "다행히 저 혼자가 아닙니다. 세라핀, 이자벨라, 아민 세 사람이 처음부터 함께합니다. 「승무원 명단」에서 이들의 능력을 확인해 보세요.": {
+  "en": "Luckily, I’m not alone. Seraphine, Isabella and Amin are with us from the start. Check their abilities in the Crew Roster.",
+  "es": "Por suerte, no estoy sola. Seraphine, Isabella y Amin nos acompañan desde el principio. Revise sus habilidades en la Lista de tripulantes.",
+  "fr": "Heureusement, je ne suis pas seule. Séraphine, Isabella et Amin nous accompagnent dès le départ. Consultez leurs compétences dans le Rôle d’équipage.",
+  "it": "Per fortuna non sono sola. Seraphine, Isabella e Amin sono con noi fin dall’inizio. Controlla le loro abilità nell’Elenco equipaggio.",
+  "pt": "Felizmente não estou sozinha. Seraphine, Isabella e Amin estão conosco desde o início. Veja as habilidades deles na Lista da Tripulação.",
+  "ja": "幸い、私ひとりではありません。セラフィン、イザベラ、アミンの3人が最初から一緒です。「クルー名簿」で彼らの能力を確かめてみてください。",
+  "zhs": "幸好不只有我。瑟拉芬、伊莎贝拉、阿明三人从一开始就与我们同行。可以在「船员名单」中查看他们的能力。",
+  "zht": "幸好不只有我。賽拉芬、伊莎貝拉、阿敏三人從一開始就與我們同行。可以在「船員名單」中查看他們的能力。"
+ },
+ "해적 기지 목록입니다. 전투력과 선체가 넉넉할 때 도전하세요. 이기면 큰 보상을 얻고, 잔당은 시간이 지나면 다시 모여듭니다.": {
+  "en": "Here’s the list of pirate bases. Take them on when your combat power and hull are strong enough. Victory brings big rewards, and the remnants regroup over time.",
+  "es": "Esta es la lista de bases piratas. Atáquelas cuando su poder de combate y su casco sean suficientes. La victoria trae grandes recompensas, y los restos se reagrupan con el tiempo.",
+  "fr": "Voici la liste des bases pirates. Attaquez-les quand votre puissance de combat et votre coque sont suffisantes. La victoire rapporte gros, et les survivants se regroupent avec le temps.",
+  "it": "Ecco l’elenco delle basi pirata. Attaccale quando potenza di combattimento e scafo sono sufficienti. La vittoria porta grandi ricompense, e i superstiti si riorganizzano col tempo.",
+  "pt": "Esta é a lista de bases piratas. Ataque quando seu poder de combate e seu casco estiverem bons. A vitória traz grandes recompensas, e os remanescentes se reagrupam com o tempo.",
+  "ja": "海賊基地の一覧です。戦闘力と船体に余裕があるときに挑んでください。勝てば大きな報酬が得られ、残党は時間が経つとまた集まってきます。",
+  "zhs": "这里是海盗基地列表。战斗力和船体充足时再去挑战。获胜会得到丰厚奖励,残党过一段时间会再次聚集。",
+  "zht": "這裡是海盜基地列表。戰鬥力和船體充足時再去挑戰。獲勝會得到豐厚獎勵,殘黨過一段時間會再次聚集。"
+ },
+ "주 임무와 기지의 납품 의뢰가 여기 모여 있습니다. 하나씩 해내시면 크레딧과 연구 데이터를 드리죠.": {
+  "en": "Your main missions and the bases’ delivery requests are all here. Complete them one by one and you’ll earn credits and research data.",
+  "es": "Aquí están las misiones principales y los encargos de entrega de las bases. Complételos uno a uno y ganará créditos y datos de investigación.",
+  "fr": "Vos missions principales et les commandes de livraison des bases sont toutes ici. Accomplissez-les une à une pour gagner des crédits et des données de recherche.",
+  "it": "Qui trovi le missioni principali e le richieste di consegna delle basi. Completale una alla volta e otterrai crediti e dati di ricerca.",
+  "pt": "Aqui ficam as missões principais e os pedidos de entrega das bases. Complete um por um e ganhe créditos e dados de pesquisa.",
+  "ja": "主任務と基地の納品依頼がここにまとまっています。ひとつずつこなせば、クレジットと研究データを差し上げます。",
+  "zhs": "主线任务和基地的交付委托都集中在这里。逐一完成就能获得信用点和研究数据。",
+  "zht": "主線任務和基地的交付委託都集中在這裡。逐一完成就能獲得信用點和研究資料。"
+ },
+ "발견한 천체, 업적과 칭호, 지나온 이야기가 기록됩니다. 업적을 달성해 얻은 칭호를 장착하면 효과가 붙습니다.": {
+  "en": "The celestial bodies you’ve found, your achievements and titles, and the story so far are recorded here. Equip a title earned from an achievement to gain its effect.",
+  "es": "Aquí se registran los astros descubiertos, los logros y títulos, y la historia hasta ahora. Equipe un título ganado con un logro para obtener su efecto.",
+  "fr": "Les astres découverts, vos succès et titres, et l’histoire jusqu’ici sont consignés ici. Équipez un titre obtenu grâce à un succès pour profiter de son effet.",
+  "it": "Qui sono registrati i corpi celesti scoperti, gli obiettivi e i titoli, e la storia fin qui. Equipaggia un titolo ottenuto da un obiettivo per averne l’effetto.",
+  "pt": "Aqui ficam registrados os astros descobertos, as conquistas e títulos, e a história até agora. Equipe um título ganho com uma conquista para obter seu efeito.",
+  "ja": "発見した天体、実績と称号、これまでの物語が記録されます。実績で得た称号を装備すると効果が付きます。",
+  "zhs": "这里记录已发现的天体、成就与称号,以及至今的故事。装备通过成就获得的称号即可获得效果。",
+  "zht": "這裡記錄已發現的天體、成就與稱號,以及至今的故事。裝備透過成就獲得的稱號即可獲得效果。"
+ },
+ "알겠어요": {
+  "en": "Got it",
+  "es": "Entendido",
+  "fr": "Compris",
+  "it": "Capito",
+  "pt": "Entendi",
+  "ja": "わかりました",
+  "zhs": "明白了",
+  "zht": "明白了"
  }
 }

@@ -6,7 +6,7 @@
    · Play 게임즈가 플레이어마다 최고 기록만 남기므로 같은 값은 다시 보내지 않는다
    · 올리는 때: 1분마다 기록이 바뀌었으면, 앱이 뒤로 갈 때, 랭킹 창을 열 때
    웹에서는 내 기록만 보여 준다 (리더보드는 앱에서만). */
-const RANK_IDS = { found:"", sell:"", wins:"", bigbang:"" };
+const RANK_IDS = { found:"CgkI69adrZYdEAIQAQ", sell:"CgkI69adrZYdEAIQAg", wins:"CgkI69adrZYdEAIQAw", bigbang:"CgkI69adrZYdEAIQBA" };
 const RANK_LIST = [
   { k:"found",   ic:"🔭", name:__("탐사가"),         desc:__("발견한 천체와 떠돌이 별의 수"),                 val:s => (s.found||[]).length + (s.starsFound||[]).length },
   { k:"sell",    ic:"💠", name:__("무역왕"),         desc:__("무역으로 번 누적 크레딧"),                       val:s => Math.floor((s.stats||{}).sell || 0) },
